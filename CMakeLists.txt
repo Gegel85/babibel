@@ -3,7 +3,11 @@ project(CPP_babel_2019)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
 add_executable(
 	CPP_babel_2019
 	src/main.cpp
-)
+	)
+
+target_link_libraries(CPP_babel_2019 Qt5::Widgets)
