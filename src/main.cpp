@@ -10,7 +10,6 @@
 #include <portaudio.h>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QPushButton>
-#include <QApplication>
 
 int main(int argc, char **argv)
 {
