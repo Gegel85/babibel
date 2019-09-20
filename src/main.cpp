@@ -10,7 +10,7 @@
 #include <portaudio.h>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QPushButton>
-#include "qt5/Cursors.hpp"
+#include "graphical/qt5/Cursors.hpp"
 
 class Window : public QWidget
 {
