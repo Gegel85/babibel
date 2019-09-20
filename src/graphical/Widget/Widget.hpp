@@ -16,9 +16,9 @@ class GUIScreen;
 class Widget
 {
 protected:
+	Vector2<unsigned> _position;
 	Vector2<unsigned> _size;
-	Vector2<unsigned> _pos;
-	bool _enabled = true;
+	bool _enabled;
 	bool _visible;
 
 public:

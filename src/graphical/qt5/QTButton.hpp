@@ -9,37 +9,33 @@
 #define QTBUTOON_HPP
 
 #include <QtWidgets/QPushButton>
+#include "../Widget/Button.hpp"
 #include "Cursors.hpp"
-#include "data/Vector2.hpp"
 
-class QTButton {
+namespace Babel {
+class QTButton : Button
+{
 	public:
-		Button(std::string text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0} , QWidget *parent = nullptr);
-		~Button() = default;
+		QTButton(std::string text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0} , QWidget *parent = nullptr);
 
-		void setText(const std::string &text);
-		const std::string getText();
+		// void setText(const std::string &text);
+		// const std::string getText();
 
-		void setToolTip(const std::string &toolTip);
-		const std::string getToolTip();
+		// void setToolTip(const std::string &toolTip);
+		// const std::string getToolTip();
 
-		void setIcon(const std::string &path);
-		void setIcon(const QIcon &otherIcon);
-		const QIcon getIcon();
+		// void setIcon(const std::string &path);
+		// void setIcon(const QIcon &otherIcon);
+		// const QIcon getIcon();
 
-		void setFont(std::string fontName, unsigned int size);
+		// void setFont(std::string fontName, unsigned size);
 
-		void setCursor(enum cursors);
-		const enum cursors getCursor();
-
-		void setPosition(const Vector2<unsigned int> &position);
-		const Vector2<unsigned int> getposition();
-		void setGeometry(Vector4<unsigned int> geometry); //(abscisse, ordonnée, largeur, hauteur)
-		const Vector4<unsigned int> getGeometry();
-
+		// void setCursor(enum cursors);
+		// const enum cursors getCursor();
 
 	private:
-		std::string _text;
+		QWidget *_parent;
 };
+}
 
 #endif

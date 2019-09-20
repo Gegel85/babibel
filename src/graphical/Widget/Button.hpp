@@ -15,8 +15,6 @@ class Button : public Widget
 {
 protected:
 	std::string _text;
-	Vector2<unsigned> _position;
-	Vector2<unsigned> _size;
 	bool _clicked;
 
 public:

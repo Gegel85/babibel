@@ -14,8 +14,6 @@ namespace Babel {
 class ScrollBar : public Widget
 {
 protected:
-	Vector2<unsigned> _position;
-	Vector2<unsigned> _size;
 	unsigned _maxValue;
 	unsigned _frameSize;
 	unsigned _value;
