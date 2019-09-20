@@ -40,7 +40,7 @@ public:
 	Widget &getWidget(unsigned int id);
 	void setFullscreen(bool fullscreen = true);
 	void setSize(Vector2<unsigned int> size);
-	unsigned int addWidget(std::sharedPtr<Widget> widget);
+	unsigned int addWidget(std::shared_ptr<Widget> widget);
 }
 
 class Widget {
@@ -60,7 +60,7 @@ public:
 	bool getEnabled() const;
 	Vector2<unsigned> getSize() const;
 	Vector2<unsigned> getPosition() const;
-	virtual void draw(GUIDScreen &screen) = 0;
+	virtual void draw(GUIScreen &screen) = 0;
 }
 
 class Picture : public Widget {
@@ -80,7 +80,7 @@ public:
 	void setText(const std::string &text);
 	std::string getText() const;
 	bool isClicked();
-}
+};
 
 class TextBox : public Widget {
 protected:
@@ -100,7 +100,7 @@ public:
 	TypingBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
-}
+};
 
 class ScrollBar : public Widget {
 protected:
@@ -112,4 +112,4 @@ public:
 	void setMaxValue(unsigned maxValue);
 	void setFrameSize(unsigned frameSize);
 	double getValue();
-}
+};
