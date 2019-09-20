@@ -7,24 +7,27 @@
 
 #include "Button.hpp"
 
-namespace Babel {
-	Button::Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0})
-	:	_text(text),
-		_position(position),
-		_size(size),
+namespace Babel
+{
+	Button::Button(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+		Widget(position, size),
+		_text(text),
 		_clicked(false)
 	{
 	}
 
-	void Button::setText(const std::string &text) {
+	void Button::setText(const std::string &text)
+	{
 		this->_text = text;
 	}
 
-	std::string Button::getText() const {
+	std::string Button::getText() const
+	{
 		return (this->_text);
 	}
 
-	bool Button::isClicked() const {
+	bool Button::isClicked() const
+	{
 		return (this->_clicked);
 	}
 }

@@ -10,20 +10,20 @@
 
 #include "Widget.hpp"
 
-namespace Babel {
-class ScrollBar : public Widget
+namespace Babel
 {
-protected:
-	unsigned _maxValue;
-	unsigned _frameSize;
-	unsigned _value;
+	class ScrollBar : public Widget {
+	protected:
+		unsigned _maximum;
+		unsigned _frameSize;
+		unsigned _barPos;
 
-public:
-	ScrollBar(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-	void setMaxValue(unsigned maxValue);
-	void setFrameSize(unsigned frameSize);
-	double getValue() const;
-};
+	public:
+		ScrollBar(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+		void setMaxValue(unsigned maxValue);
+		void setFrameSize(unsigned frameSize);
+		double getValue() const;
+	};
 }
 
 #endif

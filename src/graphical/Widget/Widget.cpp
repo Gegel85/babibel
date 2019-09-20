@@ -7,45 +7,53 @@
 
 #include "Widget.hpp"
 
-namespace Babel {
-	Widget::Widget(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0})
-	:	_position(position),
+namespace Babel
+{
+	Widget::Widget(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+		_position(position),
 		_size(size),
 		_enabled(true),
 		_visible(true)
 	{
 	}
 
-	void Widget::setVisible(bool visible) {
+	void Widget::setVisible(bool visible)
+	{
 		this->_visible = visible;
 	}
 
-	void Widget::setEnabled(bool enabled) {
+	void Widget::setEnabled(bool enabled)
+	{
 		this->_enabled = enabled;
 	}
 
-	void Widget::setSize(Vector2<unsigned> size) {
+	void Widget::setSize(Vector2<unsigned> size)
+	{
 		this->_size = size;
 	}
 
-	void Widget::setPosition(Vector2<unsigned> position)
+	void Widget::setPosition(Vector2<int> position)
 	{
 		this->_position = position;
 	}
 
-	bool Widget::getVisible () const {
+	bool Widget::getVisible () const
+	{
 		return (this->_visible);
 	}
 
-	bool Widget::getEnabled() const {
+	bool Widget::getEnabled() const
+	{
 		return (this->_enabled);
 	}
 
-	Vector2<unsigned> Widget::getSize() const {
+	Vector2<unsigned> Widget::getSize() const
+	{
 		return (this->_size);
 	}
 
-	Vector2<unsigned> Widget::getPosition() const {
+	Vector2<unsigned> Widget::getPosition() const
+	{
 		return (this->_position);
 	}
 }

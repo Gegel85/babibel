@@ -10,18 +10,18 @@
 
 #include "Widget.hpp"
 
-namespace Babel {
-class Button : public Widget
+namespace Babel
 {
-protected:
-	std::string _text;
-	bool _clicked;
+	class Button : public Widget {
+	protected:
+		std::string _text;
+		bool _clicked;
 
-public:
-	Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-	void setText(const std::string &text);
-	std::string getText() const;
-	bool isClicked() const;
-};
+	public:
+		Button(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+		void setText(const std::string &text);
+		std::string getText() const;
+		bool isClicked() const;
+	};
 }
 #endif

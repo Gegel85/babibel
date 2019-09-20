@@ -8,8 +8,9 @@
 #include "Picture.hpp"
 
 namespace Babel {
-	Picture::Picture(const std::string &path)
-	:	_path(path)
+	Picture::Picture(const std::string &path, Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+		Widget(position, size),
+		_path(path)
 	{
 	}
 }

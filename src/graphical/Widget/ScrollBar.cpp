@@ -8,21 +8,26 @@
 #include "ScrollBar.hpp"
 
 namespace Babel {
-	ScrollBar::ScrollBar(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0})
-	:	_position(position),
-		_size(size)
+	ScrollBar::ScrollBar(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+		Widget(position, size),
+		_maxValue(0),
+		_frameSize(0),
+		_barPos(0)
 	{
 	}
 
-	void ScrollBar::setMaxValue(unsigned maxValue) {
-		this->_maxValue = maxValue;
+	void ScrollBar::setMaximum(unsigned maxValue)
+	{
+		this->_maximum = maxValue;
 	}
 
-	void ScrollBar::setFrameSize(unsigned frameSize) {
+	void ScrollBar::setFrameSize(unsigned frameSize)
+	{
 		this->_frameSize = frameSize;
 	}
 
-	double ScrollBar::getValue() const{
-		return (this->_value);
+	double ScrollBar::getValue() const
+	{
+		return (this->_barPos / this->_position.y) ;
 	}
 }

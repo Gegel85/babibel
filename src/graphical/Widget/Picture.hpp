@@ -10,15 +10,14 @@
 
 #include "Widget.hpp"
 
-namespace Babel {
-
-class Picture : public Widget
+namespace Babel
 {
-protected:
-	const std::string &_path;
+	class Picture : public Widget {
+	protected:
+		const std::string &_path;
 
-public:
-	Picture(const std::string &path);
-};
+	public:
+		Picture(const std::string &path, Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	};
 }
 #endif
