@@ -20,7 +20,7 @@ namespace Babel
 
 	public:
 		ScrollBar(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-		void setMaxValue(unsigned maxValue);
+		void setMaximum(unsigned maxValue);
 		void setFrameSize(unsigned frameSize);
 		double getValue() const;
 	};

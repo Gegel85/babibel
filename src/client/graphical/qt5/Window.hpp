@@ -17,7 +17,7 @@ class Window : public QWidget
 	public:
 		Window();
 		~Window() = {
-			if (this->_button) delete (this->_button);
+git 			if (this->_button) delete (this->_button);
 		};
 
 	private:

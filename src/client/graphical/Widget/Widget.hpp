@@ -9,7 +9,7 @@
 #define WIDGET_HPP
 
 #include <string>
-#include "Vector2.hpp"
+#include "../../data/Vector2.hpp"
 
 namespace Babel
 {
@@ -30,7 +30,7 @@ namespace Babel
 		bool getVisible() const;
 		bool getEnabled() const;
 		Vector2<unsigned> getSize() const;
-		Vector2<unsigned> getPosition() const;
+		Vector2<int> getPosition() const;
 		virtual void draw(GUIScreen &screen) = 0;
 	};
 }

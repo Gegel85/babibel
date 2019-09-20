@@ -9,7 +9,7 @@
 
 namespace Babel
 {
-	Button::Button(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+	Button::Button(const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
 		_text(text),
 		_clicked(false)

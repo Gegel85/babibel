@@ -9,7 +9,7 @@
 
 namespace Babel
 {
-	Widget::Widget(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+	Widget::Widget(Vector2<int> position, Vector2<unsigned> size) :
 		_position(position),
 		_size(size),
 		_enabled(true),
@@ -52,7 +52,7 @@ namespace Babel
 		return (this->_size);
 	}
 
-	Vector2<unsigned> Widget::getPosition() const
+	Vector2<int> Widget::getPosition() const
 	{
 		return (this->_position);
 	}

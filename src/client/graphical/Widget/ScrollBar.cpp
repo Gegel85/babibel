@@ -8,9 +8,9 @@
 #include "ScrollBar.hpp"
 
 namespace Babel {
-	ScrollBar::ScrollBar(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+	ScrollBar::ScrollBar(Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
-		_maxValue(0),
+		_maximum(0),
 		_frameSize(0),
 		_barPos(0)
 	{
@@ -28,6 +28,6 @@ namespace Babel {
 
 	double ScrollBar::getValue() const
 	{
-		return (this->_barPos / this->_position.y) ;
+		return this->_size.y && (static_cast<float>(this->_barPos) / this->_size.y) * this->_maximum;
 	}
 }

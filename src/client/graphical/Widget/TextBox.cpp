@@ -9,7 +9,7 @@
 
 namespace Babel
 {
-	TextBox::TextBox(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0}) :
+	TextBox::TextBox(const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
 		_text(text)
 	{
