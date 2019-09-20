@@ -9,7 +9,27 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(
 	babel_client
-	src/main.cpp
+	src/client/data/Vector2.hpp
+	src/client/graphical/Widget/TextBox.cpp
+	src/client/graphical/Widget/Picture.hpp
+	src/client/graphical/Widget/Widget.hpp
+	src/client/graphical/Widget/Widget.cpp
+	src/client/graphical/Widget/TypingBox.cpp
+	src/client/graphical/Widget/Button.hpp
+	src/client/graphical/Widget/ScrollBar.hpp
+	src/client/graphical/Widget/Button.cpp
+	src/client/graphical/Widget/ScrollBar.cpp
+	src/client/graphical/Widget/Picture.cpp
+	src/client/graphical/Widget/TextBox.hpp
+	src/client/graphical/Widget/TypingBox.hpp
+	src/client/graphical/qt5/QTWindow.cpp
+	src/client/graphical/qt5/QTCursors.hpp
+	src/client/graphical/qt5/QTWindow.hpp
+	src/client/graphical/qt5/QTButton.hpp
+	src/client/graphical/qt5/QTButton.cpp
+	src/client/graphical/GUIScreen.hpp
+	src/client/graphical/GUIScreen.cpp
+	src/client/main.cpp
 )
 
 target_link_libraries(
@@ -20,7 +40,7 @@ target_link_libraries(
 
 add_executable(
 	babel_server
-	src/main.cpp
+	src/server/main.cpp
 )
 
 target_link_libraries(

@@ -10,19 +10,17 @@
 
 #include <QtWidgets/QPushButton>
 #include "../Widget/Button.hpp"
-#include "QTWidget.hpp"
 
 //#include "Cursors.hpp"
 
-namespace Babel {
-class QTButton : public Button, public QTWidget
+namespace Babel
 {
+	class QTButton : public Button, public QPushButton {
 	public:
-		QTButton(std::string text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0} , QTWidget &parent);
-		~QTButton();
+		QTButton(QWidget &parent, const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 
-		// void setText(const std::string &text);
-		// const std::string getText();
+		void setText(const std::string &text) override;
+		bool isClicked() const override;
 
 		// void setToolTip(const std::string &toolTip);
 		// const std::string getToolTip();
@@ -35,11 +33,7 @@ class QTButton : public Button, public QTWidget
 
 		// void setCursor(enum cursors);
 		// const enum cursors getCursor();
-
-	private:
-		QWidget *_parent = nullptr;
-		QPushButton *_button;
-};
+	};
 }
 
 #endif

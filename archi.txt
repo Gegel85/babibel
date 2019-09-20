@@ -52,11 +52,11 @@ protected:
 	bool _visible = true;
 
 public:
-	Widget(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	Widget(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setVisible(bool visible);
 	void setEnabled(bool enabled);
 	void setSize(Vector2<unsigned> size);
-	void setPosition(Vector2<unsigned> position);
+	void setPosition(Vector2<int> position);
 	bool getVisible() const;
 	bool getEnabled() const;
 	Vector2<unsigned> getSize() const;
@@ -77,7 +77,7 @@ protected:
 	std::string _text;
 
 public:
-	Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	Button(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
 	bool isClicked();
@@ -88,7 +88,7 @@ protected:
 	std::string _text;
 
 public:
-	TextBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	TextBox(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
 }
@@ -98,7 +98,7 @@ protected:
 	std::string _text;
 
 public:
-	TypingBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	TypingBox(const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
 };
@@ -109,8 +109,8 @@ protected:
 	unsigned _frameSize;
 
 public:
-	ScrollBar(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-	void setMaxValue(unsigned maxValue);
+	ScrollBar(Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setMaximum(unsigned maxValue);
 	void setFrameSize(unsigned frameSize);
 	double getValue();
 };
