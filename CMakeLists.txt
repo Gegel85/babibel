@@ -8,8 +8,23 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(
-	CPP_babel_2019
+	babel_client
 	src/main.cpp
 )
 
-target_link_libraries(CPP_babel_2019 ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(
+	babel_client
+	${CONAN_LIBS}
+	Qt5::Widgets
+)
+
+add_executable(
+	babel_server
+	src/main.cpp
+)
+
+target_link_libraries(
+	babel_server
+	${CONAN_LIBS}
+	Qt5::Widgets
+)
