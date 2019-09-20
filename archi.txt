@@ -1,0 +1,87 @@
+class Sound {
+public:
+	enum SoundState {
+		Stopped,
+		Paused,
+		Playing,
+	};
+
+	Sound();
+	void playBuffer(const std::vector<unsigned char> &buffer);
+	void playStream(const std::istream &stream);
+	SoundState getState();
+	void stop();
+	void pause();
+	void play();
+}
+
+class AudioDecoder : public std::istream {
+public:
+	AudioDecoder(const std::istream &stream);
+}
+
+class AudioEncoder : public std::ostream {
+public:
+	AudioEncoder(const std::ostream &stream);
+}
+
+template<typename type>
+struct Vector2 {
+	type x;
+	type y;
+}
+
+class GUIScreen {
+public:
+	GUIScreen(Vector2<unsigned int> size);
+
+	Vector2<unsigned int> getSize();
+	std::vector<Widget> getWidgets();
+	Widget &getWidget(unsigned int id);
+	void setFullscreen(bool fullscreen = true);
+	void setSize(Vector2<unsigned int> size);
+	unsigned int addButton(std::sharedPtr<Button> button);
+	unsigned int addPicture(std::sharedPtr<Picture> picture);
+	unsigned int addTextBox(std::sharedPtr<TextBox> textBox);
+	unsigned int addScrollBar(std::sharedPtr<ScrollBar> scrollBar);
+	unsigned int addTypingBox(std::sharedPtr<TypingBox> *typingBox);
+}
+
+class Widget {
+protected:
+	Vector2<unsigned> _pos;
+	Vector2<unsigned> _size;
+	bool _enabled = true;
+	bool _visible = true;
+
+public:
+	Widget(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setEnabled(bool enabled);
+	void setVisible(bool visible);
+	void setPosition(Vector2<unsigned> position);
+	void setSize(Vector2<unsigned> size);
+	Vector2<unsigned> getSize();
+	Vector2<unsigned> getPosition();
+	bool getVisible();
+	bool getEnabled();
+}
+
+class Button : public Widget {
+	
+}
+
+class Picture : public Widget {
+
+}
+
+class TextBox : public Widget {
+
+}
+
+class ScrollBar : public Widget {
+
+}
+
+class TypingBox : public Widget {
+
+}
