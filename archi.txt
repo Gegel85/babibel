@@ -81,7 +81,7 @@ public:
 	void setText(const std::string &text);
 	std::string getText() const;
 	bool isClicked();
-}
+};
 
 class TextBox : public Widget {
 protected:
@@ -101,7 +101,7 @@ public:
 	TypingBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
-}
+};
 
 class ScrollBar : public Widget {
 protected:
@@ -113,4 +113,4 @@ public:
 	void setMaxValue(unsigned maxValue);
 	void setFrameSize(unsigned frameSize);
 	double getValue();
-}
+};
