@@ -10,13 +10,16 @@
 
 #include <QtWidgets/QPushButton>
 #include "../Widget/Button.hpp"
-#include "Cursors.hpp"
+#include "QTWidget.hpp"
+
+//#include "Cursors.hpp"
 
 namespace Babel {
-class QTButton : Button
+class QTButton : public Button, public QTWidget
 {
 	public:
-		QTButton(std::string text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0} , QWidget *parent = nullptr);
+		QTButton(std::string text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0} , QTWidget &parent);
+		~QTButton();
 
 		// void setText(const std::string &text);
 		// const std::string getText();
@@ -34,7 +37,8 @@ class QTButton : Button
 		// const enum cursors getCursor();
 
 	private:
-		QWidget *_parent;
+		QWidget *_parent = nullptr;
+		QPushButton *_button;
 };
 }
 
