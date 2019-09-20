@@ -15,12 +15,15 @@ class Button : public Widget
 {
 protected:
 	std::string _text;
+	Vector2<unsigned> _position;
+	Vector2<unsigned> _size;
+	bool _clicked;
 
 public:
 	Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 	void setText(const std::string &text);
 	std::string getText() const;
-	bool isClicked();
+	bool isClicked() const;
 };
 }
 #endif

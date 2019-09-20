@@ -11,17 +11,14 @@
 #include "Widget.hpp"
 
 namespace Babel {
-class Button : public Widget
+
+class Picture : public Widget
 {
 protected:
-	std::string _text;
+	const std::string &_path;
 
 public:
-	Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-	void setText(const std::string &text);
-	std::string getText() const;
-	bool isClicked();
+	Picture(const std::string &path);
 };
 }
-
 #endif
