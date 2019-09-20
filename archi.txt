@@ -40,48 +40,76 @@ public:
 	Widget &getWidget(unsigned int id);
 	void setFullscreen(bool fullscreen = true);
 	void setSize(Vector2<unsigned int> size);
-	unsigned int addButton(std::sharedPtr<Button> button);
-	unsigned int addPicture(std::sharedPtr<Picture> picture);
-	unsigned int addTextBox(std::sharedPtr<TextBox> textBox);
-	unsigned int addScrollBar(std::sharedPtr<ScrollBar> scrollBar);
-	unsigned int addTypingBox(std::sharedPtr<TypingBox> *typingBox);
+	unsigned int addWidget(std::sharedPtr<Widget> widget);
 }
 
 class Widget {
 protected:
-	Vector2<unsigned> _pos;
 	Vector2<unsigned> _size;
+	Vector2<unsigned> _pos;
 	bool _enabled = true;
 	bool _visible = true;
 
 public:
 	Widget(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
-	void setEnabled(bool enabled);
 	void setVisible(bool visible);
-	void setPosition(Vector2<unsigned> position);
+	void setEnabled(bool enabled);
 	void setSize(Vector2<unsigned> size);
-	Vector2<unsigned> getSize();
-	Vector2<unsigned> getPosition();
-	bool getVisible();
-	bool getEnabled();
-}
-
-class Button : public Widget {
-	
+	void setPosition(Vector2<unsigned> position);
+	bool getVisible() const;
+	bool getEnabled() const;
+	Vector2<unsigned> getSize() const;
+	Vector2<unsigned> getPosition() const;
+	virtual void draw(GUIDScreen &screen) = 0;
 }
 
 class Picture : public Widget {
+protected:
+	const std::string &path;
 
+public:
+	Picture(const std::string &path);
+}
+
+class Button : public Widget {
+protected:
+	std::string _text;
+
+public:
+	Button(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setText(const std::string &text);
+	std::string getText() const;
+	bool isClicked();
 }
 
 class TextBox : public Widget {
+protected:
+	std::string _text;
 
-}
-
-class ScrollBar : public Widget {
-
+public:
+	TextBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setText(const std::string &text);
+	std::string getText() const;
 }
 
 class TypingBox : public Widget {
+protected:
+	std::string _text;
 
+public:
+	TypingBox(const std::string &text = "", Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setText(const std::string &text);
+	std::string getText() const;
+}
+
+class ScrollBar : public Widget {
+protected:
+	unsigned _maxValue;
+	unsigned _frameSize;
+
+public:
+	ScrollBar(Vector2<unsigned> position = {0, 0}, Vector2<unsigned> size = {0, 0});
+	void setMaxValue(unsigned maxValue);
+	void setFrameSize(unsigned frameSize);
+	double getValue();
 }
