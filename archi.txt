@@ -1,4 +1,7 @@
 class Sound {
+private:
+	std::stream &_stream;
+
 public:
 	enum SoundState {
 		Stopped,
@@ -6,23 +9,21 @@ public:
 		Playing,
 	};
 
-	Sound();
-	void playBuffer(const std::vector<unsigned char> &buffer);
-	void playStream(const std::istream &stream);
+	Sound(std::istream &stream);
 	SoundState getState();
+	void play();
 	void stop();
 	void pause();
-	void play();
 }
 
 class AudioDecoder : public std::istream {
 public:
-	AudioDecoder(const std::istream &stream);
+	AudioDecoder(std::istream &stream);
 }
 
 class AudioEncoder : public std::ostream {
 public:
-	AudioEncoder(const std::ostream &stream);
+	AudioEncoder(std::ostream &stream);
 }
 
 template<typename type>
@@ -40,7 +41,7 @@ public:
 	Widget &getWidget(unsigned int id);
 	void setFullscreen(bool fullscreen = true);
 	void setSize(Vector2<unsigned int> size);
-	unsigned int addWidget(std::sharedPtr<Widget> widget);
+	unsigned int addWidget(std::shared_ptr<Widget> widget);
 }
 
 class Widget {
@@ -60,7 +61,7 @@ public:
 	bool getEnabled() const;
 	Vector2<unsigned> getSize() const;
 	Vector2<unsigned> getPosition() const;
-	virtual void draw(GUIDScreen &screen) = 0;
+	virtual void draw(GUIScreen &screen) = 0;
 }
 
 class Picture : public Widget {
