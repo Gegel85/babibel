@@ -1,4 +1,6 @@
+babel_client
+babel_server
 cmake-build-debug
 .idea
-build
+build_folder
 .vscode
