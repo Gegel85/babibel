@@ -10,6 +10,7 @@
 
 
 #include <vector>
+#include <random>
 #include <string>
 
 namespace Babel::Protocol
@@ -17,6 +18,12 @@ namespace Babel::Protocol
 	enum Opcode {
 		HELLO,
 		BYE,
+		REGISTER,
+		GET_FRIENDS,
+		GET_USER_INFOS,
+		CALL,
+		CALL_ACCEPTED,
+		CALL_REFUSED,
 	};
 
 	namespace ExitReason {
@@ -32,7 +39,11 @@ namespace Babel::Protocol
 		const char *what() const noexcept override { return this->_msg.c_str(); }
 	};
 
-	struct Packet {
+	class Packet {
+	private:
+		std::random_device _random;
+
+	public:
 		unsigned char op;
 		std::string data;
 
