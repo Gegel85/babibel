@@ -20,6 +20,7 @@ namespace Babel
 		this->_packet.data = {'\0', '\x01'};
 		this->_buffer = this->_packet;
 
+		std::cout << "New connection from " << this->_socket.remote_endpoint() << std::endl;
 		boost::asio::async_write(
 			this->_socket,
 			boost::asio::buffer(this->_buffer),
@@ -47,8 +48,16 @@ namespace Babel
 	{
 	}
 
-	void TcpConnection::_handleWrite(const boost::system::error_code &error, size_t bytesTransferred)
+	TcpConnection::~TcpConnection()
 	{
-		std::cout << error << " " << bytesTransferred << std::endl;
+		this->_packet.op = Protocol::BYE;
+		this->_packet.data = Protocol::ExitReason::NORMAL_CLOSURE;
+		this->_buffer = this->_packet;
+
+		this->_socket.send(boost::asio::buffer(this->_buffer));
+		std::cout << this->_socket.remote_endpoint() << " disconnected" << std::endl;
 	}
+
+	void TcpConnection::_handleWrite(const boost::system::error_code &, size_t)
+	{}
 }

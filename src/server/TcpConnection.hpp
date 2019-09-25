@@ -23,6 +23,7 @@ namespace Babel
 	public:
 		typedef boost::shared_ptr<TcpConnection> Ptr;
 
+		~TcpConnection();
 		static Ptr create(boost::asio::io_context& io_context);
 		boost::asio::ip::tcp::socket &socket();
 		void start();

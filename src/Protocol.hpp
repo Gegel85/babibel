@@ -16,7 +16,12 @@ namespace Babel::Protocol
 {
 	enum Opcode {
 		HELLO,
+		BYE,
 	};
+
+	namespace ExitReason {
+		extern std::string NORMAL_CLOSURE;
+	}
 
 	class InvalidPacketException : public std::exception {
 	private:

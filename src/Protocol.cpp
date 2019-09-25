@@ -43,4 +43,6 @@ namespace Babel::Protocol
 			static_cast<char>(this->data.size())
 		} + this->data;
 	}
+
+	std::string ExitReason::NORMAL_CLOSURE = {'\0', '\0', '\0', '\0'};
 }
