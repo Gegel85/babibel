@@ -10,11 +10,12 @@
 
 
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/write.hpp>
 
-class TcpConnection
+class TcpConnection : public boost::enable_shared_from_this<TcpConnection>
 {
 public:
 	typedef boost::shared_ptr<TcpConnection> Ptr;

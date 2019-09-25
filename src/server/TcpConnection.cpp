@@ -21,7 +21,7 @@ void TcpConnection::start()
 		boost::asio::buffer(message_),
 		boost::bind(
 			&TcpConnection::_handleWrite,
-			boost::shared_ptr<TcpConnection>{this},
+			this->shared_from_this(),
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred
 		)
