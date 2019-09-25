@@ -8,11 +8,15 @@
 #include <stdio.h>
 #include <opus/opus.h>
 #include <portaudio.h>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QLCDNumber>
-#include <QtWidgets/QSlider>
+// #include <QtWidgets/QLCDNumber>
+// #include <QtWidgets/QSlider>
+#include <QTimer>
+#include "graphical/qt5/QTWindow.hpp"
+#include "graphical/qt5/QTButton.hpp"
+#include "graphical/qt5/QTApplication.hpp"
+#include "graphical/qt5/QTScrollBar.hpp"
 
+/*
 class Window : public QWidget
 {
     public:
@@ -48,9 +52,7 @@ class Window : public QWidget
         QLCDNumber *_lcd;
         QSlider *_slider;
     };
-
-int main(int argc, char **argv)
-{
+*/
 /*
     QApplication app (argc, argv);
     QWidget window;
@@ -71,11 +73,13 @@ int main(int argc, char **argv)
     return app.exec();
 */
 
-    QApplication app(argc, argv);
+int main(int argc, char **argv)
+{
+    Babel::QTApplication app(argc, argv);
+    Babel::QTWindow myWindow({1000, 500});
+    Babel::QTButton quitButton(myWindow, "Quit", {100, 100}, {50, 50});
+    Babel::QTScrollBar scrollBar(Babel::VERTICAL, myWindow, {(int)myWindow.getSize().x - 15, 0}, {15, myWindow.getSize().y});
 
-    Window myWindow;
     myWindow.show();
-
-    return app.exec();
-
+    return app.launch();
 }

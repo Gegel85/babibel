@@ -8,10 +8,12 @@
 #include "QTWindow.hpp"
 
 namespace Babel {
-	QTWindow::QTWindow(Vector2<unsigned int> size, QWidget &parent) :
-		QMainWindow(&parent),
-		GUIScreen()
+	QTWindow::QTWindow(Vector2<unsigned int> size, QWidget *parent) :
+		QMainWindow(parent),
+		GUIScreen(),
+		_size(size)
 	{
+		this->setFixedSize(size.x, size.y);
 	}
 
 	void QTWindow::setFullscreen(bool fullscren)
@@ -21,6 +23,16 @@ namespace Babel {
 
 	void QTWindow::setSize(Vector2<unsigned> size)
 	{
+		this->setFixedSize(size.x, size.y);
+	}
 
+	void QTWindow::refresh()
+	{
+
+	}
+
+	Vector2<unsigned> QTWindow::getSize() const
+	{
+		return (this->_size);
 	}
 }

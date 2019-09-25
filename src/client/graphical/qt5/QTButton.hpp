@@ -21,6 +21,7 @@ namespace Babel
 
 		void setText(const std::string &text) override;
 		bool isClicked() const override;
+		void draw(GUIScreen &screen) override;
 
 		// void setToolTip(const std::string &toolTip);
 		// const std::string getToolTip();

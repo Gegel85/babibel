@@ -25,4 +25,9 @@ namespace Babel {
 	{
 		return (this->isDown());
 	}
+
+	void QTButton::draw(GUIScreen &screen)
+	{
+		
+	}
 }

@@ -15,11 +15,14 @@
 namespace Babel {
 	class QTWindow : public QMainWindow, public GUIScreen {
 		public:
-			QTWindow(Vector2<unsigned int> size, QWidget &parent);
+			QTWindow(Vector2<unsigned int> size, QWidget *parent = nullptr);
 			void setFullscreen(bool fullscren = true) override;
 			void setSize(Vector2<unsigned> size) override;
+			void refresh() override;
+			Vector2<unsigned int> getSize() const override;
 
 		private:
+			Vector2<unsigned> _size;
 	};
 }
 #endif

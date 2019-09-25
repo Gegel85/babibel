@@ -27,6 +27,10 @@ add_executable(
 	src/client/graphical/qt5/QTWindow.hpp
 	src/client/graphical/qt5/QTButton.hpp
 	src/client/graphical/qt5/QTButton.cpp
+	src/client/graphical/qt5/QTApplication.hpp
+	src/client/graphical/qt5/QTApplication.cpp
+	src/client/graphical/qt5/QTScrollBar.cpp
+	src/client/graphical/qt5/QTScrollBar.hpp
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp
