@@ -15,11 +15,8 @@ $(CLIENT_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(CLIENT_NAME)
 $(SERVER_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(SERVER_NAME)
 	cp $(BUILD_FOLDER)/$(SERVER_NAME) .
 
-$(BUILD_FOLDER)/$(CLIENT_NAME):
-	cd $(BUILD_FOLDER) && cmake --build .
-
-$(BUILD_FOLDER)/$(SERVER_NAME):
-	cd $(BUILD_FOLDER) && cmake --build .
+$(BUILD_FOLDER)/%:
+	cd $(BUILD_FOLDER) && cmake --build . --target `echo $@ | sed -e "s/$(BUILD_FOLDER)\///"`
 
 $(BUILD_FOLDER):
 	mkdir $(BUILD_FOLDER) && cd $(BUILD_FOLDER) && (conan install .. || conan install .. --build) && cmake .. $(CMAKE_FLAGS)
