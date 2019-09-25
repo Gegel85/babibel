@@ -43,7 +43,9 @@ add_executable(
 	src/server/main.cpp
 	src/server/TcpServer.cpp
 	src/server/TcpServer.hpp
-	src/server/TcpConnection.cpp src/server/TcpConnection.hpp)
+	src/server/TcpConnection.cpp
+	src/server/TcpConnection.hpp
+)
 
 target_link_libraries(
 	babel_server
