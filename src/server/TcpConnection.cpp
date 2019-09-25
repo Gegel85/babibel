@@ -12,38 +12,43 @@
 #include <iostream>
 #include "TcpConnection.hpp"
 
-void TcpConnection::start()
+namespace Babel
 {
-	std::string message_ = "test";
+	void TcpConnection::start()
+	{
+		this->_packet.op = Protocol::HELLO;
+		this->_packet.data = {'\0', '\x01'};
+		this->_buffer = this->_packet;
 
-	boost::asio::async_write(
-		this->_socket,
-		boost::asio::buffer(message_),
-		boost::bind(
-			&TcpConnection::_handleWrite,
-			this->shared_from_this(),
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::bytes_transferred
-		)
-	);
-}
+		boost::asio::async_write(
+			this->_socket,
+			boost::asio::buffer(this->_buffer),
+			boost::bind(
+				&TcpConnection::_handleWrite,
+				this->shared_from_this(),
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred
+			)
+		);
+	}
 
-TcpConnection::Ptr TcpConnection::create(boost::asio::io_context &io_context)
-{
-	return Ptr(new TcpConnection(io_context));
-}
+	TcpConnection::Ptr TcpConnection::create(boost::asio::io_context &io_context)
+	{
+		return Ptr(new TcpConnection(io_context));
+	}
 
-boost::asio::ip::tcp::socket& TcpConnection::socket()
-{
-	return this->_socket;
-}
+	boost::asio::ip::tcp::socket& TcpConnection::socket()
+	{
+		return this->_socket;
+	}
 
-TcpConnection::TcpConnection(boost::asio::io_context &io_context) :
-	_socket(io_context)
-{
-}
+	TcpConnection::TcpConnection(boost::asio::io_context &io_context) :
+		_socket(io_context)
+	{
+	}
 
-void TcpConnection::_handleWrite(const boost::system::error_code &error, size_t bytesTransferred)
-{
-	std::cout << error << " " << bytesTransferred << std::endl;
+	void TcpConnection::_handleWrite(const boost::system::error_code &error, size_t bytesTransferred)
+	{
+		std::cout << error << " " << bytesTransferred << std::endl;
+	}
 }

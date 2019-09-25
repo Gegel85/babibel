@@ -10,38 +10,41 @@
 #include "TcpServer.hpp"
 #include "TcpConnection.hpp"
 
-TcpServer::TcpServer(unsigned int port) :
-	_context(),
-	_acceptor(_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+namespace Babel
 {
-	startAccept();
-}
-
-void TcpServer::handleAccept(TcpConnection::Ptr newConnection, const boost::system::error_code &error)
-{
-	if (!error) {
-		newConnection->start();
+	TcpServer::TcpServer(unsigned int port) :
+		_context(),
+		_acceptor(_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+	{
+		startAccept();
 	}
 
-	startAccept();
-}
+	void TcpServer::handleAccept(TcpConnection::Ptr newConnection, const boost::system::error_code &error)
+	{
+		if (!error) {
+			newConnection->start();
+		}
 
-void TcpServer::startAccept()
-{
-	TcpConnection::Ptr new_connection = TcpConnection::create(this->_context);
+		startAccept();
+	}
 
-	this->_acceptor.async_accept(
-		new_connection->socket(),
-		boost::bind(
-			&TcpServer::handleAccept,
-			this,
-			new_connection,
-			boost::asio::placeholders::error
-		)
-	);
-}
+	void TcpServer::startAccept()
+	{
+		TcpConnection::Ptr new_connection = TcpConnection::create(this->_context);
 
-void TcpServer::run()
-{
-	this->_context.run();
+		this->_acceptor.async_accept(
+			new_connection->socket(),
+			boost::bind(
+				&TcpServer::handleAccept,
+				this,
+				new_connection,
+				boost::asio::placeholders::error
+			)
+		);
+	}
+
+	void TcpServer::run()
+	{
+		this->_context.run();
+	}
 }

@@ -30,6 +30,8 @@ add_executable(
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp
+	src/Protocol.cpp
+	src/Protocol.hpp
 )
 
 target_link_libraries(
@@ -45,6 +47,8 @@ add_executable(
 	src/server/TcpServer.hpp
 	src/server/TcpConnection.cpp
 	src/server/TcpConnection.hpp
+	src/Protocol.cpp
+	src/Protocol.hpp
 )
 
 target_link_libraries(

@@ -14,23 +14,29 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/write.hpp>
+#include "../Protocol.hpp"
 
-class TcpConnection : public boost::enable_shared_from_this<TcpConnection>
+namespace Babel
 {
-public:
-	typedef boost::shared_ptr<TcpConnection> Ptr;
+	class TcpConnection : public boost::enable_shared_from_this<TcpConnection>
+	{
+	public:
+		typedef boost::shared_ptr<TcpConnection> Ptr;
 
-	static Ptr create(boost::asio::io_context& io_context);
-	boost::asio::ip::tcp::socket &socket();
-	void start();
+		static Ptr create(boost::asio::io_context& io_context);
+		boost::asio::ip::tcp::socket &socket();
+		void start();
 
-private:
-	TcpConnection(boost::asio::io_context &io_context);
+	private:
+		TcpConnection(boost::asio::io_context &io_context);
 
-	void _handleWrite(const boost::system::error_code &error, size_t bytesTransferred);
+		void _handleWrite(const boost::system::error_code &error, size_t bytesTransferred);
 
-	boost::asio::ip::tcp::socket _socket;
-};
+		boost::asio::ip::tcp::socket _socket;
+		Protocol::Packet _packet;
+		std::string _buffer;
+	};
+}
 
 
 #endif //CPP_BABEL_2019_TCPCONNECTION_HPP
