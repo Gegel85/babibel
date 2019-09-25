@@ -27,7 +27,7 @@ namespace Babel
 		virtual Vector2<unsigned int> getSize() const = 0;
 		virtual void setFullscreen(bool fullscreen = true) = 0;
 		virtual void setSize(Vector2<unsigned int> size) = 0;
-		virtual void refresh() = 0;
+		virtual bool refresh() = 0;
 	};
 }
 

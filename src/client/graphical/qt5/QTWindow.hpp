@@ -18,7 +18,7 @@ namespace Babel {
 			QTWindow(Vector2<unsigned int> size, QWidget *parent = nullptr);
 			void setFullscreen(bool fullscren = true) override;
 			void setSize(Vector2<unsigned> size) override;
-			void refresh() override;
+			bool refresh() override;
 			Vector2<unsigned int> getSize() const override;
 
 		private:

@@ -26,9 +26,9 @@ namespace Babel {
 		this->setFixedSize(size.x, size.y);
 	}
 
-	void QTWindow::refresh()
+	bool QTWindow::refresh()
 	{
-
+		return (true);
 	}
 
 	Vector2<unsigned> QTWindow::getSize() const

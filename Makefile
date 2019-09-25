@@ -3,6 +3,8 @@ SERVER_NAME = babel_server
 
 NAME = $(CLIENT_NAME) $(SERVER_NAME)
 
+CMAKE_FLAGS =
+
 BUILD_FOLDER = build_folder
 
 all:	$(NAME)
@@ -13,14 +15,11 @@ $(CLIENT_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(CLIENT_NAME)
 $(SERVER_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(SERVER_NAME)
 	cp $(BUILD_FOLDER)/$(SERVER_NAME) .
 
-$(BUILD_FOLDER)/$(CLIENT_NAME):
-	cd $(BUILD_FOLDER) && cmake --build .
-
-$(BUILD_FOLDER)/$(SERVER_NAME):
-	cd $(BUILD_FOLDER) && cmake --build .
+$(BUILD_FOLDER)/%:
+	cd $(BUILD_FOLDER) && cmake --build . --target `echo $@ | sed -e "s/$(BUILD_FOLDER)\///"`
 
 $(BUILD_FOLDER):
-	mkdir $(BUILD_FOLDER) && cd $(BUILD_FOLDER) && (conan install .. || conan install .. --build) && cmake ..
+	mkdir $(BUILD_FOLDER) && cd $(BUILD_FOLDER) && (conan install .. || conan install .. --build) && cmake .. $(CMAKE_FLAGS)
 
 add_remotes:
 	conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
@@ -33,6 +32,10 @@ clean:
 fclean: clean
 	rm -rf $(NAME)
 
-re:	fclean $(NAME)
+re:	fclean all
+
+dbg:	fclean
+dbg:	CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=Debug
+dbg:	all
 
 .PHONY: all re clean fclean add_remotes
