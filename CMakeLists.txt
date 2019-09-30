@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+conan_basic_setup()
 
 add_executable(
 	babel_client
@@ -41,9 +42,9 @@ add_executable(
 )
 
 target_link_libraries(
-	babel_client
-	${CONAN_LIBS}
-	Qt5::Widgets
+  babel_client
+  ${CONAN_LIBS}
+  Qt5::Widgets
 )
 
 add_executable(
