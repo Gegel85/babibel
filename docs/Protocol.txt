@@ -1,0 +1,48 @@
+PROTOCOLE B.A.B.E.L. v0.0.1
+
+# STRUCTURATION D'UN PAQUET
+
+ Range | Length | Nom       | Description
+-----------------------------------------------------------------------------
+   0   |   1    | opcode    | Octet représentant l'instruction dans l'enum `Opcode`.
+ 1 - 4 |   4    | data_size | Taille de la `data`.
+ 5 - 9 |   4    | key       | Clé utilisé pour chiffré la data avec un xor.
+10 - ? |   ?    | data      | data de taille `data_size`.
+
+
+# Opcode
+
+#### 'd' dans la colonne `data_size` signifie que la taille de la data doit être récupérée dans le header ci-dessus
+
+
+ Code | Nom            | data_size | Description
+-----------------------------------------------------------------------------------------------------
+ 0    | OK             | d         | Code générique en cas de succes.x
+ 1    | KO             | d         | Code générique en cas d'erreur.
+ 2    | HELLO          | 2         | Inithialisation du socket, envoie en data la version du protocal.
+ 3    | BYE            | 4         | Fermeture du socket, envoie en data le code retour.
+ 4    | REGISTER       | 64        | (Client) Enregistrement du client, envoie en data le nom d'utilisateur et le mot de passe de longeur 32 maximum chaqu'un. Paddé avec des '\0'.
+ 5    | CONNECT        | 64        | (Client) Connecte le client, même data que pour le REGISTER.
+ 6    | GET_FRIENDS    | d         | (Client) Demande la liste d'amis au serveur, envoie une liste d'ID de chaqu'un 4 octets.
+ 7    | GET_USER_INFOS | 36        | (Client) Renvoie une structure de donnée `User`.
+ 8    | CALL           | 4         | (Client) Envoie au serveur une demande d'apel avec l'ID de l'utilisateur que le client souhaite contacter.
+ 9    | CALL_ACCEPTED  | 6         | (Serveur) Appel accepté. Renvoie une structure `Call`
+ 10   | CALL_REFUSED   | 0         | (Serveur) Appel refusé.
+
+
+# Structures
+
+USER:
+
+ Range | Length | Nom       | Description
+-----------------------------------------------------------------------------
+ 0 - 3 |   4    | ID        | ID de l'utilisateur
+ 4 - 35|   32   | name      | Nom de l'utilisateur.
+ 
+CALL:
+
+ Range | Length | Nom       | Description
+-----------------------------------------------------------------------------
+ 0 - 3 |   4    | IP_ADDR   | Adresse IP du destinataire.
+ 4 - 5 |   2    | PORT      | Port de connection au destinataire.
+
