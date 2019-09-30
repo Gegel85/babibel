@@ -22,9 +22,11 @@ add_executable(
 	src/client/graphical/Widget/Picture.cpp
 	src/client/graphical/Widget/TextBox.hpp
 	src/client/graphical/Widget/TypingBox.hpp
-	src/client/graphical/qt5/QTWindow.cpp
 	src/client/graphical/qt5/QTCursors.hpp
 	src/client/graphical/qt5/QTWindow.hpp
+	src/client/graphical/qt5/QTWindow.cpp
+	src/client/graphical/qt5/myQTWindow.hpp
+	src/client/graphical/qt5/myQTWindow.cpp
 	src/client/graphical/qt5/QTButton.hpp
 	src/client/graphical/qt5/QTButton.cpp
 	src/client/graphical/qt5/QTApplication.hpp
