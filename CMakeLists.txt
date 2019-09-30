@@ -4,7 +4,9 @@ project(CPP_babel_2019)
 set(CMAKE_CXX_STANDARD 17)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
+add_compile_options(-g -O0)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(
@@ -34,8 +36,8 @@ add_executable(
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp
-	src/Protocol.cpp
-	src/Protocol.hpp
+	src/network/Protocol.cpp
+	src/network/Protocol.hpp
 )
 
 target_link_libraries(
@@ -47,13 +49,11 @@ target_link_libraries(
 add_executable(
 	babel_server
 	src/server/main.cpp
-	src/server/TcpServer.cpp
-	src/server/TcpServer.hpp
-	src/server/TcpConnection.cpp
-	src/server/TcpConnection.hpp
-	src/Protocol.cpp
-	src/Protocol.hpp
-)
+	src/network/Socket.cpp
+	src/network/Socket.hpp
+	src/network/Protocol.cpp
+	src/network/Protocol.hpp
+	src/network/SocketExceptions.hpp src/network/ServerSocket.cpp src/network/ServerSocket.hpp src/server/TcpServer.cpp src/server/TcpServer.hpp)
 
 target_link_libraries(
 	babel_server

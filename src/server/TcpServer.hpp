@@ -9,22 +9,17 @@
 #define CPP_BABEL_2019_TCPSERVER_HPP
 
 
-#include <boost/asio/ip/tcp.hpp>
-#include "TcpConnection.hpp"
+#include "../network/ServerSocket.hpp"
 
 namespace Babel
 {
 	class TcpServer {
 	private:
-		void startAccept();
-		void handleAccept(TcpConnection::Ptr newConnection, const boost::system::error_code &error);
-
-		boost::asio::io_context _context;
-		boost::asio::ip::tcp::acceptor _acceptor;
+		ServerSocket _socket;
+		static std::function<void (Socket &)> _handler;
 
 	public:
-		TcpServer(unsigned int port);
-
+		TcpServer(unsigned short port);
 		void run();
 	};
 }

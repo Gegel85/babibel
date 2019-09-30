@@ -1,12 +1,20 @@
 #include <iostream>
-#include <boost/asio/io_service.hpp>
 #include "TcpServer.hpp"
 
-int	main()
+int	main(int argc, char **argv)
 {
-	Babel::TcpServer	server{10800};
+
+	if (argc < 2)
+		std::cout << argv[0] << " <port>" << std::endl;
 
 	try {
+		unsigned		port = std::stoi(argv[1]);
+
+		if (port > 65535)
+			throw std::invalid_argument("Port is not in range 0 - 65535");
+
+		Babel::TcpServer	server(port);
+
 		server.run();
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;

@@ -5,46 +5,60 @@
 ** TcpServer.cpp
 */
 
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
 #include "TcpServer.hpp"
-#include "TcpConnection.hpp"
+#include "../network/Protocol.hpp"
+#include "../network/SocketExceptions.hpp"
 
 namespace Babel
 {
-	TcpServer::TcpServer(unsigned int port) :
-		_context(),
-		_acceptor(_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
-	{
-		startAccept();
-	}
+	std::function<void (Socket &)> TcpServer::_handler{[](Socket &socket){
+		try {
+			Protocol::Packet packet{socket};
 
-	void TcpServer::handleAccept(TcpConnection::Ptr newConnection, const boost::system::error_code &error)
-	{
-		if (!error) {
-			newConnection->start();
+			switch (packet.op) {
+			case Protocol::HELLO:
+				if (packet.data != VERSION_STR) {
+					packet.op = Protocol::BYE;
+					packet.data = Protocol::ExitReason::BAD_VERSION;
+					socket.send(packet);
+					socket.disconnect();
+				}
+				break;
+			case Protocol::BYE:
+				packet.op = Protocol::BYE;
+				packet.data = Protocol::ExitReason::NORMAL_CLOSURE;
+				socket.send(packet);
+				socket.disconnect();
+				break;
+			default:
+				packet.op = Protocol::BYE;
+				packet.data = Protocol::ExitReason::INVALID_OPCODE;
+				socket.send(packet);
+				socket.disconnect();
+			}
+		} catch (TimeoutException &) {
+			Protocol::Packet packet;
+
+			packet.op = Protocol::BYE;
+			packet.data = Protocol::ExitReason::BAD_PACKET;
+			socket.send(packet);
 		}
+	}};
 
-		startAccept();
-	}
-
-	void TcpServer::startAccept()
-	{
-		TcpConnection::Ptr new_connection = TcpConnection::create(this->_context);
-
-		this->_acceptor.async_accept(
-			new_connection->socket(),
-			boost::bind(
-				&TcpServer::handleAccept,
-				this,
-				new_connection,
-				boost::asio::placeholders::error
-			)
-		);
-	}
+	TcpServer::TcpServer(unsigned short port) :
+		_socket(port)
+	{}
 
 	void TcpServer::run()
 	{
-		this->_context.run();
+		Protocol::Packet packet;
+
+		packet.op = Protocol::HELLO;
+		packet.data = VERSION_STR;
+		while (true) {
+			Socket &sock = this->_socket.acceptClient(this->_handler);
+
+			sock.send(packet);
+		}
 	}
 }

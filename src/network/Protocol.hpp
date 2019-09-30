@@ -12,12 +12,18 @@
 #include <vector>
 #include <random>
 #include <string>
+#include "Socket.hpp"
+
+#define VERSION_STR std::string{'\0', '\x01'}
 
 namespace Babel::Protocol
 {
 	enum Opcode {
+		OK,
+		KO,
 		HELLO,
 		BYE,
+		CONNECT,
 		REGISTER,
 		GET_FRIENDS,
 		GET_USER_INFOS,
@@ -28,6 +34,9 @@ namespace Babel::Protocol
 
 	namespace ExitReason {
 		extern std::string NORMAL_CLOSURE;
+		extern std::string BAD_PACKET;
+		extern std::string BAD_VERSION;
+		extern std::string INVALID_OPCODE;
 	}
 
 	class InvalidPacketException : public std::exception {
@@ -48,8 +57,10 @@ namespace Babel::Protocol
 		std::string data;
 
 		Packet() = default;
-		Packet(const std::vector<unsigned char> &vector);
-		Packet &operator=(const std::vector<unsigned char> &vector);
+		Packet(Socket &);
+		Packet(const std::string &);
+		Packet &operator=(Socket &);
+		Packet &operator=(const std::string &);
 		operator std::string();
 	};
 }

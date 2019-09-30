@@ -10,10 +10,10 @@ BUILD_FOLDER = build_folder
 all:	$(NAME)
 
 $(CLIENT_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(CLIENT_NAME)
-	cp $(BUILD_FOLDER)/$(CLIENT_NAME) .
+	cp $(BUILD_FOLDER)/bin/$(CLIENT_NAME) .
 
 $(SERVER_NAME): $(BUILD_FOLDER) $(BUILD_FOLDER)/$(SERVER_NAME)
-	cp $(BUILD_FOLDER)/$(SERVER_NAME) .
+	cp $(BUILD_FOLDER)/bin/$(SERVER_NAME) .
 
 $(BUILD_FOLDER)/%:
 	cd $(BUILD_FOLDER) && cmake --build . --target `echo $@ | sed -e "s/$(BUILD_FOLDER)\///"`
