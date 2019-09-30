@@ -8,6 +8,7 @@ conan_basic_setup()
 
 add_compile_options(-g -O0)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+conan_basic_setup()
 
 add_executable(
 	babel_client
@@ -24,9 +25,11 @@ add_executable(
 	src/client/graphical/Widget/Picture.cpp
 	src/client/graphical/Widget/TextBox.hpp
 	src/client/graphical/Widget/TypingBox.hpp
-	src/client/graphical/qt5/QTWindow.cpp
 	src/client/graphical/qt5/QTCursors.hpp
 	src/client/graphical/qt5/QTWindow.hpp
+	src/client/graphical/qt5/QTWindow.cpp
+	src/client/graphical/qt5/myQTWindow.hpp
+	src/client/graphical/qt5/myQTWindow.cpp
 	src/client/graphical/qt5/QTButton.hpp
 	src/client/graphical/qt5/QTButton.cpp
 	src/client/graphical/qt5/QTApplication.hpp
@@ -41,9 +44,9 @@ add_executable(
 )
 
 target_link_libraries(
-	babel_client
-	${CONAN_LIBS}
-	Qt5::Widgets
+  babel_client
+  ${CONAN_LIBS}
+  Qt5::Widgets
 )
 
 add_executable(

@@ -11,21 +11,28 @@
 #include <opus/opus.h>
 #include <portaudio.h>
 #include "graphical/GUIScreen.hpp"
-#include "graphical/qt5/QTWindow.hpp"
-#include "graphical/qt5/QTButton.hpp"
+#include "graphical/qt5/myQTWindow.hpp"
 #include "graphical/qt5/QTApplication.hpp"
-#include "graphical/qt5/QTScrollBar.hpp"
 
 int main(int argc, char **argv)
 {
-    Babel::QTApplication app(argc, argv);
-    Babel::QTWindow myWindow({1000, 500});
-    Babel::QTButton quitButton(myWindow, "Useless button", {100, 100}, {100, 50});
-    Babel::QTScrollBar scrollBar(Babel::VERTICAL, myWindow, {(int)myWindow.getSize().x - 15, 0}, {15, myWindow.getSize().y});
+	Babel::QTApplication app(argc, argv);
+	Babel::myQTWindow myWindow({1000, 500});
 
-    myWindow.show();
-    return app.launch();
+	myWindow.window.show();
+	return app.launch();
 }
+
+/*
+int main(int argc, char **argv)
+{
+	Babel::TempWindow	window{{640, 480}};
+
+	do {
+		//Some stuff
+	} while (window.refresh());
+}
+*/
 
 /*
 namespace Babel
@@ -59,14 +66,5 @@ namespace Babel
 			return true;
 		};
 	};
-}
-
-int main(int argc, char **argv)
-{
-	Babel::TempWindow	window{{640, 480}};
-
-	do {
-		//Some stuff
-	} while (window.refresh());
 }
 */
