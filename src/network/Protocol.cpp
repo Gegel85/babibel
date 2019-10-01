@@ -37,7 +37,7 @@ namespace Babel::Protocol
 
 		this->data.clear();
 		this->op ^= key.at(0);
-		for (int i = 1; i < data.size(); i++)
+		for (int i = 1; i <= data.size(); i++)
 			this->data.push_back(data.at(i - 1) ^ key.at(i % 4));
 		return *this;
 	}
@@ -68,7 +68,7 @@ namespace Babel::Protocol
 			throw InvalidPacketException("Packet is too large");
 
 		unsigned int key = this->_random();
-		std::string data;
+		std::string codedData;
 		std::string keyStr = {
 			static_cast<char>(key >> 24U),
 			static_cast<char>(key >> 16U),
@@ -76,8 +76,8 @@ namespace Babel::Protocol
 			static_cast<char>(key)
 		};
 
-		for (int i = 1; i < this->data.size(); i++)
-			data.push_back(this->data[i - 1] ^ keyStr[i % 4]);
+		for (int i = 1; i <= this->data.size(); i++)
+			codedData.push_back(this->data.at(i - 1) ^ keyStr[i % 4]);
 
 		return std::string{
 			static_cast<char>(this->op ^ keyStr[0]),
@@ -85,11 +85,18 @@ namespace Babel::Protocol
 			static_cast<char>(this->data.size() >> 16U),
 			static_cast<char>(this->data.size() >> 8U),
 			static_cast<char>(this->data.size())
-		} + keyStr + data;
+		} + keyStr + codedData;
 	}
 
-	std::string ExitReason::NORMAL_CLOSURE = {'\0', '\0', '\0', '\0'};
-	std::string ExitReason::BAD_PACKET = {'\0', '\0', '\0', '\x01'};
-	std::string ExitReason::BAD_VERSION = {'\0', '\0', '\0', '\x02'};
-	std::string ExitReason::INVALID_OPCODE = {'\0', '\0', '\0', '\x03'};
+	std::string ErrorReason::NORMAL_CLOSURE =	{'\0', '\0', '\0', '\x00'};
+	std::string ErrorReason::BAD_PACKET =		{'\0', '\0', '\0', '\x01'};
+	std::string ErrorReason::BAD_VERSION =		{'\0', '\0', '\0', '\x02'};
+	std::string ErrorReason::BAD_OPCODE =		{'\0', '\0', '\0', '\x03'};
+	std::string ErrorReason::BAD_CREDENTIALS =	{'\0', '\0', '\0', '\x04'};
+	std::string ErrorReason::ALREADY_CONNECTED =	{'\0', '\0', '\0', '\x05'};
+	std::string ErrorReason::ALREADY_USED =		{'\0', '\0', '\0', '\x06'};
+	std::string ErrorReason::NOT_CONNECTED =	{'\0', '\0', '\0', '\x07'};
+	std::string ErrorReason::NOT_AUTHORIZED =	{'\0', '\0', '\0', '\x08'};
+	std::string ErrorReason::NOT_FOUND =		{'\0', '\0', '\0', '\x09'};
+	std::string ErrorReason::REMOTE_NOT_CONNECTED =	{'\0', '\0', '\0', '\x0A'};
 }

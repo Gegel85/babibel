@@ -26,6 +26,7 @@ namespace Babel
 
 	public:
 		explicit ServerSocket(unsigned short port);
+		~ServerSocket();
 		Socket &acceptClient(const std::function<void (Socket &)> &handler = {});
 	};
 }
