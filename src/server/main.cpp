@@ -9,7 +9,7 @@ int	main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	//try {
+	try {
 		unsigned		port = std::stoi(argv[1]);
 
 		if (port > 65535)
@@ -18,8 +18,8 @@ int	main(int argc, char **argv)
 		Babel::TcpServer	server(port);
 
 		server.run();
-	//} catch (std::exception& e) {
-	//	std::cerr << e.what() << std::endl;
-	//}
+	} catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 	return EXIT_SUCCESS;
 }
