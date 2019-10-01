@@ -6,8 +6,8 @@ PROTOCOLE B.A.B.E.L. v0.0.1
 -----------------------------------------------------------------------------
    0   |   1    | opcode    | Octet représentant l'instruction dans l'enum `Opcode`.
  1 - 4 |   4    | data_size | Taille de la `data`.
- 5 - 9 |   4    | key       | Clé utilisée pour chiffrer la data avec un xor.
-10 - ? |   ?    | data      | data de taille `data_size`.
+ 5 - 8 |   4    | key       | Clé utilisée pour chiffrer la data avec un xor.
+ 9 - ? |   ?    | data      | data de taille `data_size`.
 
 
 # Opcode
