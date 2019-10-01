@@ -88,8 +88,15 @@ namespace Babel::Protocol
 		} + keyStr + data;
 	}
 
-	std::string ExitReason::NORMAL_CLOSURE = {'\0', '\0', '\0', '\0'};
-	std::string ExitReason::BAD_PACKET = {'\0', '\0', '\0', '\x01'};
-	std::string ExitReason::BAD_VERSION = {'\0', '\0', '\0', '\x02'};
-	std::string ExitReason::INVALID_OPCODE = {'\0', '\0', '\0', '\x03'};
+	std::string ErrorReason::NORMAL_CLOSURE =	{'\0', '\0', '\0', '\x00'};
+	std::string ErrorReason::BAD_PACKET =		{'\0', '\0', '\0', '\x01'};
+	std::string ErrorReason::BAD_VERSION =		{'\0', '\0', '\0', '\x02'};
+	std::string ErrorReason::BAD_OPCODE =		{'\0', '\0', '\0', '\x03'};
+	std::string ErrorReason::BAD_CREDENTIALS =	{'\0', '\0', '\0', '\x04'};
+	std::string ErrorReason::ALREADY_CONNECTED =	{'\0', '\0', '\0', '\x05'};
+	std::string ErrorReason::ALREADY_USED =		{'\0', '\0', '\0', '\x06'};
+	std::string ErrorReason::NOT_CONNECTED =	{'\0', '\0', '\0', '\x07'};
+	std::string ErrorReason::NOT_AUTHORIZED =	{'\0', '\0', '\0', '\x08'};
+	std::string ErrorReason::NOT_FOUND =		{'\0', '\0', '\0', '\x09'};
+	std::string ErrorReason::REMOTE_NOT_CONNECTED =	{'\0', '\0', '\0', '\x0A'};
 }

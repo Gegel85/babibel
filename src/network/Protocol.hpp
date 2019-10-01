@@ -28,15 +28,23 @@ namespace Babel::Protocol
 		GET_FRIENDS,
 		GET_USER_INFOS,
 		CALL,
-		CALL_ACCEPTED,
 		CALL_REFUSED,
+		CALL_ACCEPTED,
 	};
 
-	namespace ExitReason {
+	namespace ErrorReason {
 		extern std::string NORMAL_CLOSURE;
 		extern std::string BAD_PACKET;
 		extern std::string BAD_VERSION;
-		extern std::string INVALID_OPCODE;
+		extern std::string BAD_OPCODE;
+		extern std::string BAD_CREDENTIALS;
+		extern std::string ALREADY_CONNECTED;
+		extern std::string ALREADY_USED;
+		extern std::string ALREADY_CALLING;
+		extern std::string NOT_CONNECTED;
+		extern std::string NOT_AUTHORIZED;
+		extern std::string NOT_FOUND;
+		extern std::string REMOTE_NOT_CONNECTED;
 	}
 
 	class InvalidPacketException : public std::exception {

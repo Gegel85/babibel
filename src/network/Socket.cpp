@@ -174,7 +174,7 @@ namespace Babel
 
 		FD_ZERO(&set);
 		FD_SET(this->_socket, &set);
-		if (select(0, &set, nullptr, nullptr, &time) <= 0)
+		if (select(FD_SETSIZE, &set, nullptr, nullptr, &time) <= 0)
 			throw TimeoutException("Connection timed out after " + std::to_string(timeout) + " second(s)");
 	}
 
@@ -185,7 +185,7 @@ namespace Babel
 
 		FD_ZERO(&set);
 		FD_SET(this->_socket, &set);
-		if (this->_opened && select(0, &set, nullptr, nullptr, &time) == -1)
+		if (this->_opened && select(FD_SETSIZE, &set, nullptr, nullptr, &time) == -1)
 			this->_opened = false;
 		return (this->_opened);
 	}

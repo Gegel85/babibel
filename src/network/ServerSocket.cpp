@@ -26,19 +26,22 @@ namespace Babel
 			throw ListenFailedException(getLastSocketError());
 	}
 
+	ServerSocket::~ServerSocket()
+	{
+		for (auto &thread : this->_threads)
+			if (thread.joinable())
+				thread.join();
+	}
+
 	Socket& ServerSocket::acceptClient(const std::function<void(Socket &)> &handler)
 	{
 		if (!handler)
 			throw InvalidHandlerException("The data handler sent to acceptClient is empty");
 
 		int i = 0;
-		/*struct sockaddr_in address{};
 
-		address.sin_port = htons(this->_port);
-		address.sin_family = AF_INET;
-		address.sin_addr.s_addr = INADDR_ANY;*/
-
-		while (i < this->_clients.size() && this->_clients[i++]->isOpen());
+		while (i < this->_clients.size() && this->_clients[i]->isOpen())
+			i++;
 		if (i == this->_clients.size())
 			this->_clients.emplace_back(new Socket());
 
