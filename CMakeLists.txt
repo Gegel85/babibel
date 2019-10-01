@@ -61,5 +61,4 @@ add_executable(
 target_link_libraries(
 	babel_server
 	${CONAN_LIBS}
-	Qt5::Widgets
 )

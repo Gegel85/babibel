@@ -73,5 +73,7 @@ namespace Babel::Protocol
 	};
 }
 
+std::ostream &operator<<(std::ostream &stream, Babel::Protocol::Packet &packet);
+
 
 #endif //CPP_BABEL_2019_PROTOCOL_HPP

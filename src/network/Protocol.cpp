@@ -5,6 +5,7 @@
 ** Protocol.cpp
 */
 
+#include <iostream>
 #include "Protocol.hpp"
 
 namespace Babel::Protocol
@@ -27,8 +28,8 @@ namespace Babel::Protocol
 		std::string data;
 
 		this->op = socket.read(1, 2).at(0);
-		key = socket.read(4, 2);
 		lenStr = socket.read(4, 2);
+		key = socket.read(4, 2);
 		length= static_cast<unsigned char>(lenStr[0] << 24U) +
 			static_cast<unsigned char>(lenStr[1] << 16U) +
 			static_cast<unsigned char>(lenStr[2] << 8U) +
@@ -99,4 +100,17 @@ namespace Babel::Protocol
 	std::string ErrorReason::NOT_AUTHORIZED =	{'\0', '\0', '\0', '\x08'};
 	std::string ErrorReason::NOT_FOUND =		{'\0', '\0', '\0', '\x09'};
 	std::string ErrorReason::REMOTE_NOT_CONNECTED =	{'\0', '\0', '\0', '\x0A'};
+}
+
+std::ostream &operator<<(std::ostream &stream, Babel::Protocol::Packet &packet)
+{
+	stream << "op: " << static_cast<unsigned>(packet.op);
+	stream << " data: [";
+	for (int i = 0; i < packet.data.size(); i++) {
+		if (i)
+			stream << ", ";
+		stream << static_cast<unsigned>(static_cast<unsigned char>(packet.data[i]));
+	}
+	stream << "] (" << packet.data.size() << "B)";
+	return stream;
 }
