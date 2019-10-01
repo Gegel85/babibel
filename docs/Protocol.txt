@@ -46,3 +46,23 @@ CALL:
  0 - 3 |   4    | IP_ADDR   | Adresse IP du destinataire.
  4 - 5 |   2    | PORT      | Port de connection au destinataire.
 
+
+# ErrorReason
+
+Enum réprésentant le code d'erreur.
+
+
+ Code | Nom               | Description
+ -------------------------------
+ 0    | NORMAL_CLOSURE     | La connection a été fermée sans erreur.
+ 1    | BAD_PACKET         | Le paquet envoyé est incorect/comprompu.
+ 2    | BAD_VERSION        | La version du protocole n'est pas la même.
+ 3    | BAD_OPCODE         | L'`opcode` est invalide et ne correspond à aucune opération.
+ 4    | BAD_CREDENTIALS    | Le nom d'utilisateur ou le mot de passe est incorect.
+ 5    | ALREADY_CONNECTED  | L'utilisateur est déjà connecté.
+ 6    | ALREADY_USED       | La ressource demandé est utilisé par un autre client.
+ 7    | NOT_CONNECTED      | L'utilisateur n'est pas connecté et ne peux donc pas utiliser cette opération.
+ 8    | NOT_AUTHORIZED     | L'utilisateur n'est pas autorisé à utiliser cette opération.
+ 9    | NOT_FOUND          | La ressource demandé n'a pas été trouvé.
+ 10   | REMOTE_NOT_CONNCTED| Le destinataire a fermé la connection.
+ 
