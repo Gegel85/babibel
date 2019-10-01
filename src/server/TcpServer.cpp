@@ -70,12 +70,11 @@ namespace Babel
 		while (true) {
 			try {
 				this->_socket.waitToBeReady(1);
-				for (bool done = false; !done;) {
+				for (bool done = false; !done; ) {
 					done = true;
 					for (auto it = this->_users.begin(); it != this->_users.end(); )
 						if (!it->first->isOpen()) {
 							this->_users.erase(it);
-							it = this->_users.begin();
 							done = false;
 							break;
 						} else

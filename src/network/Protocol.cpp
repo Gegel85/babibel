@@ -37,7 +37,7 @@ namespace Babel::Protocol
 
 		this->data.clear();
 		this->op ^= key.at(0);
-		for (int i = 1; i < data.size(); i++)
+		for (int i = 1; i <= data.size(); i++)
 			this->data.push_back(data.at(i - 1) ^ key.at(i % 4));
 		return *this;
 	}
@@ -68,7 +68,7 @@ namespace Babel::Protocol
 			throw InvalidPacketException("Packet is too large");
 
 		unsigned int key = this->_random();
-		std::string data;
+		std::string codedData;
 		std::string keyStr = {
 			static_cast<char>(key >> 24U),
 			static_cast<char>(key >> 16U),
@@ -76,8 +76,8 @@ namespace Babel::Protocol
 			static_cast<char>(key)
 		};
 
-		for (int i = 1; i < this->data.size(); i++)
-			data.push_back(this->data[i - 1] ^ keyStr[i % 4]);
+		for (int i = 1; i <= this->data.size(); i++)
+			codedData.push_back(this->data.at(i - 1) ^ keyStr[i % 4]);
 
 		return std::string{
 			static_cast<char>(this->op ^ keyStr[0]),
@@ -85,7 +85,7 @@ namespace Babel::Protocol
 			static_cast<char>(this->data.size() >> 16U),
 			static_cast<char>(this->data.size() >> 8U),
 			static_cast<char>(this->data.size())
-		} + keyStr + data;
+		} + keyStr + codedData;
 	}
 
 	std::string ErrorReason::NORMAL_CLOSURE =	{'\0', '\0', '\0', '\x00'};
