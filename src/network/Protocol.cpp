@@ -28,12 +28,8 @@ namespace Babel::Protocol
 		std::string data;
 
 		this->op = socket.read(1, 2).at(0);
-		lenStr = socket.read(4, 2);
+		length = uintFromByteString(socket.read(4, 2));
 		key = socket.read(4, 2);
-		length= static_cast<unsigned char>(lenStr[0] << 24U) +
-			static_cast<unsigned char>(lenStr[1] << 16U) +
-			static_cast<unsigned char>(lenStr[2] << 8U) +
-			static_cast<unsigned char>(lenStr[3]);
 		data = socket.read(length, 2);
 
 		this->data.clear();
@@ -45,11 +41,7 @@ namespace Babel::Protocol
 
 	Packet &Packet::operator=(const std::string &str)
 	{
-		unsigned int length =
-			static_cast<unsigned char>(str.at(1) << 24U) +
-			static_cast<unsigned char>(str.at(2) << 16U) +
-			static_cast<unsigned char>(str.at(3) << 8U) +
-			static_cast<unsigned char>(str.at(4));
+		unsigned int length = uintFromByteString(str.substr(1, 4));
 		std::string key{str.begin() + 5, str.begin() + 9};
 
 		this->data.clear();
@@ -63,30 +55,37 @@ namespace Babel::Protocol
 		return *this;
 	}
 
+
+	unsigned Packet::uintFromByteString(const std::string &str)
+	{
+		return	static_cast<unsigned char>(str.at(1) << 24U) +
+			static_cast<unsigned char>(str.at(2) << 16U) +
+			static_cast<unsigned char>(str.at(3) << 8U) +
+			static_cast<unsigned char>(str.at(4));
+	}
+
+	std::string Packet::toByteString(unsigned value)
+	{
+		return {static_cast<char>(value >> 24U),
+			static_cast<char>(value >> 16U),
+			static_cast<char>(value >> 8U),
+			static_cast<char>(value)};
+	}
+
 	Packet::operator std::string()
 	{
 		if (this->data.size() >= UINT32_MAX)
 			throw InvalidPacketException("Packet is too large");
 
-		unsigned int key = this->_random();
 		std::string codedData;
-		std::string keyStr = {
-			static_cast<char>(key >> 24U),
-			static_cast<char>(key >> 16U),
-			static_cast<char>(key >> 8U),
-			static_cast<char>(key)
-		};
+		std::string keyStr = toByteString(this->_random());
 
 		for (int i = 1; i <= this->data.size(); i++)
 			codedData.push_back(this->data.at(i - 1) ^ keyStr[i % 4]);
 
 		return std::string{
-			static_cast<char>(this->op ^ keyStr[0]),
-			static_cast<char>(this->data.size() >> 24U),
-			static_cast<char>(this->data.size() >> 16U),
-			static_cast<char>(this->data.size() >> 8U),
-			static_cast<char>(this->data.size())
-		} + keyStr + codedData;
+			static_cast<char>(this->op ^ keyStr[0])
+		} + toByteString(this->data.size()) + keyStr + codedData;
 	}
 
 	std::string ErrorReason::NORMAL_CLOSURE =	{'\0', '\0', '\0', '\x00'};

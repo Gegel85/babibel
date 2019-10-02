@@ -24,6 +24,14 @@ namespace Babel
 			unsigned	beingCalled;
 		};
 
+		struct User {
+			unsigned id;
+			std::string name;
+			std::string passwd;
+		};
+
+		std::vector<User> _createdUsers;
+		unsigned _lastUserID = 0;
 		ServerSocket _socket;
 		std::function<void (Socket &)> _handler;
 		std::map<Socket *, Client> _users;

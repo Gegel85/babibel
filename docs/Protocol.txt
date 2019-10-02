@@ -21,13 +21,14 @@ PROTOCOLE B.A.B.E.L. v0.0.1
  1    | KO             | d         | Code générique en cas d'erreur.
  2    | HELLO          | 2         | Initialisation du socket, envoie en data la version du protocole.
  3    | BYE            | 4         | Fermeture du socket, envoie en data le code retour.
- 4    | REGISTER       | 64        | (Client) Enregistrement du client, envoie en data le nom d'utilisateur et le mot de passe de longueur 32 chacun. (Remplir les trous avec des bytes nuls)
- 5    | CONNECT        | 64        | (Client) Connecte le client. Même data que pour le REGISTER.
- 6    | GET_FRIENDS    | d         | (Client) Demande la liste d'amis au serveur, envoie une liste d'ID de chacun 4 octets.
- 7    | GET_USER_INFOS | 36        | (Client) Renvoie une structure de donnée `User`.
- 8    | CALL           | 4         | Envoie au (ou reçoit du) serveur une demande d'appel avec l'ID de l'utilisateur que le client souhaite contacter.
- 9    | CALL_ACCEPTED  | 6         | Appel accepté. Renvoie une structure `Call`
- 10   | CALL_REFUSED   | 0         | Appel refusé.
+ 4    | LOGIN          | 64        | (Client) Connecte le client. Même data que pour le REGISTER.
+ 5    | LOGOUT         | 0         | (Client) Deconnecte le client.
+ 6    | REGISTER       | 64        | (Client) Enregistrement du client, envoie en data le nom d'utilisateur et le mot de passe de longueur 32 chacun. (Remplir les trous avec des bytes nuls)
+ 7    | GET_FRIENDS    | d         | (Client) Demande la liste d'amis au serveur, envoie une liste d'ID de chacun 4 octets.
+ 8    | GET_USER_INFOS | 36        | (Client) Renvoie une structure de donnée `User`.
+ 9    | CALL           | 4         | Envoie au (ou reçoit du) serveur une demande d'appel avec l'ID de l'utilisateur que le client souhaite contacter.
+ 10   | CALL_ACCEPTED  | 6         | Appel accepté. Renvoie une structure `Call`
+ 11   | CALL_REFUSED   | 0         | Appel refusé.
 
 
 # Structures
