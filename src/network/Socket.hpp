@@ -21,12 +21,12 @@ namespace Babel
 {
 	class Socket {
 	public:
-		Socket();
+		explicit Socket();
 		Socket(SOCKET sock, bool connected);
 		~Socket();
 		bool			isOpen();
-		virtual void		connect(const std::string &host, unsigned short portno);
-		virtual void		connect(unsigned int ip, unsigned short portno);
+		virtual void		connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
+		virtual void		connect(unsigned int ip, unsigned short portno, int protocol = IPPROTO_TCP);
 		virtual void		disconnect();
 		virtual void		send(const std::string &);
 		virtual std::string	read(int size, int timeout = -1);
@@ -40,7 +40,6 @@ namespace Babel
 	protected:
 		SOCKET	_socket = INVALID_SOCKET;
 		bool	_opened = false;
-
 	};
 }
 

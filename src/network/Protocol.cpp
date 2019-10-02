@@ -58,10 +58,10 @@ namespace Babel::Protocol
 
 	unsigned Packet::uintFromByteString(const std::string &str)
 	{
-		return	static_cast<unsigned char>(str.at(1) << 24U) +
-			static_cast<unsigned char>(str.at(2) << 16U) +
-			static_cast<unsigned char>(str.at(3) << 8U) +
-			static_cast<unsigned char>(str.at(4));
+		return	static_cast<unsigned>(str.at(0) << 24U) +
+			static_cast<unsigned>(str.at(1) << 16U) +
+			static_cast<unsigned>(str.at(2) << 8U) +
+			static_cast<unsigned char>(str.at(3));
 	}
 
 	std::string Packet::toByteString(unsigned value)

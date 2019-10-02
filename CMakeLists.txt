@@ -6,7 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_compile_options(-g -O0)
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	add_compile_options(-g -O0)
+endif ()
+
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 conan_basic_setup()
 
@@ -56,7 +59,12 @@ add_executable(
 	src/network/Socket.hpp
 	src/network/Protocol.cpp
 	src/network/Protocol.hpp
-	src/network/SocketExceptions.hpp src/network/ServerSocket.cpp src/network/ServerSocket.hpp src/server/TcpServer.cpp src/server/TcpServer.hpp)
+	src/network/SocketExceptions.hpp
+	src/network/ServerSocket.cpp
+	src/network/ServerSocket.hpp
+	src/server/TcpServer.cpp
+	src/server/TcpServer.hpp
+)
 
 target_link_libraries(
 	babel_server
