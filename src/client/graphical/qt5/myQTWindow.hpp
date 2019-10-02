@@ -10,15 +10,18 @@
 
 #include <vector>
 #include <QWidget>
+#include <QObject>
 #include "../GUIScreen.hpp"
 #include "QTButton.hpp"
 #include "QTScrollBar.hpp"
 #include "QTWindow.hpp"
+#include "QTTextBox.hpp"
 
 namespace Babel
 {
-	class myQTWindow
+	class myQTWindow : public QObject
 	{
+	Q_OBJECT
 	public:
 		myQTWindow(Vector2<unsigned int> size, QWidget *parent = nullptr);
 		QTWindow window;
@@ -29,6 +32,8 @@ namespace Babel
 	private:
 		QTScrollBar _scrollBar;
 		QTButton _myButton;
+		QTTextBox _IPTextBox;
+		QTTextBox _portTextBox;
 //		std::vector<Babel::QTButton &> _users;
 	};
 }
