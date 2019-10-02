@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2019)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_AUTOMOC ON)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
@@ -39,6 +40,8 @@ add_executable(
 	src/client/graphical/qt5/QTApplication.cpp
 	src/client/graphical/qt5/QTScrollBar.cpp
 	src/client/graphical/qt5/QTScrollBar.hpp
+	src/client/graphical/qt5/QTTextBox.cpp
+	src/client/graphical/qt5/QTTextBox.hpp
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp
