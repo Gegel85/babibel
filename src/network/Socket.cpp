@@ -97,8 +97,11 @@ namespace Babel
 			throw SocketCreationErrorException(strerror(errno));
 
 		/* connect the socket */
-		if (::connect(this->_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+		if (::connect(this->_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+			closesocket(this->_socket);
+			this->_socket = INVALID_SOCKET;
 			throw ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
+		}
 		this->_opened = true;
 	}
 
@@ -137,7 +140,7 @@ namespace Babel
 			if (bytes <= 0) {
 				if (size < 0)
 					break;
-				throw EOFException(strerror(errno));
+				throw EOFException(bytes ? strerror(errno) : "The connection was closed");
 			}
 			for (int i = 0; i < bytes; i++)
 				buf.push_back(buffer[i]);
@@ -154,7 +157,7 @@ namespace Babel
 			int bytes = ::send(this->_socket, &msg.c_str()[pos], msg.length() - pos, 0);
 
 			if (bytes <= 0)
-				throw EOFException(strerror(errno));
+				throw EOFException(bytes ? strerror(errno) : "The connection was closed");
 			pos += bytes;
 		}
 	}
@@ -166,15 +169,15 @@ namespace Babel
 
 	void Socket::waitToBeReady(int timeout)
 	{
-		if (timeout < 0)
-			return;
-
 		FD_SET	set;
 		timeval time = {timeout, 0};
 
 		FD_ZERO(&set);
 		FD_SET(this->_socket, &set);
-		if (select(FD_SETSIZE, &set, nullptr, nullptr, &time) == 0)
+
+		int found = select(FD_SETSIZE, &set, nullptr, nullptr, (timeout > 0 ? &time : nullptr));
+
+		if (found == 0)
 			throw TimeoutException("Connection timed out after " + std::to_string(timeout) + " second(s)");
 	}
 

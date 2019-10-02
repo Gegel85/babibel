@@ -42,8 +42,13 @@ add_executable(
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp
+	src/network/Socket.cpp
+	src/network/Socket.hpp
 	src/network/Protocol.cpp
 	src/network/Protocol.hpp
+	src/network/SocketExceptions.hpp
+	src/network/ServerSocket.cpp
+	src/network/ServerSocket.hpp
 )
 
 target_link_libraries(
