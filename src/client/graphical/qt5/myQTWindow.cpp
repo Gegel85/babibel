@@ -22,10 +22,13 @@ namespace Babel
 
 	void myQTWindow::renameButton()
 	{
-//		std::string new_text = "Renamed button";
 		std::string new_text = this->_IPTextBox.getPlainText() + ":" + this->_portTextBox.getPlainText();
 		int lenght_new_text = new_text.length();
 
+		if (lenght_new_text > 20) {
+			lenght_new_text = 20;
+			new_text = new_text.substr(0, 20) + "...";
+		}
 		if (lenght_new_text != this->_myButton.getText().length())
 			this->_myButton.setGeometry(this->_myButton.getPosition().x, this->_myButton.getPosition().y, lenght_new_text * 10, this->_myButton.getSize().y);
 		this->_myButton.setText(new_text);
