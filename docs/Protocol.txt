@@ -6,8 +6,8 @@ PROTOCOLE B.A.B.E.L. v0.0.1
 -----------------------------------------------------------------------------
    0   |   1    | opcode    | Octet représentant l'instruction dans l'enum `Opcode`.
  1 - 4 |   4    | data_size | Taille de la `data`.
- 5 - 9 |   4    | key       | Clé utilisé pour chiffré la data avec un xor.
-10 - ? |   ?    | data      | data de taille `data_size`.
+ 5 - 8 |   4    | key       | Clé utilisée pour chiffrer la data avec un xor.
+ 9 - ? |   ?    | data      | data de taille `data_size`.
 
 
 # Opcode
@@ -17,15 +17,15 @@ PROTOCOLE B.A.B.E.L. v0.0.1
 
  Code | Nom            | data_size | Description
 -----------------------------------------------------------------------------------------------------
- 0    | OK             | d         | Code générique en cas de succes.x
+ 0    | OK             | d         | Code générique en cas de succès.
  1    | KO             | d         | Code générique en cas d'erreur.
- 2    | HELLO          | 2         | Inithialisation du socket, envoie en data la version du protocal.
+ 2    | HELLO          | 2         | Initialisation du socket, envoie en data la version du protocole.
  3    | BYE            | 4         | Fermeture du socket, envoie en data le code retour.
- 4    | REGISTER       | 64        | (Client) Enregistrement du client, envoie en data le nom d'utilisateur et le mot de passe de longeur 32 maximum chaqu'un. Paddé avec des '\0'.
- 5    | CONNECT        | 64        | (Client) Connecte le client, même data que pour le REGISTER.
- 6    | GET_FRIENDS    | d         | (Client) Demande la liste d'amis au serveur, envoie une liste d'ID de chaqu'un 4 octets.
+ 4    | REGISTER       | 64        | (Client) Enregistrement du client, envoie en data le nom d'utilisateur et le mot de passe de longueur 32 chacun. (Remplir les trous avec des bytes nuls)
+ 5    | CONNECT        | 64        | (Client) Connecte le client. Même data que pour le REGISTER.
+ 6    | GET_FRIENDS    | d         | (Client) Demande la liste d'amis au serveur, envoie une liste d'ID de chacun 4 octets.
  7    | GET_USER_INFOS | 36        | (Client) Renvoie une structure de donnée `User`.
- 8    | CALL           | 4         | Envoie au (ou reçoit du) serveur une demande d'apel avec l'ID de l'utilisateur que le client souhaite contacter.
+ 8    | CALL           | 4         | Envoie au (ou reçoit du) serveur une demande d'appel avec l'ID de l'utilisateur que le client souhaite contacter.
  9    | CALL_ACCEPTED  | 6         | Appel accepté. Renvoie une structure `Call`
  10   | CALL_REFUSED   | 0         | Appel refusé.
 
@@ -34,17 +34,17 @@ PROTOCOLE B.A.B.E.L. v0.0.1
 
 USER:
 
- Range | Length | Nom       | Description
+ Bytes | Taille | Nom       | Description
 -----------------------------------------------------------------------------
  0 - 3 |   4    | ID        | ID de l'utilisateur
  4 - 35|   32   | name      | Nom de l'utilisateur.
  
 CALL:
 
- Range | Length | Nom       | Description
+ Bytes | Taille | Nom       | Description
 -----------------------------------------------------------------------------
- 0 - 3 |   4    | IP_ADDR   | Adresse IP du destinataire.
- 4 - 5 |   2    | PORT      | Port de connection au destinataire.
+ 0 - 3 |   4    | IP_ADDR   | Adresse IP du destinataire. Si l'ip est 0.0.0.0, alors le client doit attendre une connexion.
+ 4 - 5 |   2    | PORT      | Port de connexion au destinataire.
 
 
 # ErrorReason
@@ -52,17 +52,17 @@ CALL:
 Enum réprésentant le code d'erreur.
 
 
- Code | Nom               | Description
+ Code | Nom                  | Description
  -------------------------------
- 0    | NORMAL_CLOSURE     | La connection a été fermée sans erreur.
- 1    | BAD_PACKET         | Le paquet envoyé est incorect/comprompu.
- 2    | BAD_VERSION        | La version du protocole n'est pas la même.
- 3    | BAD_OPCODE         | L'`opcode` est invalide et ne correspond à aucune opération.
- 4    | BAD_CREDENTIALS    | Le nom d'utilisateur ou le mot de passe est incorect.
- 5    | ALREADY_CONNECTED  | L'utilisateur est déjà connecté.
- 6    | ALREADY_USED       | La ressource demandé est utilisé par un autre client.
- 7    | NOT_CONNECTED      | L'utilisateur n'est pas connecté et ne peux donc pas utiliser cette opération.
- 8    | NOT_AUTHORIZED     | L'utilisateur n'est pas autorisé à utiliser cette opération.
- 9    | NOT_FOUND          | La ressource demandé n'a pas été trouvé.
- 10   | REMOTE_NOT_CONNCTED| Le destinataire a fermé la connection.
+ 0    | NORMAL_CLOSURE       | La connexion a été fermée sans erreur.
+ 1    | BAD_PACKET           | Le paquet envoyé est incorrect/corrompu.
+ 2    | BAD_VERSION          | La version du protocole n'est pas la même.
+ 3    | BAD_OPCODE           | L'`opcode` est invalide et ne correspond à aucune opération.
+ 4    | BAD_CREDENTIALS      | Le nom d'utilisateur ou le mot de passe est incorrect.
+ 5    | ALREADY_CONNECTED    | L'utilisateur est déjà connecté.
+ 6    | ALREADY_USED         | La ressource demandée est utilisé par un autre client.
+ 7    | NOT_CONNECTED        | L'utilisateur n'est pas connecté et ne peux donc pas utiliser cette opération.
+ 8    | NOT_AUTHORIZED       | L'utilisateur n'est pas autorisé à utiliser cette opération.
+ 9    | NOT_FOUND            | La ressource demandée n'a pas été trouvé.
+ 10   | REMOTE_NOT_CONNECTED | Le destinataire n'est pas connecté au serveur.
  
