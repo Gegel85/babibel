@@ -40,12 +40,13 @@ namespace Babel
 
 		int i = 0;
 
-		while (i < this->_clients.size() && this->_clients[i]->isOpen())
+		while (i < this->_clients.size() && this->_clients.at(i)->isOpen())
 			i++;
+
 		if (i == this->_clients.size())
 			this->_clients.emplace_back(new Socket());
 
-		Socket &socket = *this->_clients[i];
+		Socket &socket = *this->_clients.at(i);
 
 		socket.setSocket(::accept(this->getSocket(), nullptr, nullptr), true);
 		this->_threads.emplace_back([&socket, handler, this](){

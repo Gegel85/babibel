@@ -23,7 +23,8 @@ namespace Babel::Protocol
 		KO,
 		HELLO,
 		BYE,
-		CONNECT,
+		LOGIN,
+		LOGOUT,
 		REGISTER,
 		GET_FRIENDS,
 		GET_USER_INFOS,
@@ -70,6 +71,10 @@ namespace Babel::Protocol
 		Packet &operator=(Socket &);
 		Packet &operator=(const std::string &);
 		operator std::string();
+
+		static std::string	toByteString(unsigned value);
+		static unsigned		uintFromByteString(
+			const std::string &str);
 	};
 }
 

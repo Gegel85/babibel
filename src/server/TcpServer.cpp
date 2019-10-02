@@ -37,30 +37,52 @@ namespace Babel
 				std::cout << "Received new packet (" << packet << ")" << std::endl;
 
 				switch (packet.op) {
-					case Protocol::HELLO:
-						if (packet.data.size() != 2)
-							return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_PACKET);
-						std::cout << "Client version is ";
-						std::cout << static_cast<unsigned>(static_cast<unsigned char>(packet.data[0] << 8) + static_cast<unsigned char>(packet.data[1]));
-						std::cout << std::endl;
-						if (packet.data != VERSION_STR)
-							return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_VERSION);
-						break;
-					case Protocol::BYE:
-						return TcpServer::disconnectClient(socket, Protocol::ErrorReason::NORMAL_CLOSURE);
-					case Protocol::OK:
-					case Protocol::KO:
-						return TcpServer::sendPacket(socket, Protocol::OK, "");
-					case Protocol::CONNECT:
-					case Protocol::REGISTER:
-					case Protocol::GET_FRIENDS:
-					case Protocol::GET_USER_INFOS:
-					case Protocol::CALL:
-					case Protocol::CALL_ACCEPTED:
-					case Protocol::CALL_REFUSED:
-						return;
-					default:
-						return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_OPCODE);
+				case Protocol::HELLO:
+					if (packet.data.size() != 2)
+						return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_PACKET);
+					std::cout << "Client version is ";
+					std::cout << static_cast<unsigned>(static_cast<unsigned char>(packet.data[0] << 8) + static_cast<unsigned char>(packet.data[1]));
+					std::cout << std::endl;
+					if (packet.data != VERSION_STR)
+						return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_VERSION);
+					break;
+				case Protocol::BYE:
+					return TcpServer::disconnectClient(socket, Protocol::ErrorReason::NORMAL_CLOSURE);
+				case Protocol::OK:
+				case Protocol::KO:
+					return TcpServer::sendPacket(socket, Protocol::OK, "");
+				case Protocol::LOGIN:
+				case Protocol::REGISTER:
+					if (packet.data.size() != 32)
+						return TcpServer::sendPacket(socket, Protocol::KO, Protocol::ErrorReason::BAD_PACKET);
+					if (this->_users.at(&socket).connected)
+						return TcpServer::sendPacket(socket, Protocol::KO, Protocol::ErrorReason::ALREADY_CONNECTED);
+					this->_users.at(&socket).connected = true;
+					this->_users.at(&socket).userId = this->_lastUserID;
+					this->_createdUsers.push_back({
+						this->_lastUserID,
+						packet.data.substr(0, 16),
+						packet.data.substr(16, 16)
+					});
+					return TcpServer::sendPacket(
+						socket,
+						Protocol::OK,
+						Protocol::Packet::toByteString(this->_lastUserID++) + packet.data.substr(0, 16)
+					);
+				case Protocol::LOGOUT:
+					if (!this->_users.at(&socket).connected)
+						return TcpServer::sendPacket(socket, Protocol::KO, Protocol::ErrorReason::NOT_CONNECTED);
+					this->_users.at(&socket).connected = false;
+					this->_users.at(&socket).userId = 0;
+					return TcpServer::sendPacket(socket, Protocol::OK, "");
+				case Protocol::GET_FRIENDS:
+				case Protocol::GET_USER_INFOS:
+				case Protocol::CALL:
+				case Protocol::CALL_ACCEPTED:
+				case Protocol::CALL_REFUSED:
+					return;
+				default:
+					return TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_OPCODE);
 				}
 			} catch (TimeoutException &) {
 				TcpServer::disconnectClient(socket, Protocol::ErrorReason::BAD_PACKET);
