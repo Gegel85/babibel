@@ -14,6 +14,7 @@
 #include <string>
 #include "Socket.hpp"
 
+//! @brief Protocole de communication entre client/serveur
 namespace Babel::Network::Protocol
 {
 	//! @brief Version actuelle du protocole.

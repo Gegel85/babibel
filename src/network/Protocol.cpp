@@ -15,7 +15,7 @@ namespace Babel::Network::Protocol
 		*this = vector;
 	}
 
-	Packet::Packet(Babel::Network::Socket &socket)
+	Packet::Packet(Network::Socket &socket)
 	{
 		*this = socket;
 	}
