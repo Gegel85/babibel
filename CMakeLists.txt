@@ -42,6 +42,8 @@ add_executable(
 	src/client/graphical/qt5/QTScrollBar.hpp
 	src/client/graphical/qt5/QTTypingBox.cpp
 	src/client/graphical/qt5/QTTypingBox.hpp
+	src/client/graphical/qt5/QTTextBox.cpp
+	src/client/graphical/qt5/QTTextBox.hpp
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/main.cpp

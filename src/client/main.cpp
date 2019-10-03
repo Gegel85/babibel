@@ -15,7 +15,7 @@
 
 namespace Babel::Client
 {
-	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end)
+	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end, std::string &lastError)
 	{
 		try {
 			Network::Protocol::Packet packet;
@@ -37,17 +37,19 @@ namespace Babel::Client
 			std::cerr << "An error occurred and the connection to the server will be interrupted: " << e.what() << std::endl;
 			if (socket.isOpen())
 				socket.disconnect();
+			lastError = e.what();
 		}
 	}
 
 	int babel(std::string ip, unsigned short port, int argc, char **argv)
 	{
+		std::string lastError = "";
 		bool end = false;
 		Network::Socket socket;
 		std::thread clientThread{
-			[&socket, &ip, &port, &end](){
+			[&socket, &ip, &port, &end, &lastError](){
 				while (!end) {
-					handleConnection(socket, ip, port, end);
+					handleConnection(socket, ip, port, end, lastError);
 					if (end)
 						break;
 					std::cout << "Reconnecting in 10 seconds..." << std::endl;
@@ -56,7 +58,7 @@ namespace Babel::Client
 			}
 		};
 		QTApplication app(argc, argv);
-		BabelQTClient qtClient(socket, {1000, 500});
+		BabelQTClient qtClient(socket, lastError, {1000, 500});
 
 		qtClient.window.show();
 

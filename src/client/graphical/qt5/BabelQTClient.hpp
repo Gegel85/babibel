@@ -20,6 +20,7 @@
 #include "QTScrollBar.hpp"
 #include "QTWindow.hpp"
 #include "QTTypingBox.hpp"
+#include "QTTextBox.hpp"
 #include "QTCursors.hpp"
 
 namespace Babel::Client
@@ -28,25 +29,27 @@ namespace Babel::Client
 	{
 	Q_OBJECT
 	public:
-		BabelQTClient(Babel::Network::Socket &socket, Vector2<unsigned int> size, QWidget *parent = nullptr);
+		BabelQTClient(Babel::Network::Socket &socket, const std::string &lastError, Vector2<unsigned int> size, QWidget *parent = nullptr);
+		~BabelQTClient();
 		QTWindow window;
 
 	public slots:
 //		void renameButton();
 		void sendConnectionLogs();
-		void refreshToKnowIfConnectedToServer();
 
 	private:
 		QTScrollBar _scrollBar;
 
 		QTButton _logButton;
-		QTButton _serverLoggedButton;
-		QTButton _refreshConnectServer;
+		QTTextBox _serverLogged;
 
 		QTTypingBox _username;
 		QTTypingBox _password;
 
-		Babel::Network::Socket _socket;
+		Babel::Network::Socket &_socket;
+		std::thread _thread;
+		bool _end = false;
+		const std::string &_lastError;
 	};
 }
 
