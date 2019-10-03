@@ -8,7 +8,7 @@
 #include <thread>
 #include <iostream>
 #include "../network/Socket.hpp"
-#include "graphical/qt5/myQTWindow.hpp"
+#include "graphical/qt5/BabelQTClient.hpp"
 #include "graphical/qt5/QTApplication.hpp"
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
@@ -50,9 +50,9 @@ namespace Babel::Client
 			}
 		};
 		QTApplication app(argc, argv);
-		myQTWindow myWindow({1000, 500});
+		BabelQTClient qtClient(socket, {1000, 500});
 
-		myWindow.window.show();
+		qtClient.window.show();
 
 		int code = app.launch();
 
