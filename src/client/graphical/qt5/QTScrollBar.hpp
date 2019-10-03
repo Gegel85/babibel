@@ -11,7 +11,7 @@
 #include <QScrollBar>
 #include "../Widget/ScrollBar.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	enum QTOrientation {
 		HORIZONTAL = Qt::Horizontal,

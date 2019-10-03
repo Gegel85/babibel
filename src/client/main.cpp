@@ -13,26 +13,26 @@
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	int babel(std::string ip, unsigned short port, int argc, char **argv)
 	{
 		bool end = false;
-		BabelNetwork::Socket socket;
+		Babel::Network::Socket socket;
 		std::thread clientThread{
 			[&socket, &ip, &port, &end](){
 				while (!end) {
 					try {
-						BabelNetwork::Protocol::Packet packet;
+						Babel::Network::Protocol::Packet packet;
 
-						packet.op = BabelNetwork::Protocol::HELLO;
+						packet.op = Babel::Network::Protocol::HELLO;
 						packet.data = VERSION_STR;
 						socket.connect(ip, port);
 						socket.send(packet);
 						while (socket.isOpen() && !end) {
 							try {
 								socket.waitToBeReady(1);
-							} catch (BabelNetwork::TimeoutException &) {
+							} catch (Babel::Network::TimeoutException &) {
 								continue;
 							}
 							packet = socket;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	return BabelClient::babel(argv[1], port, argc, argv);
+	return Babel::Client::babel(argv[1], port, argc, argv);
 }
 
 /*

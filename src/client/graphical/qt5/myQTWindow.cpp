@@ -7,7 +7,7 @@
 
 #include "myQTWindow.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	myQTWindow::myQTWindow(Vector2<unsigned int> size, QWidget *parent) :
 		window(size, parent),

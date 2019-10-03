@@ -15,7 +15,7 @@
 
 #define MAX_SOCKETS 32
 
-namespace BabelNetwork
+namespace Babel::Network
 {
     //! class hérité de Socket
 	class ServerSocket : public Socket {

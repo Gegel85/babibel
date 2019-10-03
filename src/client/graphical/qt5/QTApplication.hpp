@@ -10,7 +10,7 @@
 
 #include <QtWidgets/QApplication>
 
-namespace BabelClient
+namespace Babel::Client
 {
 	class QTApplication : public QApplication {
 	public:

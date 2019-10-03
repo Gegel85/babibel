@@ -7,7 +7,7 @@
 
 #include "TextBox.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	TextBox::TextBox(const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),

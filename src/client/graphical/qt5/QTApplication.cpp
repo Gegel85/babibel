@@ -7,7 +7,7 @@
 
 #include "QTApplication.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	QTApplication::QTApplication(int &ac, char **av) :
 		QApplication(ac, av)

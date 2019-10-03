@@ -8,14 +8,14 @@
 #include <iostream>
 #include "Protocol.hpp"
 
-namespace BabelNetwork::Protocol
+namespace Babel::Network::Protocol
 {
 	Packet::Packet(const std::string &vector)
 	{
 		*this = vector;
 	}
 
-	Packet::Packet(BabelNetwork::Socket &socket)
+	Packet::Packet(Babel::Network::Socket &socket)
 	{
 		*this = socket;
 	}
@@ -101,7 +101,7 @@ namespace BabelNetwork::Protocol
 	std::string ErrorReason::REMOTE_NOT_CONNECTED =	{'\0', '\0', '\0', '\x0A'};
 }
 
-std::ostream &operator<<(std::ostream &stream, BabelNetwork::Protocol::Packet &packet)
+std::ostream &operator<<(std::ostream &stream, Babel::Network::Protocol::Packet &packet)
 {
 	stream << "op: " << static_cast<unsigned>(packet.op);
 	stream << " data: [";

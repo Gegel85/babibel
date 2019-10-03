@@ -11,7 +11,7 @@
 #include <QTextEdit>
 #include "../Widget/TextBox.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	class QTTextBox : public TextBox, public QTextEdit {
 	public:

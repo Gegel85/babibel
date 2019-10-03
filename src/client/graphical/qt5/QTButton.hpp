@@ -13,7 +13,7 @@
 
 //#include "Cursors.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	class QTButton : public Button, public QPushButton {
 	public:

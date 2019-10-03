@@ -7,7 +7,7 @@
 
 #include "Widget.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	Widget::Widget(Vector2<int> position, Vector2<unsigned> size) :
 		_position(position),

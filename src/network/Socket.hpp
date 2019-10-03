@@ -17,7 +17,7 @@
 #endif
 #include <string>
 
-namespace BabelNetwork
+namespace Babel::Network
 {
 	//! @brief Implémentation custom des sockets.
 	class Socket {

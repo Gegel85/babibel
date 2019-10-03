@@ -7,7 +7,7 @@
 
 #include "QTTextBox.hpp"
 
-namespace BabelClient
+namespace Babel::Client
 {
 	QTTextBox::QTTextBox(QWidget &parent, const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		QTextEdit(QString(text.c_str()), &parent),
