@@ -34,7 +34,6 @@ namespace Babel::Client
 		QTWindow window;
 
 	public slots:
-//		void renameButton();
 		void sendConnectionLogs();
 
 	private:

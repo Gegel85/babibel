@@ -27,8 +27,9 @@ namespace Babel::Client
 		}),
 		_lastError(lastError)
 	{
+		this->window.setWindowTitle("Skipe");
+		this->window.setWindowIcon("Assets/Images/skipe-logo.png");
 		this->_logButton.setCursor(POINTINGHANDCURSOR);
-//		this->_serverLoggedButton.setEnabled(false);
 		QObject::connect(&this->_logButton, SIGNAL(released()), this, SLOT(sendConnectionLogs()));
 	}
 
@@ -42,6 +43,5 @@ namespace Babel::Client
 	{
 		std::string username = this->_username.getPlainText();
 		std::string password = this->_password.getPlainText();
-
 	}
 }
