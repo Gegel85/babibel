@@ -13,7 +13,7 @@
 #include "../data/Vector2.hpp"
 #include "Widget/Widget.hpp"
 
-namespace Babel
+namespace Babel::Client
 {
 	class GUIScreen {
 	protected:

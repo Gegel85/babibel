@@ -21,7 +21,7 @@ typedef fd_set FD_SET;
 #define closesocket(socket) close(socket)
 #endif
 
-namespace Babel
+namespace Babel::Network
 {
 	std::string Socket::getLastSocketError()
 	{

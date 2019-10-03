@@ -7,7 +7,7 @@
 
 #include "TypingBox.hpp"
 
-namespace Babel {
+namespace Babel::Client {
 	TypingBox::TypingBox(const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
 		_text(text)

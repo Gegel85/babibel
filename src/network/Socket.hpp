@@ -17,24 +17,78 @@
 #endif
 #include <string>
 
-namespace Babel
+namespace Babel::Network
 {
+	//! @brief Implémentation custom des sockets.
 	class Socket {
 	public:
 		explicit Socket();
 		Socket(SOCKET sock, bool connected);
-		~Socket();
-		bool			isOpen();
-		virtual void		connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
-		virtual void		connect(unsigned int ip, unsigned short portno, int protocol = IPPROTO_TCP);
-		virtual void		disconnect();
-		virtual void		send(const std::string &);
-		virtual std::string	read(int size, int timeout = -1);
-		virtual std::string	readUntilEOF(int timeout = -1);
-		SOCKET			getSocket();
-		void			setSocket(SOCKET sock, bool connected);
-		void			waitToBeReady(int timeout);
 
+		//! @brief Destructeur
+		//! @details Ferme automatiquement le Socket quand il est détruit.
+		~Socket();
+
+		//! @brief Renvoie un booleen pour savoir si le Socket est connecté.
+		bool	isOpen();
+
+		//! @brief Ouvre une connection avec un nom d'hote.
+		//! @details Cette méthode récupère l'adresse ip de l'hote, puis appelle connect(ip_address, portno, protocol).
+		//! @param host Nom de l'host.
+		//! @param portno Numéro du port.
+		//! @param protocol Protocole à utiliser.
+		//! @throw AlreadyOpenedException
+		//! @throw HostNotFoundException
+		virtual void		connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
+
+		//! @brief Ouvre une connection avec une adresse ip.
+		//! @param ip Adresse IP du destinataire.
+		//! @param portno Numéro du port.
+		//! @param protocol Protocole à utiliser.
+		//! @throw AlreadyOpenedException
+		//! @throw SocketCreationErrorException
+		//! @throw ConnectException
+		virtual void	connect(unsigned int ip, unsigned short portno, int protocol = IPPROTO_TCP);
+
+		//! @brief Déconnecte le Socket.
+		//! @throw NotConnectedException
+		virtual void	disconnect();
+
+		//! @brief Envoie des données au destinataire.
+		//! @throw EOFException
+		virtual void	send(const std::string &);
+
+		//! @brief Lis les données reçus depuis le destinataire.
+		//! @param size Taille des données à lire, -1 pour lire jusqu'à fermeture de la connection.
+		//! @param timeout Temps maximum d'attente avant de lever TimeoutException.
+		//! @return Données lues dans le Socket.
+		//! @throw TimeoutException
+		//! @throw EOFException
+		virtual std::string	read(int size, int timeout = -1);
+
+		//! @brief Lis toutes les données reçues depuis le destinataire jusqu'à fermeture de la connection.
+		//! @note Équivaut à Socket.read(-1, timeout).
+		virtual std::string	readUntilEOF(int timeout = -1);
+
+		//! @brief Renvoie le SOCKET système.
+		//! @return SOCKET système Unix ou Windows.
+		SOCKET	getSocket();
+
+		//! @brief Lie un SOCKET système à l'objet.
+		//! @param sock SOCKET système.
+		//! @param connected Booleen represantant l'état du SOCKET.
+		//! @throw AlreadyOpenedException
+		void	setSocket(SOCKET sock, bool connected);
+
+		//! @brief Attend que le Socket soit prêt en lecture.
+		//! @param timeout Temps d'attente avant de lever l'exception TimeoutException.
+		//! @note Si une valeur négative est envoyée, le Socket attend jusqu'à ce qu'il soit prêt.
+		//! @throw TimeoutException
+		void	waitToBeReady(int timeout);
+
+		//! @brief Renvoie la dernière erreur survenue du Socket.
+		//! @return Chaîne de caractères contenant la dernière erreur survenue.
+		//! @warning La valeur est sucéptible de changer si d'autres appels systèmes ont été fait entre la dernière erreur du Socket et l'appel de cette fonction !
 		static std::string	getLastSocketError();
 
 	protected:

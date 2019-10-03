@@ -1,5 +1,33 @@
 PROTOCOLE B.A.B.E.L. v0.0.1
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@          OUTDATED        @@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+For check protocol doc, please look at html doc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # STRUCTURATION D'UN PAQUET
 
  Range | Length | Nom       | Description

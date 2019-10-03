@@ -15,7 +15,7 @@ int	main(int argc, char **argv)
 		if (port > 65535)
 			throw std::invalid_argument("Port is not in range 0 - 65535");
 
-		Babel::TcpServer	server(port);
+		Babel::Server::TcpServer	server(port);
 
 		server.run();
 	} catch (std::exception& e) {

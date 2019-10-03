@@ -17,7 +17,7 @@
 #include "QTWindow.hpp"
 #include "QTTextBox.hpp"
 
-namespace Babel
+namespace Babel::Client
 {
 	class myQTWindow : public QObject
 	{

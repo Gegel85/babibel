@@ -13,26 +13,26 @@
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
 
-namespace Babel
+namespace Babel::Client
 {
 	int babel(std::string ip, unsigned short port, int argc, char **argv)
 	{
 		bool end = false;
-		Babel::Socket socket;
+		Babel::Network::Socket socket;
 		std::thread clientThread{
 			[&socket, &ip, &port, &end](){
 				while (!end) {
 					try {
-						Babel::Protocol::Packet packet;
+						Babel::Network::Protocol::Packet packet;
 
-						packet.op = Protocol::HELLO;
+						packet.op = Babel::Network::Protocol::HELLO;
 						packet.data = VERSION_STR;
 						socket.connect(ip, port);
 						socket.send(packet);
 						while (socket.isOpen() && !end) {
 							try {
 								socket.waitToBeReady(1);
-							} catch (TimeoutException &) {
+							} catch (Babel::Network::TimeoutException &) {
 								continue;
 							}
 							packet = socket;
@@ -49,8 +49,8 @@ namespace Babel
 				}
 			}
 		};
-		Babel::QTApplication app(argc, argv);
-		Babel::myQTWindow myWindow({1000, 500});
+		QTApplication app(argc, argv);
+		myQTWindow myWindow({1000, 500});
 
 		myWindow.window.show();
 
@@ -85,5 +85,5 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	return Babel::babel(argv[1], port, argc, argv);
+	return Babel::Client::babel(argv[1], port, argc, argv);
 }

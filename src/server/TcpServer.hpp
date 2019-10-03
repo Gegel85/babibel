@@ -13,7 +13,7 @@
 #include "../network/ServerSocket.hpp"
 #include "../network/Protocol.hpp"
 
-namespace Babel
+namespace Babel::Server
 {
 	class TcpServer {
 	private:
@@ -32,13 +32,13 @@ namespace Babel
 
 		std::vector<User> _createdUsers;
 		unsigned _lastUserID = 0;
-		ServerSocket _socket;
-		std::function<void (Socket &)> _handler;
-		std::map<Socket *, Client> _users;
+		Babel::Network::ServerSocket _socket;
+		std::function<void (Babel::Network::Socket &)> _handler;
+		std::map<Babel::Network::Socket *, Client> _users;
 
 	public:
-		static void sendPacket(Socket &, Protocol::Opcode op, const std::string &data);
-		static void disconnectClient(Socket &, const std::string &code);
+		static void sendPacket(Babel::Network::Socket &, Babel::Network::Protocol::Opcode op, const std::string &data);
+		static void disconnectClient(Babel::Network::Socket &, const std::string &code);
 
 		TcpServer(unsigned short port);
 		void run();

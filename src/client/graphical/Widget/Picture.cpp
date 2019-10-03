@@ -7,7 +7,7 @@
 
 #include "Picture.hpp"
 
-namespace Babel {
+namespace Babel::Client {
 	Picture::Picture(const std::string &path, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
 		_path(path)

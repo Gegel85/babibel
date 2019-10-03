@@ -7,7 +7,7 @@
 
 #include "QTWindow.hpp"
 
-namespace Babel {
+namespace Babel::Client {
 	QTWindow::QTWindow(Vector2<unsigned int> size, QWidget *parent) :
 		QMainWindow(parent),
 		GUIScreen(),

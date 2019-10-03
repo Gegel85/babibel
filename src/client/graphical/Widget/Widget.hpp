@@ -11,7 +11,7 @@
 #include <string>
 #include "../../data/Vector2.hpp"
 
-namespace Babel
+namespace Babel::Client
 {
 	class GUIScreen;
 	class Widget {

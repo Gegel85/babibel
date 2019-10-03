@@ -10,7 +10,7 @@
 
 #include "Widget.hpp"
 
-namespace Babel
+namespace Babel::Client
 {
 	class Picture : public Widget {
 	protected:

@@ -12,7 +12,7 @@
 #include <exception>
 #include <string>
 
-namespace Babel
+namespace Babel::Network
 {
 	class BaseException : public std::exception {
 	private:
