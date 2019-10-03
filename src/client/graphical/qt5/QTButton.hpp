@@ -20,6 +20,7 @@ namespace Babel
 		QTButton(QWidget &parent, const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 
 		void setText(const std::string &text) override;
+		
 		bool isClicked() const override;
 		void draw(GUIScreen &screen) override;
 
