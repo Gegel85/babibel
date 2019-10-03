@@ -55,9 +55,9 @@ add_executable(
 )
 
 target_link_libraries(
-  babel_client
-  ${CONAN_LIBS}
-  Qt5::Widgets
+	babel_client
+	${CONAN_LIBS}
+	Qt5::Widgets
 )
 
 add_executable(

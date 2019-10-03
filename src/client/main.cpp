@@ -15,35 +15,41 @@
 
 namespace Babel::Client
 {
+	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end)
+	{
+		try {
+			Network::Protocol::Packet packet;
+
+			packet.op = Network::Protocol::HELLO;
+			packet.data = VERSION_STR;
+			socket.connect(ip, port);
+			socket.send(packet);
+			while (socket.isOpen() && !end) {
+				try {
+					socket.waitToBeReady(1);
+				} catch (Network::Exceptions::TimeoutException &) {
+					continue;
+				}
+				packet = socket;
+				std::cout << "Server sent packet " << packet << std::endl;
+			}
+		} catch (std::exception &e) {
+			std::cerr << "An error occurred and the connection to the server will be interrupted: " << e.what() << std::endl;
+			if (socket.isOpen())
+				socket.disconnect();
+		}
+	}
+
 	int babel(std::string ip, unsigned short port, int argc, char **argv)
 	{
 		bool end = false;
-		Babel::Network::Socket socket;
+		Network::Socket socket;
 		std::thread clientThread{
 			[&socket, &ip, &port, &end](){
 				while (!end) {
-					try {
-						Babel::Network::Protocol::Packet packet;
-
-						packet.op = Babel::Network::Protocol::HELLO;
-						packet.data = VERSION_STR;
-						socket.connect(ip, port);
-						socket.send(packet);
-						while (socket.isOpen() && !end) {
-							try {
-								socket.waitToBeReady(1);
-							} catch (Babel::Network::TimeoutException &) {
-								continue;
-							}
-							packet = socket;
-							std::cout << "Server sent packet " << packet << std::endl;
-						}
+					handleConnection(socket, ip, port, end);
+					if (end)
 						break;
-					} catch (std::exception &e) {
-						std::cerr << "An error occurred and the connection to the server will be interrupted: " << e.what() << std::endl;
-						if (socket.isOpen())
-							socket.disconnect();
-					}
 					std::cout << "Reconnecting in 10 seconds..." << std::endl;
 					std::this_thread::sleep_for(std::chrono::seconds(10));
 				}

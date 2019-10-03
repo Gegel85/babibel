@@ -21,9 +21,9 @@ namespace Babel::Network
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
 		if (bind(this->_socket, (struct sockaddr *)&address, sizeof(address)) == -1)
-			throw BindFailedException(getLastSocketError());
+			throw Exceptions::BindFailedException(getLastSocketError());
 		if (listen(this->_socket, MAX_SOCKETS) == -1)
-			throw ListenFailedException(getLastSocketError());
+			throw Exceptions::ListenFailedException(getLastSocketError());
 	}
 
 	ServerSocket::~ServerSocket()
@@ -36,7 +36,7 @@ namespace Babel::Network
 	Socket& ServerSocket::acceptClient(const std::function<void(Socket &)> &handler)
 	{
 		if (!handler)
-			throw InvalidHandlerException("The data handler sent to acceptClient is empty");
+			throw Exceptions::InvalidHandlerException("The data handler sent to acceptClient is empty");
 
 		int i = 0;
 
@@ -56,7 +56,7 @@ namespace Babel::Network
 				try {
 					sock.waitToBeReady(1);
 					handler(sock);
-				} catch (TimeoutException &) {
+				} catch (Exceptions::TimeoutException &) {
 				} catch (std::exception &e) {
 					std::cerr << "Error while receiving data " << e.what() << std::endl;
 					try { sock.disconnect(); } catch (std::exception &) {}

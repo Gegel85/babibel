@@ -69,12 +69,12 @@ namespace Babel::Network
 		struct hostent	*server;
 
 		if (this->isOpen())
-			throw AlreadyOpenedException("This socket is already opened");
+			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		/* lookup the ip address */
 		server = gethostbyname(host.c_str());
 		if (server == nullptr)
-			throw HostNotFoundException("Cannot find host '" + host + "'");
+			throw Exceptions::HostNotFoundException("Cannot find host '" + host + "'");
 
 		this->connect(*reinterpret_cast<unsigned *>(server->h_addr), portno, protocol);
 	}
@@ -84,7 +84,7 @@ namespace Babel::Network
 		struct sockaddr_in	serv_addr = {};
 
 		if (this->isOpen())
-			throw AlreadyOpenedException("This socket is already opened");
+			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		/* fill in the structure */
 		serv_addr.sin_family = AF_INET;
@@ -94,13 +94,13 @@ namespace Babel::Network
 		/* create the socket */
 		this->_socket = socket(AF_INET, SOCK_STREAM, protocol);
 		if (this->_socket == INVALID_SOCKET)
-			throw SocketCreationErrorException(strerror(errno));
+			throw Exceptions::SocketCreationErrorException(strerror(errno));
 
 		/* connect the socket */
 		if (::connect(this->_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 			closesocket(this->_socket);
 			this->_socket = INVALID_SOCKET;
-			throw ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
+			throw Exceptions::ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
 		}
 		this->_opened = true;
 	}
@@ -108,7 +108,7 @@ namespace Babel::Network
 	void Socket::disconnect()
 	{
 		if (!this->isOpen())
-			throw NotConnectedException("This socket is not opened");
+			throw Exceptions::NotConnectedException("This socket is not opened");
 		closesocket(this->_socket);
 		this->_opened = false;
 	}
@@ -121,7 +121,7 @@ namespace Babel::Network
 	void Socket::setSocket(SOCKET sock, bool connected)
 	{
 		if (this->isOpen())
-			throw AlreadyOpenedException("This socket is already opened");
+			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		this->_socket = sock;
 		this->_opened = connected;
@@ -140,7 +140,7 @@ namespace Babel::Network
 			if (bytes <= 0) {
 				if (size < 0)
 					break;
-				throw EOFException(bytes ? strerror(errno) : "The connection was closed");
+				throw Exceptions::EOFException(bytes ? strerror(errno) : "The connection was closed");
 			}
 			for (int i = 0; i < bytes; i++)
 				buf.push_back(buffer[i]);
@@ -157,7 +157,7 @@ namespace Babel::Network
 			int bytes = ::send(this->_socket, &msg.c_str()[pos], msg.length() - pos, 0);
 
 			if (bytes <= 0)
-				throw EOFException(bytes ? strerror(errno) : "The connection was closed");
+				throw Exceptions::EOFException(bytes ? strerror(errno) : "The connection was closed");
 			pos += bytes;
 		}
 	}
@@ -178,7 +178,7 @@ namespace Babel::Network
 		int found = select(FD_SETSIZE, &set, nullptr, nullptr, (timeout > 0 ? &time : nullptr));
 
 		if (found == 0)
-			throw TimeoutException("Connection timed out after " + std::to_string(timeout) + " second(s)");
+			throw Exceptions::TimeoutException("Connection timed out after " + std::to_string(timeout) + " second(s)");
 	}
 
 	bool	Socket::isOpen()

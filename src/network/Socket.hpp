@@ -24,6 +24,7 @@ namespace Babel::Network
 	public:
 		explicit Socket();
 		Socket(SOCKET sock, bool connected);
+		Socket(Socket &) = delete;
 
 		//! @brief Destructeur
 		//! @details Ferme automatiquement le Socket quand il est détruit.
@@ -39,7 +40,7 @@ namespace Babel::Network
 		//! @param protocol Protocole à utiliser.
 		//! @throw AlreadyOpenedException
 		//! @throw HostNotFoundException
-		virtual void		connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
+		virtual void	connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
 
 		//! @brief Ouvre une connection avec une adresse ip.
 		//! @param ip Adresse IP du destinataire.
