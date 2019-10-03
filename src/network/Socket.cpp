@@ -118,7 +118,7 @@ namespace Babel::Network
 		return this->_socket;
 	}
 
-	void Socket::setSocket(SOCKET sock, bool connected)
+	void Socket::setSocket(SOCKET sock)
 	{
 		if (this->isOpen())
 			throw Exceptions::AlreadyOpenedException("This socket is already opened");

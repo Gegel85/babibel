@@ -77,9 +77,8 @@ namespace Babel::Network
 
 		//! @brief Lie un SOCKET système à l'objet.
 		//! @param sock SOCKET système.
-		//! @param connected Booleen represantant l'état du SOCKET.
 		//! @throw AlreadyOpenedException
-		void	setSocket(SOCKET sock, bool connected);
+		void	setSocket(SOCKET soc);
 
 		//! @brief Attend que le Socket soit prêt en lecture.
 		//! @param timeout Temps d'attente avant de lever l'exception TimeoutException.
