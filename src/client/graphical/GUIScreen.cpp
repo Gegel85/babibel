@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "GUIScreen.hpp"
 
-namespace Babel
+namespace BabelClient
 {
 	unsigned int GUIScreen::addWidget(std::shared_ptr<Widget> widget)
 	{

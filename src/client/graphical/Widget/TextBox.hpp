@@ -10,7 +10,7 @@
 
 #include "Widget.hpp"
 
-namespace Babel
+namespace BabelClient
 {
 	class TextBox : public Widget {
 	protected:

@@ -7,7 +7,7 @@
 
 #include "ScrollBar.hpp"
 
-namespace Babel {
+namespace BabelClient {
 	ScrollBar::ScrollBar(Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),
 		_maximum(0),

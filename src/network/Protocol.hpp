@@ -14,7 +14,7 @@
 #include <string>
 #include "Socket.hpp"
 
-namespace Babel::Protocol
+namespace BabelNetwork::Protocol
 {
 	//! @brief Version actuelle du protocole.
 	#define VERSION_STR std::string{'\0', '\x01'}
@@ -154,7 +154,7 @@ namespace Babel::Protocol
 	};
 }
 
-std::ostream &operator<<(std::ostream &stream, Babel::Protocol::Packet &packet);
+std::ostream &operator<<(std::ostream &stream, BabelNetwork::Protocol::Packet &packet);
 
 
 #endif //CPP_BABEL_2019_PROTOCOL_HPP

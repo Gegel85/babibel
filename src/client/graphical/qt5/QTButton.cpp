@@ -7,7 +7,7 @@
 
 #include "QTButton.hpp"
 
-namespace Babel {
+namespace BabelClient {
 	QTButton::QTButton(QWidget &parent, const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Button(text, position, size),
 		QPushButton(QString(this->_text.c_str()), &parent)

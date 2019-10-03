@@ -12,7 +12,7 @@
 #include <QtWidgets/QMainWindow>
 #include "../GUIScreen.hpp"
 
-namespace Babel {
+namespace BabelClient {
 	class QTWindow : public QMainWindow, public GUIScreen {
 	public:
 		QTWindow(Vector2<unsigned int> size, QWidget *parent = nullptr);

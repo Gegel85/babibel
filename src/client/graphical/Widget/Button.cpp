@@ -7,7 +7,7 @@
 
 #include "Button.hpp"
 
-namespace Babel
+namespace BabelClient
 {
 	Button::Button(const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Widget(position, size),

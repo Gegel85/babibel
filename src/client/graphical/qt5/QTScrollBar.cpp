@@ -7,7 +7,7 @@
 
 #include "QTScrollBar.hpp"
 
-namespace Babel
+namespace BabelClient
 {
 	QTScrollBar::QTScrollBar(QTOrientation orientation, QWidget &parent, Vector2<int> position, Vector2<unsigned> size) :
 		ScrollBar(position, size),

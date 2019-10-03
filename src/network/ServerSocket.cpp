@@ -9,7 +9,7 @@
 #include "ServerSocket.hpp"
 #include "SocketExceptions.hpp"
 
-namespace Babel
+namespace BabelNetwork
 {
 	ServerSocket::ServerSocket(unsigned short port) :
 		Socket(socket(AF_INET, SOCK_STREAM, 0), true),

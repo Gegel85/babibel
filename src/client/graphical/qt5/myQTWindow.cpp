@@ -7,12 +7,12 @@
 
 #include "myQTWindow.hpp"
 
-namespace Babel
+namespace BabelClient
 {
 	myQTWindow::myQTWindow(Vector2<unsigned int> size, QWidget *parent) :
 		window(size, parent),
 		QObject(parent),
-		_scrollBar(Babel::VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
+		_scrollBar(VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
 		_myButton(this->window, "Connect", {10, 80}, {(unsigned)(std::string("Useless button").length()) * 5, 35}),
 		_IPTextBox(this->window, "IP Adress", {10, 5}, {200, 30}),
 		_portTextBox(this->window, "Port", {10, 40}, {100, 30})

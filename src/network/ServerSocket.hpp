@@ -15,14 +15,15 @@
 
 #define MAX_SOCKETS 32
 
-namespace Babel
+namespace BabelNetwork
 {
+    //! class hérité de Socket
 	class ServerSocket : public Socket {
 	private:
-		unsigned short				_port;
-		bool					_ended;
-		std::vector<std::thread>		_threads;
-		std::vector<std::unique_ptr<Socket>>	_clients;
+		unsigned short _port;
+		bool _ended;
+		std::vector<std::thread> _threads;
+		std::vector<std::unique_ptr<Socket>> _clients;
 
 	public:
 		explicit ServerSocket(unsigned short port);

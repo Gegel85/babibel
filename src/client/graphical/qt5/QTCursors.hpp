@@ -9,7 +9,7 @@
 #define QTCURSOR_HPP
 
 #include <QtWidgets>
-namespace Babel {
+namespace BabelClient {
 	enum cursors {
 		ARROWCURSOR = Qt::ArrowCursor,
 		UPARROWCURSOR = Qt::UpArrowCursor,
