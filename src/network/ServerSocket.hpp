@@ -17,7 +17,7 @@
 
 namespace Babel::Network
 {
-    //! class hérité de Socket
+    //! @brief Socket du serveur où se connecte les clients.
 	class ServerSocket : public Socket {
 	private:
 		unsigned short _port;
