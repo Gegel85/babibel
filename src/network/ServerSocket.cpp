@@ -48,7 +48,7 @@ namespace Babel::Network
 
 		Socket &socket = *this->_clients.at(i);
 
-		socket.setSocket(::accept(this->getSocket(), nullptr, nullptr), true);
+		socket.setSocket(::accept(this->getSocket(), nullptr, nullptr));
 		this->_threads.emplace_back([&socket, handler, this](){
 			Socket &sock = socket;
 
