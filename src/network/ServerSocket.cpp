@@ -12,7 +12,7 @@
 namespace Babel::Network
 {
 	ServerSocket::ServerSocket(unsigned short port) :
-		Socket(socket(AF_INET, SOCK_STREAM, 0), true),
+		Socket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)),
 		_port(port)
 	{
 		struct sockaddr_in address{};
