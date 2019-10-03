@@ -52,10 +52,11 @@ namespace Babel::Network
 	#endif
 	}
 
-	Socket::Socket(SOCKET sock, bool connected)
+	Socket::Socket(SOCKET sock)
 	{
+		if (this->isOpen())
+			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 		this->_socket = sock;
-		this->_opened = connected;
 	}
 
 	Socket::~Socket()
@@ -102,7 +103,6 @@ namespace Babel::Network
 			this->_socket = INVALID_SOCKET;
 			throw Exceptions::ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
 		}
-		this->_opened = true;
 	}
 
 	void Socket::disconnect()
@@ -110,10 +110,10 @@ namespace Babel::Network
 		if (!this->isOpen())
 			throw Exceptions::NotConnectedException("This socket is not opened");
 		closesocket(this->_socket);
-		this->_opened = false;
+		this->_socket = INVALID_SOCKET;
 	}
 
-	SOCKET Socket::getSocket()
+	SOCKET Socket::getSocket() const
 	{
 		return this->_socket;
 	}
@@ -124,7 +124,6 @@ namespace Babel::Network
 			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		this->_socket = sock;
-		this->_opened = connected;
 	}
 
 	std::string Socket::read(int size, int timeout)
@@ -167,7 +166,7 @@ namespace Babel::Network
 		return this->read(-1, timeout);
 	}
 
-	void Socket::waitToBeReady(int timeout)
+	void Socket::waitToBeReady(int timeout) const
 	{
 		FD_SET	set;
 		timeval time = {timeout, 0};
@@ -181,15 +180,17 @@ namespace Babel::Network
 			throw Exceptions::TimeoutException("Connection timed out after " + std::to_string(timeout) + " second(s)");
 	}
 
-	bool	Socket::isOpen()
+	bool	Socket::isOpen() const
 	{
 		FD_SET	set;
 		timeval time = {0, 0};
 
 		FD_ZERO(&set);
 		FD_SET(this->_socket, &set);
-		if (this->_opened && select(FD_SETSIZE, &set, nullptr, nullptr, &time) == -1)
-			this->_opened = false;
-		return (this->_opened);
+		if (this->_socket != INVALID_SOCKET && select(FD_SETSIZE, &set, nullptr, nullptr, &time) == -1) {
+			closesocket(this->_socket);
+			this->_socket = INVALID_SOCKET;
+		}
+		return this->_socket != INVALID_SOCKET;
 	}
 }

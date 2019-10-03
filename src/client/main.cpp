@@ -15,6 +15,17 @@
 
 namespace Babel::Client
 {
+	void handlePacket(const Network::Protocol::Packet &packet)
+	{
+		using namespace Network::Protocol;
+
+		switch (packet.op) {
+		case HELLO:
+		case BYE:
+			break;
+		}
+	}
+
 	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end)
 	{
 		try {
@@ -31,6 +42,7 @@ namespace Babel::Client
 					continue;
 				}
 				packet = socket;
+				handlePacket(packet);
 				std::cout << "Server sent packet " << packet << std::endl;
 			}
 		} catch (std::exception &e) {

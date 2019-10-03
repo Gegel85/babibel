@@ -23,7 +23,7 @@ namespace Babel::Network
 	class Socket {
 	public:
 		explicit Socket();
-		Socket(SOCKET sock, bool connected);
+		Socket(SOCKET sock);
 		Socket(Socket &) = delete;
 
 		//! @brief Destructeur
@@ -31,7 +31,7 @@ namespace Babel::Network
 		~Socket();
 
 		//! @brief Renvoie un booleen pour savoir si le Socket est connecté.
-		bool	isOpen();
+		bool	isOpen() const;
 
 		//! @brief Ouvre une connection avec un nom d'hote.
 		//! @details Cette méthode récupère l'adresse ip de l'hote, puis appelle connect(ip_address, portno, protocol).
@@ -73,7 +73,7 @@ namespace Babel::Network
 
 		//! @brief Renvoie le SOCKET système.
 		//! @return SOCKET système Unix ou Windows.
-		SOCKET	getSocket();
+		SOCKET	getSocket() const;
 
 		//! @brief Lie un SOCKET système à l'objet.
 		//! @param sock SOCKET système.
@@ -85,7 +85,7 @@ namespace Babel::Network
 		//! @param timeout Temps d'attente avant de lever l'exception TimeoutException.
 		//! @note Si une valeur négative est envoyée, le Socket attend jusqu'à ce qu'il soit prêt.
 		//! @throw TimeoutException
-		void	waitToBeReady(int timeout);
+		void	waitToBeReady(int timeout) const;
 
 		//! @brief Renvoie la dernière erreur survenue du Socket.
 		//! @return Chaîne de caractères contenant la dernière erreur survenue.
@@ -93,8 +93,7 @@ namespace Babel::Network
 		static std::string	getLastSocketError();
 
 	protected:
-		SOCKET	_socket = INVALID_SOCKET;
-		bool	_opened = false;
+		mutable SOCKET	_socket = INVALID_SOCKET;
 	};
 }
 
