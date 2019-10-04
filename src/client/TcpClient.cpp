@@ -101,21 +101,24 @@ namespace Babel::Client
 	{
 		if (sock.isOpen())
 			sock.disconnect();
-		if (connectThread.joinable())
-			connectThread.join();
 		end = true;
 		if (retryThread.joinable())
 			retryThread.join();
 		end = false;
+		if (connectThread.joinable())
+			connectThread.join();
+		std::cout  << "Done !" << std::endl;
 	}
 
 	void TcpClient::disconnectFromVoice()
 	{
+		std::cout << "Disconnecting from voice" << std::endl;
 		_disconnect(this->_voiceConnectionEnd, this->_voiceConnectionThread, this->_voiceThread, this->_voiceSock);
 	}
 
 	void TcpClient::disconnectFromServer()
 	{
+		std::cout << "Disconnecting from server" << std::endl;
 		_disconnect(this->_serverConnectionEnd, this->_serverConnectionThread, this->_serverThread, this->_sock);
 	}
 
