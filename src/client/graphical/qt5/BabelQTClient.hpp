@@ -43,6 +43,8 @@ namespace Babel::Client
 		QTButton _logButton;
 		QTTextBox _serverLogged;
 
+		QTTextBox _usernameLog;
+		QTTextBox _passwordLog;
 		QTTypingBox _username;
 		QTTypingBox _password;
 

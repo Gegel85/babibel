@@ -10,13 +10,15 @@
 namespace Babel::Client
 {
 	BabelQTClient::BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent) :
-		window(size, parent),
 		QObject(parent),
+		window(size, parent),
 		_scrollBar(VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
-		_logButton(this->window, "Connect", {10, 80}, {70, 35}),
+		_logButton(this->window, "Connect", {10, 125}, {70, 35}),
 		_serverLogged(this->window, "Not Connected to server", {10, (int)(size.y - 45)}, {250, 35}),
-		_username(this->window, "Username", {10, 5}, {200, 30}),
-		_password(this->window, "Password", {10, 40}, {100, 30}),
+		_usernameLog(this->window, "Username", {12, 5}, {80, 30}),
+		_passwordLog(this->window, "Password", {12, 55}, {80, 30}),
+		_username(this->window, "", {10, 30}, {200, 30}),
+		_password(this->window, "", {10, 85}, {100, 30}),
 		_client(client),
 		_thread([this](){
 			while (!this->_end) {
