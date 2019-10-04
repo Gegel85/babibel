@@ -76,7 +76,7 @@ void Sound::playAudio()
   }
 }
 
-unsigned char Sound::recordAudio()
+std::vector <unsigned char> Sound::recordAudio()
 {
   err = Pa_OpenStream(
             &stream,
@@ -117,6 +117,17 @@ unsigned char Sound::recordAudio()
   average = average / (double)numSamples;
   std::cout << "sample max amplitude = " << max << std::endl;
   std::cout << "sample average = %lf\n" << average << std::endl;
+  std::ofstream fstream{"file.raw"};
+  if( fstream.fail() )
+  {
+      std::cerr << "Could not open file." << std::endl;
+  }
+  else
+  {
+    for (int i = 0; i < this->data.maxFrameIndex; i++)
+      fstream << this->data.recordedSamples[i];
+  }
+  fstream.close();
 }
 
 
@@ -229,4 +240,11 @@ PaError Sound::terminate()
       err = 1;
   }
   return err;
+}
+
+int main()
+{
+   Sound Sound1;
+   Sound1.recordAudio();
+   Sound1.playAudio();
 }
