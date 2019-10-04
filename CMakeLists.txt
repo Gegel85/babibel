@@ -18,7 +18,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif ()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
-conan_basic_setup()
 
 if (WIN32)
 	file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf [Paths]\nPrefix=${CONAN_QT_ROOT})
@@ -58,6 +57,8 @@ add_executable(
 	src/client/graphical/GUIScreen.cpp
 	src/client/sound/Compressor.cpp
 	src/client/sound/Compressor.hpp
+	src/client/sound/Sound.cpp
+	src/client/sound/Sound.hpp
 	src/client/main.cpp
 	src/network/Socket.cpp
 	src/network/Socket.hpp

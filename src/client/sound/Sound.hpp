@@ -1,59 +1,96 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fstream>
 #include <vector>
-#include "portaudio.h"
-#include <iostream>
+#include <string>
+#include <portaudio.h>
 
-#define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (5)
-#define NUM_CHANNELS    (2)
-#define DITHER_FLAG     (0)
-#define WRITE_TO_FILE   (0)
 
-#define PA_SAMPLE_TYPE  paUInt8
-typedef unsigned char SAMPLE;
-#define SAMPLE_SILENCE  (0)
-
-typedef struct
+namespace Babel::Client::Sound
 {
-    int          frameIndex;  /* Index into sample array. */
-    int          maxFrameIndex;
-    SAMPLE      *recordedSamples;
+	namespace Exceptions {
+		class BaseException : public std::exception {
+		private:
+			std::string	_msg;
+		public:
+			explicit BaseException(const std::string &msg) : _msg(msg) {};
+			const char *what() const noexcept override { return this->_msg.c_str(); };
+		};
+
+		class InitializationErrorException : public BaseException {
+		public:
+			explicit InitializationErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class StreamCreationErrorException : public BaseException {
+		public:
+			explicit StreamCreationErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class OpenStreamErrorException : public BaseException {
+		public:
+			explicit OpenStreamErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class StartStreamErrorException : public BaseException {
+		public:
+			explicit StartStreamErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class StreamActivityCheckErrorException : public BaseException {
+		public:
+			explicit StreamActivityCheckErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class CloseStreamErrorException : public BaseException {
+		public:
+			explicit CloseStreamErrorException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class InvalidChannelCountException : public BaseException {
+		public:
+			explicit InvalidChannelCountException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class NoOutputDeviceException : public BaseException {
+		public:
+			explicit NoOutputDeviceException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class NoInputDeviceException : public BaseException {
+		public:
+			explicit NoInputDeviceException(const std::string &msg) : BaseException(msg) {};
+		};
+	}
+
+	class Sound {
+	private:
+		struct SoundState {
+			unsigned int channelCount;
+			unsigned int currentIndex;
+			std::vector<float> buffer;
+		};
+
+		static int _playCallback(
+			const void *inputBuffer,
+			void *outputBuffer,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *timeInfo,
+			PaStreamCallbackFlags statusFlags,
+			void *userData
+		);
+
+		static int _recordCallback(
+			const void *inputBuffer,
+			void *outputBuffer,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *timeInfo,
+			PaStreamCallbackFlags statusFlags,
+			void *userData
+		);
+
+	public:
+		Sound();
+		~Sound();
+		std::vector<float> recordAudio(float duration, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void playBuffer(const std::vector<float> &buffer, size_t sampleRate = 48000, unsigned channelCount = 2);
+	};
 }
-paTestData;
-
-class Sound
-{
-  private:
-    PaStreamParameters  inputParameters,
-                        outputParameters;
-    PaStream*           stream;
-    PaError             err = paNoError;
-    paTestData          data;
-    int                 i;
-    int                 totalFrames;
-    int                 numSamples;
-    int                 numBytes;
-    SAMPLE              max, val;
-    double              average;
-  public:
-    Sound();
-    ~Sound();
-  void playAudio();
-  std::vector <unsigned char>  recordAudio();
-  PaError terminate();
-  static int recordCallback( const void *inputBuffer, void *outputBuffer,
-                               unsigned long framesPerBuffer,
-                               const PaStreamCallbackTimeInfo* timeInfo,
-                               PaStreamCallbackFlags statusFlags,
-                               void *userData );
-    static int playCallback( const void *inputBuffer, void *outputBuffer,
-                               unsigned long framesPerBuffer,
-                               const PaStreamCallbackTimeInfo* timeInfo,
-                               PaStreamCallbackFlags statusFlags,
-                               void *userData );
-
-
-};
