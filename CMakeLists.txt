@@ -8,7 +8,13 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-	add_compile_options(-g -O0)
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		add_compile_options(-g -O0)
+	endif()
+endif ()
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	add_compile_options(-W -Wall -Wextra)
 endif ()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
@@ -46,6 +52,8 @@ add_executable(
 	src/client/graphical/qt5/QTTextBox.hpp
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
+	src/client/sound/Compressor.cpp
+	src/client/sound/Compressor.hpp
 	src/client/main.cpp
 	src/network/Socket.cpp
 	src/network/Socket.hpp
@@ -54,7 +62,11 @@ add_executable(
 	src/network/SocketExceptions.hpp
 	src/network/ServerSocket.cpp
 	src/network/ServerSocket.hpp
-	src/client/TcpClient.cpp src/client/TcpClient.hpp)
+	src/client/TcpClient.cpp
+	src/client/TcpClient.hpp
+	src/client/sound/Compressor.cpp
+	src/client/sound/Compressor.hpp
+)
 
 target_link_libraries(
 	babel_client
