@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.12)
 project(CPP_babel_2019)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -19,6 +19,10 @@ endif ()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 conan_basic_setup()
+
+if (WIN32)
+	file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf [Paths]\nPrefix=${CONAN_QT_ROOT})
+endif ()
 
 add_executable(
 	babel_client

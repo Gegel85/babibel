@@ -16,12 +16,6 @@
 
 namespace Babel::Client
 {
-
-	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end, std::string &lastError)
-	{
-
-	}
-
 	int babel(const std::string &ip, unsigned short port, int argc, char **argv)
 	{
 		TcpClient client;
@@ -31,7 +25,11 @@ namespace Babel::Client
 		client.connectToServer(ip, port, 10000);
 		qtClient.window.show();
 
-		return app.launch();
+		int code = app.launch();
+
+		client.disconnect();
+
+		return code;
 	}
 }
 
