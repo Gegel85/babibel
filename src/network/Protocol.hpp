@@ -68,10 +68,10 @@ namespace Babel::Network::Protocol
 		//!   };
 		//! @endcode
 		//! @note Si l'ip envoyée est 0.0.0.0, le client est l'hôte doit attendre la connexion du partenaire.
-		CALL_REFUSED,
+		CALL_ACCEPTED,
 
 		//! taille: 0 | Appel refusé.
-		CALL_ACCEPTED,
+		CALL_REFUSED,
 	};
 
 	namespace ErrorReason {
@@ -148,15 +148,19 @@ namespace Babel::Network::Protocol
 		Packet &operator=(const std::string &);
 		operator std::string();
 
+		static std::string	uint16toByteString(unsigned short value);
+
 		//! @brief Permet de changer un entier non signé en une chaîne de charactère de 4 bytes.
 		//! @param value	Valeur à changer
 		//! @return		 Une chaîne de 4 caractères réprésentant la value, en MSBF (Most significant byte first)
-		static std::string	toByteString(unsigned value);
+		static std::string	uint32toByteString(unsigned value);
+
+		static unsigned	short	uint16FromByteString(const std::string &str);
 
 		//! @brief Permet de transformer une chaîne de charactère de 4 bytes codée en MSBF en entier non signé.
 		//! @param str  Chaîne de caractère à transformer
 		//! @return	 Un entier non signé réprésentant la chaine de caractère
-		static unsigned		uintFromByteString(const std::string &str);
+		static unsigned		uint32FromByteString(const std::string &str);
 	};
 }
 

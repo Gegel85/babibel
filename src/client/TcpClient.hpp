@@ -24,9 +24,9 @@ namespace Babel::Client
 		std::thread _serverConnectionThread;
 		std::thread _voiceConnectionThread;
 		std::string _lastError = "";
-		std::string _lastOKResponse = "";
-		Network::Socket _sock;
+		std::optional<std::pair<unsigned char, std::string>> _lastResponse = {{Network::Protocol::OK, ""}};
 		Network::ServerSocket _voiceSock;
+		Network::Socket _sock;
 
 		void _handleServerPacket(Network::Protocol::Packet &packet);
 
@@ -37,6 +37,7 @@ namespace Babel::Client
 		void connectToServer(const std::string &ip, unsigned short port, unsigned retryTime = 0);
 		void connectToVoice(const std::string &ip, unsigned short port, unsigned retryTime = 0);
 		void sendPacketToServer(Network::Protocol::Opcode op, const std::string &data);
+		std::pair<unsigned char, std::string> waitServerResponse(int timeout = -1);
 		void sendPacketToServer(Network::Protocol::Opcode op, unsigned data);
 		void hostVoice(unsigned short port, unsigned retryTime = 0);
 		void disconnectFromServer(const std::string &reason);
@@ -44,7 +45,6 @@ namespace Babel::Client
 		void disconnectFromVoice();
 		void disconnect();
 
-		std::string getLastOKResponse() const;
 		std::string getLastError() const;
 		bool isVoiceConnected() const;
 		bool isConnected() const;
@@ -62,6 +62,11 @@ namespace Babel::Client
 		class DisconnectedException : public BaseException {
 		public:
 			explicit DisconnectedException(const std::string &msg) : BaseException(msg) {};
+		};
+
+		class TimeoutException : public BaseException {
+		public:
+			explicit TimeoutException(const std::string &msg) : BaseException(msg) {};
 		};
 	}
 }

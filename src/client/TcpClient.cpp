@@ -18,6 +18,12 @@ namespace Babel::Client
 		this->disconnectFromServer();
 	}
 
+	void TcpClient::hostVoice(unsigned short port, unsigned int retryTime)
+	{}
+
+	void TcpClient::connectToVoice(const std::string &ip, unsigned short port, unsigned int retryTime)
+	{}
+
 	void TcpClient::connectToServer(const std::string &ip, unsigned short port, unsigned retryTime)
 	{
 		this->disconnectFromServer();
@@ -70,6 +76,7 @@ namespace Babel::Client
 
 	void TcpClient::_handleServerPacket(Babel::Network::Protocol::Packet &packet)
 	{
+		this->_lastResponse = std::pair<unsigned char, std::string>{packet.op, packet.data};
 		switch (packet.op) {
 		case Network::Protocol::HELLO:
 			if (packet.data.size() != 2)
@@ -83,14 +90,20 @@ namespace Babel::Client
 		case Network::Protocol::BYE:
 			this->disconnectFromServer(Network::Protocol::ErrorReason::NORMAL_CLOSURE);
 			throw Exceptions::DisconnectedException("The server closed the connection: " + Network::Protocol::ErrorReason::errorReasonToString(packet.data));
+		case Network::Protocol::CALL:
+			return this->sendPacketToServer(Network::Protocol::CALL_ACCEPTED, "");
+		case Network::Protocol::CALL_ACCEPTED:
+			if (Network::Protocol::Packet::uint32FromByteString(packet.data))
+				return this->connectToVoice(
+					inet_ntoa({
+						Network::Protocol::Packet::uint32FromByteString(packet.data)
+					}),
+					Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2))
+				);
+			return this->hostVoice(Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2)), 10000);
+		case Network::Protocol::CALL_REFUSED:
 		case Network::Protocol::OK:
 		case Network::Protocol::KO:
-			return this->sendPacketToServer(Network::Protocol::OK, "");
-		case Network::Protocol::GET_FRIENDS:
-		case Network::Protocol::GET_USER_INFOS:
-		case Network::Protocol::CALL:
-		case Network::Protocol::CALL_ACCEPTED:
-		case Network::Protocol::CALL_REFUSED:
 			return;
 		default:
 			return this->disconnectFromServer(Network::Protocol::ErrorReason::BAD_OPCODE);
@@ -143,9 +156,19 @@ namespace Babel::Client
 		return this->_lastError;
 	}
 
-	std::string TcpClient::getLastOKResponse() const
+	std::pair<unsigned char, std::string> TcpClient::waitServerResponse(int timeout)
 	{
-		return this->_lastOKResponse;
+		this->_lastResponse.reset();
+		if (timeout < 0)
+			while (!this->_lastResponse)
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		else
+			while (!this->_lastResponse) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				if (!this->_lastResponse && timeout - 1 < 0)
+					throw Exceptions::TimeoutException("Timed out");
+			}
+		return this->_lastResponse.value();
 	}
 
 	void TcpClient::sendPacketToServer(Network::Protocol::Opcode op, const std::string &data)
@@ -159,7 +182,7 @@ namespace Babel::Client
 
 	void TcpClient::sendPacketToServer(Network::Protocol::Opcode op, unsigned data)
 	{
-		this->sendPacketToServer(op, Network::Protocol::Packet::toByteString(data));
+		this->sendPacketToServer(op, Network::Protocol::Packet::uint32toByteString(data));
 	}
 
 	void TcpClient::disconnectFromServer(const std::string &reason)
