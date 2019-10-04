@@ -17,7 +17,7 @@
 
 namespace Babel::Network
 {
-    //! @brief Socket du serveur où se connecte les clients.
+	//! @brief Socket du serveur où se connecte les clients.
 	class ServerSocket : public Socket {
 	private:
 		unsigned short _port;
@@ -26,8 +26,8 @@ namespace Babel::Network
 		std::vector<std::unique_ptr<Socket>> _clients;
 
 	public:
-		explicit ServerSocket(unsigned short port);
 		~ServerSocket();
+		void bind(unsigned short port, int protocol = IPPROTO_TCP);
 		Socket &acceptClient(const std::function<void (Socket &)> &handler = {});
 	};
 }

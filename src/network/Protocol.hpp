@@ -75,6 +75,11 @@ namespace Babel::Network::Protocol
 	};
 
 	namespace ErrorReason {
+		//! @brief Transforme une ErrorReason on chaîne de caractères
+		//! @param reason Raison envoyé par le serveur/client
+		//! @return Chaîne de caractère représentant l'erreur
+		std::string errorReasonToString(const std::string &reason);
+
 		//! Fermeture normale de la connection.
 		extern std::string NORMAL_CLOSURE;
 

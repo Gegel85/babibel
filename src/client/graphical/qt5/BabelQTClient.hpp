@@ -22,6 +22,7 @@
 #include "QTTypingBox.hpp"
 #include "QTTextBox.hpp"
 #include "QTCursors.hpp"
+#include "../../TcpClient.hpp"
 
 namespace Babel::Client
 {
@@ -29,7 +30,7 @@ namespace Babel::Client
 	{
 	Q_OBJECT
 	public:
-		BabelQTClient(Babel::Network::Socket &socket, const std::string &lastError, Vector2<unsigned int> size, QWidget *parent = nullptr);
+		BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent = nullptr);
 		~BabelQTClient();
 		QTWindow window;
 
@@ -45,10 +46,9 @@ namespace Babel::Client
 		QTTypingBox _username;
 		QTTypingBox _password;
 
-		Babel::Network::Socket &_socket;
-		std::thread _thread;
 		bool _end = false;
-		const std::string &_lastError;
+		TcpClient &_client;
+		std::thread _thread;
 	};
 }
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.12)
 project(CPP_babel_2019)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -8,11 +8,21 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-	add_compile_options(-g -O0)
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		add_compile_options(-g -O0)
+	endif()
+endif ()
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	add_compile_options(-W -Wall -Wextra)
 endif ()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 conan_basic_setup()
+
+if (WIN32)
+	file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf [Paths]\nPrefix=${CONAN_QT_ROOT})
+endif ()
 
 add_executable(
 	babel_client
@@ -56,7 +66,11 @@ add_executable(
 	src/network/SocketExceptions.hpp
 	src/network/ServerSocket.cpp
 	src/network/ServerSocket.hpp
-		src/client/sound/Compressor.cpp src/client/sound/Compressor.hpp)
+	src/client/TcpClient.cpp
+	src/client/TcpClient.hpp
+	src/client/sound/Compressor.cpp
+	src/client/sound/Compressor.hpp
+)
 
 target_link_libraries(
 	babel_client

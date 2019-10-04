@@ -4,7 +4,7 @@
 
 #include <cstring>
 #include <sstream>
-#include <unistd.h>
+#include <iostream>
 #include "Socket.hpp"
 #include "SocketExceptions.hpp"
 
@@ -12,13 +12,12 @@
 #	include <netdb.h>
 #	include <arpa/inet.h>
 #	include <sys/select.h>
-#include <iostream>
+#	include <unistd.h>
+#define closesocket(socket) close(socket)
 
 typedef fd_set FD_SET;
-#endif
-
-#ifndef closesocket
-#define closesocket(socket) close(socket)
+#else
+#	include <windows.h>
 #endif
 
 namespace Babel::Network
@@ -95,7 +94,7 @@ namespace Babel::Network
 		/* create the socket */
 		this->_socket = socket(AF_INET, SOCK_STREAM, protocol);
 		if (this->_socket == INVALID_SOCKET)
-			throw Exceptions::SocketCreationErrorException(strerror(errno));
+			throw Exceptions::SocketCreationErrorException(getLastSocketError());
 
 		/* connect the socket */
 		if (::connect(this->_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
@@ -139,7 +138,7 @@ namespace Babel::Network
 			if (bytes <= 0) {
 				if (size < 0)
 					break;
-				throw Exceptions::EOFException(bytes ? strerror(errno) : "The connection was closed");
+				throw Exceptions::EOFException(bytes ? getLastSocketError() : "The connection was closed");
 			}
 			for (int i = 0; i < bytes; i++)
 				buf.push_back(buffer[i]);
@@ -156,7 +155,7 @@ namespace Babel::Network
 			int bytes = ::send(this->_socket, &msg.c_str()[pos], msg.length() - pos, 0);
 
 			if (bytes <= 0)
-				throw Exceptions::EOFException(bytes ? strerror(errno) : "The connection was closed");
+				throw Exceptions::EOFException(bytes ? getLastSocketError() : "The connection was closed");
 			pos += bytes;
 		}
 	}
