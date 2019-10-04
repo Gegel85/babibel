@@ -54,7 +54,7 @@ add_executable(
 	src/network/SocketExceptions.hpp
 	src/network/ServerSocket.cpp
 	src/network/ServerSocket.hpp
-)
+	src/client/TcpClient.cpp src/client/TcpClient.hpp)
 
 target_link_libraries(
 	babel_client

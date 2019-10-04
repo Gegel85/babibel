@@ -9,7 +9,7 @@
 
 namespace Babel::Client
 {
-	BabelQTClient::BabelQTClient(Babel::Network::Socket &socket, const std::string &lastError, Vector2<unsigned int> size, QWidget *parent) :
+	BabelQTClient::BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent) :
 		window(size, parent),
 		QObject(parent),
 		_scrollBar(VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
@@ -17,15 +17,14 @@ namespace Babel::Client
 		_serverLogged(this->window, "Not Connected to server", {10, (int)(size.y - 45)}, {250, 35}),
 		_username(this->window, "Username", {10, 5}, {200, 30}),
 		_password(this->window, "Password", {10, 40}, {100, 30}),
-		_socket(socket),
+		_client(client),
 		_thread([this](){
 			while (!this->_end) {
-				this->_serverLogged.setText(this->_socket.isOpen() ? "Connected to server" : this->_lastError);
-				this->_logButton.setEnabled(this->_socket.isOpen() ? true : false);
+				this->_serverLogged.setText(this->_client.isConnected() ? "Connected to server" : this->_client.getLastError());
+				this->_logButton.setEnabled(this->_client.isConnected());
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
-		}),
-		_lastError(lastError)
+		})
 	{
 		this->window.setWindowTitle("Skipe");
 		this->window.setWindowIcon("Assets/Images/skipe-logo.png");
@@ -35,9 +34,9 @@ namespace Babel::Client
 
 	BabelQTClient::~BabelQTClient()
 	{
+		this->_end = true;
 		if (this->_thread.joinable())
 			this->_thread.join();
-		this->_end = true;
 	}
 	void BabelQTClient::sendConnectionLogs()
 	{

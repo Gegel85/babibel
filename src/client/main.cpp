@@ -12,98 +12,53 @@
 #include "graphical/qt5/QTApplication.hpp"
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
+#include "TcpClient.hpp"
 
 namespace Babel::Client
 {
-	void handlePacket(const Network::Protocol::Packet &packet)
-	{
-		using namespace Network::Protocol;
-
-		switch (packet.op) {
-		case HELLO:
-		case BYE:
-			break;
-		}
-	}
 
 	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end, std::string &lastError)
 	{
-		try {
-			Network::Protocol::Packet packet;
 
-			packet.op = Network::Protocol::HELLO;
-			packet.data = VERSION_STR;
-			socket.connect(ip, port);
-			socket.send(packet);
-			while (socket.isOpen() && !end) {
-				try {
-					socket.waitToBeReady(1);
-				} catch (Network::Exceptions::TimeoutException &) {
-					continue;
-				}
-				packet = socket;
-				handlePacket(packet);
-				std::cout << "Server sent packet " << packet << std::endl;
-			}
-		} catch (std::exception &e) {
-			std::cerr << "An error occurred and the connection to the server will be interrupted: " << e.what() << std::endl;
-			if (socket.isOpen())
-				socket.disconnect();
-			lastError = e.what();
-		}
 	}
 
-	int babel(std::string ip, unsigned short port, int argc, char **argv)
+	int babel(const std::string &ip, unsigned short port, int argc, char **argv)
 	{
-		std::string lastError = "";
-		bool end = false;
-		Network::Socket socket;
-		std::thread clientThread{
-			[&socket, &ip, &port, &end, &lastError](){
-				while (!end) {
-					handleConnection(socket, ip, port, end, lastError);
-					if (end)
-						break;
-					std::cout << "Reconnecting in 10 seconds..." << std::endl;
-					std::this_thread::sleep_for(std::chrono::seconds(10));
-				}
-			}
-		};
+		TcpClient client;
 		QTApplication app(argc, argv);
-		BabelQTClient qtClient(socket, lastError, {1000, 500});
+		BabelQTClient qtClient(client, {1000, 500});
 
+		client.connectToServer(ip, port, 10000);
 		qtClient.window.show();
 
-		int code = app.launch();
-
-		end = true;
-		if (clientThread.joinable())
-			clientThread.join();
-		return code;
+		return app.launch();
 	}
 }
 
 int main(int argc, char **argv)
 {
+	unsigned int port;
+	std::string ip;
+
 	if (argc != 3) {
 		std::cout << argv[0] << ": <serverIp> <port>" << std::endl;
-		return EXIT_FAILURE;
+		std::cout << "Assuming server is on localhost:10800..." << std::endl;
+		ip = "localhost";
+		port = 10800;
+	} else {
+		ip = argv[1];
+		try {
+			port = std::stoi(argv[2]);
+		} catch (std::exception &) {
+			std::cerr << "The port number is invalid" << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		if (port > 65535) {
+			std::cerr << "The port number is invalid" << std::endl;
+			return EXIT_FAILURE;
+		}
 	}
 
-	unsigned int port;
-	bool end = false;
-
-	try {
-		port = std::stoi(argv[2]);
-	} catch (std::exception &) {
-		std::cerr << "The port number is invalid" << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	if (port > 65535) {
-		std::cerr << "The port number is invalid" << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	return Babel::Client::babel(argv[1], port, argc, argv);
+	return Babel::Client::babel(ip, port, argc, argv);
 }

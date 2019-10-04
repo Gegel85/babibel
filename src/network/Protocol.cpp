@@ -88,6 +88,33 @@ namespace Babel::Network::Protocol
 		} + toByteString(this->data.size()) + keyStr + codedData;
 	}
 
+	std::string ErrorReason::errorReasonToString(const std::string &reason)
+	{
+		if (reason == NORMAL_CLOSURE)
+			return "Success";
+		if (reason == BAD_PACKET)
+			return "Bad packet";
+		if (reason == BAD_VERSION)
+			return "Bad version";
+		if (reason == BAD_OPCODE)
+			return "Bad opcode";
+		if (reason == BAD_CREDENTIALS)
+			return "Bad credentials";
+		if (reason == ALREADY_CONNECTED)
+			return "Already connected";
+		if (reason == ALREADY_USED)
+			return "The resource is already used by another client";
+		if (reason == NOT_CONNECTED)
+			return "Not connected";
+		if (reason == NOT_AUTHORIZED)
+			return "Not authorized";
+		if (reason == NOT_FOUND)
+			return "Not found";
+		if (reason == REMOTE_NOT_CONNECTED)
+			return "The remote is not connected to the server";
+		return "Unknown error code";
+	}
+
 	std::string ErrorReason::NORMAL_CLOSURE =	{'\0', '\0', '\0', '\x00'};
 	std::string ErrorReason::BAD_PACKET =		{'\0', '\0', '\0', '\x01'};
 	std::string ErrorReason::BAD_VERSION =		{'\0', '\0', '\0', '\x02'};

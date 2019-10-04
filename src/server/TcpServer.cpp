@@ -29,7 +29,6 @@ namespace Babel::Server
 	}
 
 	TcpServer::TcpServer(unsigned short port) :
-		_socket(port),
 		_handler{[this](Network::Socket &socket){
 			try {
 				Network::Protocol::Packet packet{socket};
@@ -88,7 +87,9 @@ namespace Babel::Server
 				TcpServer::disconnectClient(socket, Network::Protocol::ErrorReason::BAD_PACKET);
 			}
 		}}
-	{}
+	{
+		this->_socket.bind(port);
+	}
 
 	void TcpServer::run()
 	{
