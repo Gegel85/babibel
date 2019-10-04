@@ -8,8 +8,8 @@
 #ifndef QTWINDOW_HPP
 #define QTWINDOW_HPP
 
-#include <QWidget>
-#include <QtWidgets/QMainWindow>
+#include <QMainWindow>
+#include <QIcon> 
 #include "../GUIScreen.hpp"
 
 namespace Babel::Client {
@@ -20,6 +20,8 @@ namespace Babel::Client {
 		void setSize(Vector2<unsigned> size) override;
 		bool refresh() override;
 		Vector2<unsigned int> getSize() const override;
+		void setWindowTitle(std::string title);
+		void setWindowIcon(std::string path);
 
 	private:
 		Vector2<unsigned> _size;

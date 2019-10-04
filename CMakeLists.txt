@@ -32,14 +32,16 @@ add_executable(
 	src/client/graphical/qt5/QTCursors.hpp
 	src/client/graphical/qt5/QTWindow.hpp
 	src/client/graphical/qt5/QTWindow.cpp
-	src/client/graphical/qt5/myQTWindow.hpp
-	src/client/graphical/qt5/myQTWindow.cpp
+	src/client/graphical/qt5/BabelQTClient.hpp
+	src/client/graphical/qt5/BabelQTClient.cpp
 	src/client/graphical/qt5/QTButton.hpp
 	src/client/graphical/qt5/QTButton.cpp
 	src/client/graphical/qt5/QTApplication.hpp
 	src/client/graphical/qt5/QTApplication.cpp
 	src/client/graphical/qt5/QTScrollBar.cpp
 	src/client/graphical/qt5/QTScrollBar.hpp
+	src/client/graphical/qt5/QTTypingBox.cpp
+	src/client/graphical/qt5/QTTypingBox.hpp
 	src/client/graphical/qt5/QTTextBox.cpp
 	src/client/graphical/qt5/QTTextBox.hpp
 	src/client/graphical/GUIScreen.hpp

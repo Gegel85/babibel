@@ -35,4 +35,15 @@ namespace Babel::Client {
 	{
 		return (this->_size);
 	}
+
+	void QTWindow::setWindowTitle(std::string title)
+	{
+		QMainWindow::setWindowTitle(QString(title.c_str()));
+	}
+
+	void QTWindow::setWindowIcon(std::string path)
+	{
+		QIcon icon(QString(path.c_str()));
+		QMainWindow::setWindowIcon(icon);
+	}
 }

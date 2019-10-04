@@ -10,7 +10,8 @@
 namespace Babel::Client {
 	QTButton::QTButton(QWidget &parent, const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		Button(text, position, size),
-		QPushButton(QString(this->_text.c_str()), &parent)
+		QPushButton(QString(this->_text.c_str()), &parent),
+		_clickable(true)
 	{
 		this->setGeometry(this->_position.x, this->_position.y, this->_size.x, this->_size.y);
 	}
@@ -19,6 +20,7 @@ namespace Babel::Client {
 	{
 		this->_text = text;
 		QPushButton::setText(QString(this->_text.c_str()));
+		this->setGeometry(this->_position.x, this->_position.y, (unsigned)(text.length()) * 10, this->_size.y);
 	}
 
 	bool QTButton::isClicked() const
@@ -29,5 +31,24 @@ namespace Babel::Client {
 	void QTButton::draw(GUIScreen &screen)
 	{
 		
+	}
+
+	void QTButton::setCursor(cursors cursor)
+	{
+		QPushButton::setCursor(Qt::CursorShape(cursor));
+	}
+
+	void QTButton::setClickable(bool clickable)
+	{
+		if (clickable)
+			QPushButton::setFlat(false);
+		else
+			QPushButton::setFlat(true);
+		this->_clickable = clickable;
+	}
+
+	void QTButton::setEnabled(bool enabled)
+	{
+		QPushButton::setEnabled(enabled);
 	}
 }

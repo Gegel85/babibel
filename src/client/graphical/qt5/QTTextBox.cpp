@@ -10,8 +10,8 @@
 namespace Babel::Client
 {
 	QTTextBox::QTTextBox(QWidget &parent, const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
-		QTextEdit(QString(text.c_str()), &parent),
-		TextBox(text, position, size)
+		TextBox(text, position, size),
+		QLabel(QString(this->_text.c_str()), &parent)
 	{
 		this->setGeometry(this->_position.x, this->_position.y, this->_size.x, this->_size.y);
 	}
@@ -20,8 +20,12 @@ namespace Babel::Client
 	{
 	}
 
-	std::string QTTextBox::getPlainText() const
+	void QTTextBox::setText(const std::string &text)
 	{
-		return (this->toPlainText().toStdString());
+		this->_text = text;
+		QLabel::setText(QString(this->_text.c_str()));
+		this->setGeometry(this->_position.x, this->_position.y, (unsigned)(text.length()) * 10, this->_size.y);
+
 	}
+
 }

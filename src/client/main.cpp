@@ -8,14 +8,25 @@
 #include <thread>
 #include <iostream>
 #include "../network/Socket.hpp"
-#include "graphical/qt5/myQTWindow.hpp"
+#include "graphical/qt5/BabelQTClient.hpp"
 #include "graphical/qt5/QTApplication.hpp"
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
 
 namespace Babel::Client
 {
-	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end)
+	void handlePacket(const Network::Protocol::Packet &packet)
+	{
+		using namespace Network::Protocol;
+
+		switch (packet.op) {
+		case HELLO:
+		case BYE:
+			break;
+		}
+	}
+
+	void handleConnection(Network::Socket &socket, const std::string &ip, unsigned short port, bool &end, std::string &lastError)
 	{
 		try {
 			Network::Protocol::Packet packet;
@@ -31,23 +42,26 @@ namespace Babel::Client
 					continue;
 				}
 				packet = socket;
+				handlePacket(packet);
 				std::cout << "Server sent packet " << packet << std::endl;
 			}
 		} catch (std::exception &e) {
 			std::cerr << "An error occurred and the connection to the server will be interrupted: " << e.what() << std::endl;
 			if (socket.isOpen())
 				socket.disconnect();
+			lastError = e.what();
 		}
 	}
 
 	int babel(std::string ip, unsigned short port, int argc, char **argv)
 	{
+		std::string lastError = "";
 		bool end = false;
 		Network::Socket socket;
 		std::thread clientThread{
-			[&socket, &ip, &port, &end](){
+			[&socket, &ip, &port, &end, &lastError](){
 				while (!end) {
-					handleConnection(socket, ip, port, end);
+					handleConnection(socket, ip, port, end, lastError);
 					if (end)
 						break;
 					std::cout << "Reconnecting in 10 seconds..." << std::endl;
@@ -56,9 +70,9 @@ namespace Babel::Client
 			}
 		};
 		QTApplication app(argc, argv);
-		myQTWindow myWindow({1000, 500});
+		BabelQTClient qtClient(socket, lastError, {1000, 500});
 
-		myWindow.window.show();
+		qtClient.window.show();
 
 		int code = app.launch();
 
@@ -93,49 +107,3 @@ int main(int argc, char **argv)
 
 	return Babel::Client::babel(argv[1], port, argc, argv);
 }
-
-/*
-int main(int argc, char **argv)
-{
-	Babel::TempWindow	window{{640, 480}};
-
-	do {
-		//Some stuff
-	} while (window.refresh());
-}
-*/
-
-/*
-namespace Babel
-{
-	class TempWindow : public GUIScreen {
-	private:
-		Vector2<unsigned int> _size;
-
-	public:
-		TempWindow(Vector2<unsigned int> size) : GUIScreen(), _size{size} {};
-
-		Vector2<unsigned int> getSize() const override
-		{
-			return this->_size;
-		};
-
-		virtual void setFullscreen(bool fullscreen = true) override
-		{
-			std::cout << "Fullscreen is now " << (fullscreen ? "on" : "off") << std::endl;
-		};
-
-		virtual void setSize(Vector2<unsigned int> size)
-		{
-			std::cout << "New window size (" << size.x << ", " << size.y << ")" << std::endl;
-		};
-
-		virtual bool refresh()
-		{
-			std::cout << "Rendering objects" << std::endl;
-			std::this_thread::sleep_for(std::chrono::milliseconds(17));
-			return true;
-		};
-	};
-}
-*/
