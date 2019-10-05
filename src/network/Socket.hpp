@@ -40,7 +40,7 @@ namespace Babel::Network
 		//! @param protocol Protocole à utiliser.
 		//! @throw AlreadyOpenedException
 		//! @throw HostNotFoundException
-		virtual void	connect(const std::string &host, unsigned short portno, int protocol = IPPROTO_TCP);
+		virtual void	connect(const std::string &host, unsigned short portno, int type = SOCK_STREAM, int protocol = IPPROTO_TCP);
 
 		//! @brief Ouvre une connection avec une adresse ip.
 		//! @param ip Adresse IP du destinataire.
@@ -49,7 +49,7 @@ namespace Babel::Network
 		//! @throw AlreadyOpenedException
 		//! @throw SocketCreationErrorException
 		//! @throw ConnectException
-		virtual void	connect(unsigned int ip, unsigned short portno, int protocol = IPPROTO_TCP);
+		virtual void	connect(unsigned int ip, unsigned short portno, int type = SOCK_STREAM, int protocol = IPPROTO_TCP);
 
 		//! @brief Déconnecte le Socket.
 		//! @throw NotConnectedException

@@ -40,7 +40,7 @@ namespace Babel::Client
 		this->disconnectFromVoice();
 		std::cout << "Connecting to voice server at " << ip << ":" << std::to_string(port) << std::endl;
 		try {
-			this->_voiceSock.connect(ip, port, IPPROTO_UDP);
+			this->_voiceSock.connect(ip, port, SOCK_DGRAM, IPPROTO_UDP);
 			this->_recorder.playFromSocket(this->_voiceSock);
 			this->_player.playFromSocket(this->_voiceSock);
 		} catch (std::exception &e) {

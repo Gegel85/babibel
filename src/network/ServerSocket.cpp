@@ -51,13 +51,14 @@ namespace Babel::Network
 		Socket &socket = *this->_clients.at(i);
 		sockaddr_in address{};
 		socklen_t size = sizeof(address);
+		SOCKET sock = ::accept(
+			this->getSocket(),
+			reinterpret_cast<struct sockaddr *>(&address),
+			&size
+		);
 
 		socket.setSocket(
-			::accept(
-				this->getSocket(),
-				reinterpret_cast<struct sockaddr *>(&address),
-				&size
-			),
+			sock,
 			address.sin_addr.s_addr
 		);
 

@@ -74,6 +74,8 @@ namespace Babel::Server
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED);
 					this->_users.at(&socket).connected = false;
 					this->_users.at(&socket).userId = 0;
+					this->_users.at(&socket).beingCalled = 0;
+					this->_users.at(&socket).callingUser = 0;
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::GET_FRIENDS:
 					return this->_getFriends(socket);
@@ -191,6 +193,9 @@ namespace Babel::Server
 			auto user = this->_getUser(id);
 			auto &me = this->_users.at(&socket);
 			auto &remote = this->_users.at(user.first);
+
+			if (me.userId == remote.userId)
+				return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_AUTHORIZED);
 
 			if (me.callingUser)
 				return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CALLING);

@@ -63,7 +63,7 @@ namespace Babel::Network
 			closesocket(this->_socket);
 	}
 
-	void Socket::connect(const std::string &host, unsigned short portno, int protocol)
+	void Socket::connect(const std::string &host, unsigned short portno, int type, int protocol)
 	{
 		struct hostent	*server;
 
@@ -75,10 +75,10 @@ namespace Babel::Network
 		if (server == nullptr)
 			throw Exceptions::HostNotFoundException("Cannot find host '" + host + "'");
 
-		this->connect(*reinterpret_cast<unsigned *>(server->h_addr), portno, protocol);
+		this->connect(*reinterpret_cast<unsigned *>(server->h_addr), portno, type, protocol);
 	}
 
-	void Socket::connect(unsigned int ip, unsigned short portno, int protocol)
+	void Socket::connect(unsigned int ip, unsigned short portno, int type, int protocol)
 	{
 		struct sockaddr_in	serv_addr = {};
 
@@ -91,7 +91,7 @@ namespace Babel::Network
 		serv_addr.sin_addr.s_addr = ip;
 
 		/* create the socket */
-		this->_socket = socket(AF_INET, SOCK_STREAM, protocol);
+		this->_socket = socket(AF_INET, type, protocol);
 		if (this->_socket == INVALID_SOCKET)
 			throw Exceptions::SocketCreationErrorException(getLastSocketError());
 
