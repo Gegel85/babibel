@@ -9,6 +9,7 @@
 #include "TcpServer.hpp"
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
+#include <algorithm>
 
 namespace Babel::Server
 {
@@ -52,7 +53,7 @@ namespace Babel::Server
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::LOGIN:
 				case Network::Protocol::REGISTER:
-					if (packet.data.size() != 32)
+					if (packet.data.size() != 64)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
 					if (this->_users.at(&socket).connected)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
@@ -60,8 +61,8 @@ namespace Babel::Server
 					this->_users.at(&socket).userId = this->_lastUserID;
 					this->_createdUsers.push_back({
 						this->_lastUserID,
-						packet.data.substr(0, 16),
-						packet.data.substr(16, 16)
+						packet.data.substr(0, 32),
+						packet.data.substr(32, 32)
 					});
 					return TcpServer::sendPacket(
 						socket,
@@ -81,7 +82,13 @@ namespace Babel::Server
 				case Network::Protocol::CALL_ACCEPTED:
 				case Network::Protocol::CALL_REFUSED:
 				case Network::Protocol::ADD_FRIEND:
+					if (packet.data.size() != 4)
+						return (TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET));
+					return (this->_addFriends(socket, Network::Protocol::Packet::uint32FromByteString(packet.data)));
 				case Network::Protocol::REMOVE_FRIEND:
+					if (packet.data.size() != 4)
+						return (TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET));
+						return (this->_removeFriends(socket, Network::Protocol::Packet::uint32FromByteString(packet.data)));
 					return;
 				default:
 					return TcpServer::disconnectClient(socket, Network::Protocol::ErrorReason::BAD_OPCODE);
@@ -136,5 +143,36 @@ namespace Babel::Server
 		for (auto value : friendList)
 			data += Network::Protocol::Packet::uint32toByteString(value);
 		TcpServer::sendPacket(socket, Network::Protocol::OK, data);
+	}
+
+	void TcpServer::_addFriends(Network::Socket &socket,  unsigned int ID)
+	{
+		auto &user = this->_users.at(&socket);
+
+		if (!user.connected)
+			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED));
+
+		auto finder = std::find(user.friendList.begin(), user.friendList.end(), ID);
+		if (finder == user.friendList.end()) {
+			user.friendList.push_back(ID);
+			TcpServer::sendPacket((socket, Network::Protocol::OK, ""))
+		}
+		else
+			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND));
+	}
+
+	void TcpServer::_removeFriends(Network::Socket &socket, unsigned int ID)
+	{
+		auto &user = this->_users.at(&socket);
+
+		if (!this->_users.at(&socket).connected)
+			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED));
+		auto finder = std::find(user.friendList.begin(), user.friendList.end(), ID);
+		if (finder != user.friendList.end()) {
+			user.friendList.erase(finder);
+			TcpServer::sendPacket((socket, Network::Protocol::OK, ""))
+		}
+		else
+			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND));
 	}
 }
