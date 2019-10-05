@@ -24,6 +24,29 @@ if (WIN32)
 endif ()
 
 add_executable(
+		dbg_opus
+		src/client/sound/CompressedAudio.cpp
+		src/client/sound/CompressedAudio.hpp
+		src/client/sound/Compressor.cpp
+		src/client/sound/Compressor.hpp
+		src/client/sound/Sound.cpp
+		src/client/sound/Sound.hpp
+		src/client/sound/main.cpp
+		src/network/Socket.cpp
+		src/network/Socket.hpp
+		src/network/Protocol.cpp
+		src/network/Protocol.hpp
+		src/network/SocketExceptions.hpp
+		src/network/ServerSocket.cpp
+		src/network/ServerSocket.hpp
+)
+
+target_link_libraries(
+		dbg_opus
+		${CONAN_LIBS}
+)
+
+add_executable(
 	babel_client
 	src/client/data/Vector2.hpp
 	src/client/graphical/Widget/TextBox.cpp
@@ -57,6 +80,8 @@ add_executable(
 	src/client/graphical/GUIScreen.cpp
 	src/client/sound/Compressor.cpp
 	src/client/sound/Compressor.hpp
+	src/client/sound/CompressedAudio.cpp
+	src/client/sound/CompressedAudio.hpp
 	src/client/sound/Sound.cpp
 	src/client/sound/Sound.hpp
 	src/client/main.cpp

@@ -279,6 +279,7 @@ namespace Babel::Client::Sound
 
 			std::string buffer = state.socket->read(framesPerBuffer * sizeof(float));
 
+
 			for (unsigned i = 0; i < framesPerBuffer;  i += state.channelCount)
 				for (unsigned j = i; j < i + state.channelCount; j++)
 					*output++ = Network::Protocol::Packet::float32FromByteString(buffer.substr(j * sizeof(float), sizeof(float)));
