@@ -163,7 +163,7 @@ namespace Babel::Client::Sound
 
 			state.currentIndex += framesToCalc;
 			state.stopped = framesLeft < framesPerBuffer;
-			return static_cast<int>(framesLeft < framesPerBuffer ? paComplete : paContinue);
+			return static_cast<int>(state.stopped ? paComplete : paContinue);
 		}
 	};
 
@@ -199,7 +199,7 @@ namespace Babel::Client::Sound
 					*output++ = state.buffer[j];
 
 			state.currentIndex += framesPerBuffer;
-			return static_cast<int>(paContinue);
+			return static_cast<int>(state.stopped ? paComplete : paContinue);
 		}
 	};
 
