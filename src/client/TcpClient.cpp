@@ -22,14 +22,14 @@ namespace Babel::Client
 	{
 		this->disconnectFromVoice();
 		std::cout << "Hosting voice server on port " << std::to_string(port) << std::endl;
-		this->_voiceSock.bind(port, SOCK_DGRAM, IPPROTO_UDP);
+		try {
+			this->_voiceSock.bind(port, SOCK_DGRAM, IPPROTO_UDP);
+		} catch (Network::Exceptions::ListenFailedException &) {}
 		try {
 			this->_voiceSock.waitToBeReady(5);
 
-			Network::Socket &sock = this->_voiceSock.acceptClient([](Network::Socket &) {});
-
-			this->_recorder.playFromSocket(sock);
-			this->_player.playFromSocket(sock);
+			this->_player.playFromSocket(this->_voiceSock);
+			this->_recorder.playFromSocket(this->_voiceSock);
 		} catch (std::exception &e) {
 			std::cerr << "Couldn't connect to voice client: " << e.what() << std::endl;
 		}
