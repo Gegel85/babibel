@@ -22,6 +22,7 @@
 #include "QTTypingBox.hpp"
 #include "QTTextBox.hpp"
 #include "QTCursors.hpp"
+#include "QTLayout.hpp"
 #include "../../TcpClient.hpp"
 
 namespace Babel::Client
@@ -40,7 +41,8 @@ namespace Babel::Client
 		void callButton();
 
 	private:
-		QTScrollBar _scrollBar;
+		QTLayout _usersLayout;
+//		QTScrollBar _scrollBar;
 
 		QTTextBox _lastError;
 		QTButton _logButton;

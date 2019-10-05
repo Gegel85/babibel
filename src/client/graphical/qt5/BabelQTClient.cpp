@@ -12,7 +12,7 @@ namespace Babel::Client
 	BabelQTClient::BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent) :
 		QObject(parent),
 		window(size, parent),
-		_scrollBar(VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
+		_usersLayout(TOPTOBOTTOM, this->window, {(int)size.x - 200, 0}, {190, size.y}),
 		_lastError(this->window, "Last Error: ", {10, (int)(size.y - 35)}, {120, 35}),
 		_logButton(this->window, "Log in", {10, 125}, {70, 35}),
 		_logOutButton(this->window, "Log out", {105, 125}, {70, 35}),
@@ -55,6 +55,7 @@ namespace Babel::Client
 		this->window.setWindowIcon("Assets/Images/skipe-logo.png");
 		this->_logButton.setCursor(POINTINGHANDCURSOR);
 		this->_callButton.setCursor(POINTINGHANDCURSOR);
+		this->_password.setEchoMode(PASSWORD);
 		QObject::connect(&this->_logButton, SIGNAL(released()), this, SLOT(sendConnectionLogs()));
 		QObject::connect(&this->_logOutButton, SIGNAL(released()), this, SLOT(logOut()));
 		QObject::connect(&this->_callButton, SIGNAL(released()), this, SLOT(callButton()));
@@ -79,17 +80,15 @@ namespace Babel::Client
 			this->_lastError.setText("Last Error: Username and password need to be 32 long each");
 			return;
 		}
-		username.resize(16, '\0');
-		password.resize(16, '\0');
+		username.resize(32, '\0');
+		password.resize(32, '\0');
 		this->_client.sendPacketToServer(Network::Protocol::Opcode::LOGIN, username + password);
 		std::pair<unsigned char, std::string> servResponse = this->_client.waitServerResponse();
 		if (servResponse.first == Network::Protocol::Opcode::KO) {
 			this->_lastError.setText("Last Error: Server refuse connection: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
 			return;
 		}
-		this->_myID = std::atoi(servResponse.second.c_str());
-		// this->_logOutButton.setEnabled(true);
-		// this->_logButton.setEnabled(false);
+		this->_myID = Network::Protocol::Packet::uint32FromByteString(servResponse.second);
 	}
 
 	void BabelQTClient::callButton()
@@ -100,6 +99,15 @@ namespace Babel::Client
 			this->_lastError.setText("Last Error: Cannot call, need valid ID");
 			return;
 		}
+		this->_client.sendPacketToServer(Network::Protocol::Opcode::CALL, std::atoi(idToCall.c_str()));
+		std::pair<unsigned char, std::string> servResponse = this->_client.waitServerResponse();
+		if (servResponse.first == Network::Protocol::Opcode::KO || servResponse.first == Network::Protocol::Opcode::CALL_REFUSED) {
+			this->_lastError.setText("Last Error: Server refuse call: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
+			return;
+		}
+		if (servResponse.first == Network::Protocol::Opcode::CALL_ACCEPTED)
+			this->_stateOfCallTxtBx.setText("Calling");
+		this->_lastError.setText("Last Error: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
 	}
 
 	void BabelQTClient::logOut()
@@ -111,7 +119,5 @@ namespace Babel::Client
 			return;
 		}
 		this->_myID = -1;
-		// this->_logOutButton.setEnabled(false);
-		// this->_logButton.setEnabled(true);
 	}
 }

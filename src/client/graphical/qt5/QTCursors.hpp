@@ -10,7 +10,7 @@
 
 #include <QtWidgets>
 namespace Babel::Client {
-	enum cursors {
+	enum QTCursors {
 		ARROWCURSOR = Qt::ArrowCursor,
 		UPARROWCURSOR = Qt::UpArrowCursor,
 		CROSSCURSOR = Qt::CrossCursor,

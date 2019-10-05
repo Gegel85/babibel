@@ -33,7 +33,7 @@ namespace Babel::Client {
 		(void)screen;
 	}
 
-	void QTButton::setCursor(cursors cursor)
+	void QTButton::setCursor(QTCursors cursor)
 	{
 		QPushButton::setCursor(Qt::CursorShape(cursor));
 	}

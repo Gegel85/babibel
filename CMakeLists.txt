@@ -53,6 +53,8 @@ add_executable(
 	src/client/graphical/qt5/QTTypingBox.hpp
 	src/client/graphical/qt5/QTTextBox.cpp
 	src/client/graphical/qt5/QTTextBox.hpp
+	src/client/graphical/qt5/QTLayout.cpp
+	src/client/graphical/qt5/QTLayout.hpp
 	src/client/graphical/GUIScreen.hpp
 	src/client/graphical/GUIScreen.cpp
 	src/client/sound/Compressor.cpp

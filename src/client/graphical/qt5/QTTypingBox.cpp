@@ -11,7 +11,7 @@ namespace Babel::Client
 {
 	QTTypingBox::QTTypingBox(QWidget &parent, const std::string &text, Vector2<int> position, Vector2<unsigned> size) :
 		TypingBox(text, position, size),
-		QTextEdit(QString(text.c_str()), &parent)
+		QLineEdit(QString(text.c_str()), &parent)
 	{
 		this->setGeometry(this->_position.x, this->_position.y, this->_size.x, this->_size.y);
 	}
@@ -23,11 +23,21 @@ namespace Babel::Client
 
 	std::string QTTypingBox::getPlainText() const
 	{
-		return (this->toPlainText().toStdString());
+		return (this->text().toStdString());
 	}
 
 	void QTTypingBox::setEnabled(bool enabled)
 	{
-		QTextEdit::setEnabled(enabled);
+		QLineEdit::setEnabled(enabled);
+	}
+
+	void QTTypingBox::setPlaceholderText(std::string text)
+	{
+		QLineEdit::setPlaceholderText(QString(text.c_str()));
+	}
+
+	void QTTypingBox::setEchoMode(QTEchoModes echomode)
+	{
+		QLineEdit::setEchoMode(QLineEdit::EchoMode(echomode));
 	}
 }

@@ -12,9 +12,6 @@
 #include "../Widget/Button.hpp"
 #include "QTCursors.hpp"
 
-
-//#include "Cursors.hpp"
-
 namespace Babel::Client
 {
 	class QTButton : public Button, public QPushButton {
@@ -24,7 +21,7 @@ namespace Babel::Client
 		void setText(const std::string &text) override;
 		void draw(GUIScreen &screen) override;
 		bool isClicked() const override;
-		void setCursor(cursors cursor);
+		void setCursor(QTCursors cursor);
 		void setClickable(bool clickable);
 		void setEnabled(bool enabled);
 
