@@ -19,6 +19,7 @@ namespace Babel::Client
 		QTTextBox(QWidget &parent, const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 		void setText(const std::string &text);
 		void draw(GUIScreen &screen) override;
+		void setEnabled(bool enabled);
 	};
 }
 #endif

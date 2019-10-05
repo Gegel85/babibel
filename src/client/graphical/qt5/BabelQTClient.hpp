@@ -36,10 +36,12 @@ namespace Babel::Client
 
 	public slots:
 		void sendConnectionLogs();
+		void callButton();
 
 	private:
 		QTScrollBar _scrollBar;
 
+		QTTextBox _lastError;
 		QTButton _logButton;
 		QTTextBox _serverLogged;
 
@@ -47,6 +49,13 @@ namespace Babel::Client
 		QTTextBox _passwordLog;
 		QTTypingBox _username;
 		QTTypingBox _password;
+
+		int _myID = -1;
+		QTTextBox _myIDTxtBx;
+		QTTextBox _idToCallTxtBx;
+		QTTypingBox _idToCallTyBx;
+		QTButton _callButton;
+		QTTextBox _stateOfCallTxtBx;
 
 		bool _end = false;
 		TcpClient &_client;
