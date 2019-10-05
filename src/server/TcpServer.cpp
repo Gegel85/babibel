@@ -77,8 +77,13 @@ namespace Babel::Server
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::GET_FRIENDS:
 					return this->_getFriends(socket);
-				case Network::Protocol::GET_USER_INFOS:
 				case Network::Protocol::CALL:
+					if (!this->_users.at(&socket).connected)
+						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED);
+					if (packet.data.size() != 4)
+						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+					return this->_callUser(socket, Network::Protocol::Packet::uint32FromByteString(packet.data));
+				case Network::Protocol::GET_USER_INFOS:
 				case Network::Protocol::CALL_ACCEPTED:
 				case Network::Protocol::CALL_REFUSED:
 				case Network::Protocol::ADD_FRIEND:
@@ -155,24 +160,28 @@ namespace Babel::Server
 		auto finder = std::find(user.friendList.begin(), user.friendList.end(), ID);
 		if (finder == user.friendList.end()) {
 			user.friendList.push_back(ID);
-			TcpServer::sendPacket((socket, Network::Protocol::OK, ""))
+			TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 		}
 		else
 			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND));
 	}
 
-	void TcpServer::_removeFriends(Network::Socket &socket, unsigned int ID)
-	{
+	void TcpServer::_removeFriends(Network::Socket &socket, unsigned int ID) {
 		auto &user = this->_users.at(&socket);
 
 		if (!this->_users.at(&socket).connected)
-			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED));
+			return (TcpServer::sendPacket(socket, Network::Protocol::KO,
+										  Network::Protocol::ErrorReason::NOT_CONNECTED));
 		auto finder = std::find(user.friendList.begin(), user.friendList.end(), ID);
 		if (finder != user.friendList.end()) {
 			user.friendList.erase(finder);
-			TcpServer::sendPacket((socket, Network::Protocol::OK, ""))
-		}
-		else
-			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND));
+			TcpServer::sendPacket(socket, Network::Protocol::OK, "");
+		} else
+			return (TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND));
+	}
+
+	void TcpServer::_callUser(Babel::Network::Socket &socket, unsigned id)
+	{
+
 	}
 }
