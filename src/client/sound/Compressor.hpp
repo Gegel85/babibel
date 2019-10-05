@@ -12,12 +12,14 @@
 #include <vector>
 
 #define DEFAULT_SAMPLE_RATE 48000
-#define DEFAULT_CHANNELS 2
-#define DEFAULT_APP OPUS_APPLICATION_AUDIO
+#define DEFAULT_CHANNELS 1
+#define DEFAULT_APP OPUS_APPLICATION_VOIP
 #define DEFAULT_BITRATE 64000
 #define DEFAULT_FRAME_SIZE 960
 #define DEFAULT_MAX_FRAME (6 * DEFAULT_FRAME_SIZE)
-#define DEFAULT_MAX_PACKET_SIZE (3 * 1276)
+#define DEFAULT_MAX_PACKET_SIZE 4000
+
+#include "CompressedAudio.hpp"
 
 namespace Babel::Client {
     class Compressor {
@@ -28,7 +30,8 @@ namespace Babel::Client {
         size_t _frame_size;
         size_t _max_frame_size;
         size_t _max_packet_size;
-        static opus_int16 *bytes_to_short(const std::vector<unsigned char> &bytes);
+        static float *_bytes_to_floatptr(const std::vector<float> &bytes);
+        static std::vector<std::vector<float>> _split_vector(const std::vector<float> &vect, unsigned x);
 
 
     public:
@@ -38,8 +41,8 @@ namespace Babel::Client {
                    size_t max_packet_size=DEFAULT_MAX_PACKET_SIZE);
 
         ~Compressor();
-        std::vector<unsigned char> compress_bytes(const std::vector<unsigned char> &bytes) const;
-        std::vector<unsigned char> uncompress_bytes(const std::vector<unsigned char> &bytes) const;
+        CompressedAudio compress_bytes(const std::vector<float> &bytes) const;
+        std::vector<float> uncompress_bytes(const CompressedAudio &compressed_audio) const;
 
 
 

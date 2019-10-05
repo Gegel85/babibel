@@ -113,7 +113,10 @@ namespace Babel::Client
 			this->disconnectFromServer(Network::Protocol::ErrorReason::NORMAL_CLOSURE);
 			throw Exceptions::DisconnectedException("The server closed the connection: " + Network::Protocol::ErrorReason::errorReasonToString(packet.data));
 		case Network::Protocol::CALL:
-			return this->sendPacketToServer(Network::Protocol::CALL_ACCEPTED, "");
+			return this->sendPacketToServer(
+				this->isVoiceConnected() ? Network::Protocol::CALL_REFUSED : Network::Protocol::CALL_ACCEPTED,
+				""
+			);
 		case Network::Protocol::CALL_ACCEPTED:
 			if (Network::Protocol::Packet::uint32FromByteString(packet.data))
 				return this->connectToVoice(
