@@ -39,9 +39,10 @@ namespace Babel::Client
 		void sendConnectionLogs();
 		void logOut();
 		void callButton();
+		void hangUp();
+		void voiceConnect();
 
 	private:
-		QTLayout _usersLayout;
 //		QTScrollBar _scrollBar;
 
 		QTTextBox _lastError;
@@ -60,6 +61,11 @@ namespace Babel::Client
 		QTTypingBox _idToCallTyBx;
 		QTButton _callButton;
 		QTTextBox _stateOfCallTxtBx;
+		QTButton _hangUpButton;
+
+		QTTypingBox _address;
+		QTTypingBox _port;
+		QTButton _voiceConnectButton;
 
 		bool _end = false;
 		TcpClient &_client;

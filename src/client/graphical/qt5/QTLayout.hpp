@@ -27,7 +27,7 @@ namespace Babel::Client
 		QTLayout(QTBoxLayoutDirection dir, QWidget &parent, Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 		void draw(GUIScreen &screen) override;
 		void setEnabled(bool enabled);
-//		void addWidget(Widget &widget);
+//		void addWidget(QWidget *widget);
 	};
 }
 #endif
