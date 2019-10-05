@@ -4,6 +4,11 @@
 #include <portaudio.h>
 #include "../../network/Socket.hpp"
 
+
+#ifndef BABEL_SOUND_HPP
+#define BABEL_SOUND_HPP
+
+
 #define FRAMES_PER_BUFFER (512)
 
 namespace Babel::Client::Sound
@@ -115,3 +120,5 @@ namespace Babel::Client::Sound
 		void _setupStream(size_t sampleRate, unsigned channelCount, bool input, bool output);
 	};
 }
+
+#endif //BABEL_SOUND_HPP

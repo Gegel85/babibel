@@ -29,6 +29,7 @@ namespace Babel::Network
 		~ServerSocket();
 		void bind(unsigned short port, int protocol = IPPROTO_TCP);
 		Socket &acceptClient(const std::function<void (Socket &)> &handler = {});
+		void disconnectClients();
 	};
 }
 
