@@ -26,8 +26,6 @@ namespace Babel::Client
 			this->_voiceSock.bind(port, SOCK_DGRAM, IPPROTO_UDP);
 		} catch (Network::Exceptions::ListenFailedException &) {}
 		try {
-			this->_voiceSock.waitToBeReady(5);
-
 			this->_player.playFromSocket(this->_voiceSock);
 			this->_recorder.playFromSocket(this->_voiceSock);
 		} catch (std::exception &e) {
