@@ -72,6 +72,12 @@ namespace Babel::Network::Protocol
 
 		//! taille: 0 | Appel refusé.
 		CALL_REFUSED,
+
+		//! taille : 4 | Envoie une requête de demande d'ami au serveur
+		ADD_FRIEND,
+
+		//! taille : 4 | Envoie une requête de supression d'ami au serveur 
+		REMOVE_FRIEND,
 	};
 
 	namespace ErrorReason {

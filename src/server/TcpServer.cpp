@@ -76,10 +76,13 @@ namespace Babel::Server
 					this->_users.at(&socket).userId = 0;
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::GET_FRIENDS:
+					return this->_getFriends(socket);
 				case Network::Protocol::GET_USER_INFOS:
 				case Network::Protocol::CALL:
 				case Network::Protocol::CALL_ACCEPTED:
 				case Network::Protocol::CALL_REFUSED:
+				case Network::Protocol::ADD_FRIEND:
+				case Network::Protocol::REMOVE_FRIEND:
 					return;
 				default:
 					return TcpServer::disconnectClient(socket, Network::Protocol::ErrorReason::BAD_OPCODE);
@@ -121,5 +124,18 @@ namespace Babel::Server
 			} catch (Network::Exceptions::TimeoutException &) {
 			} catch (Network::Exceptions::EOFException &) {}
 		}
+	}
+
+	void TcpServer::_getFriends(Network::Socket &socket)
+	{
+		auto &friendList = this->_users.at(&socket).friendList;
+		std::string data;
+
+		if (!this->_users.at(&socket).connected)
+			return(TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED));
+		data.reserve(friendList.size() * 4);
+		for (auto value : friendList)
+			data += Network::Protocol::Packet::uint32toByteString(value);
+		TcpServer::sendPacket(socket, Network::Protocol::OK, data);
 	}
 }
