@@ -8,13 +8,25 @@
 #include <cstring>
 #include "CompressedAudio.hpp"
 #include "Compressor.hpp"
-//#include "../../network/Protocol.hpp"
+#include "../../network/Protocol.hpp"
 
 namespace Babel::Client {
     CompressedAudio::CompressedAudio(const std::vector<CompressedPacket> &data):
     _data(data),
     _vector_length(data.size())
     {}
+
+    CompressedAudio::CompressedAudio(const std::string &strs)
+    {
+        std::string str = strs;
+
+        while (!str.empty()) {
+            unsigned length = Network::Protocol::Packet::uint32FromByteString(str);
+
+            this->_data.emplace_back(str);
+            str = str.substr(4 + length);
+        }
+    }
 
     std::vector<unsigned char> CompressedAudio::_bytes_to_vector(unsigned char *data, size_t length)
     {
@@ -63,9 +75,16 @@ namespace Babel::Client {
 
 
     CompressedPacket::CompressedPacket(unsigned char *data, size_t length):
-    _data(data),
-    _length(length)
+    _length(length),
+    _data(data)
     {}
+
+    CompressedPacket::CompressedPacket(const std::string &str) :
+        _length{Network::Protocol::Packet::uint32FromByteString(str)},
+        _data{new unsigned char[this->_length]}
+    {
+        std::memcpy(this->_data, &str.c_str()[4], this->_length);
+    }
 
     CompressedPacket::~CompressedPacket()
     {
@@ -74,8 +93,7 @@ namespace Babel::Client {
 
     std::string CompressedPacket::to_string() const
     {
-        return nullptr;
-        //return Network::Protocol::Packet::uint32toByteString(this->_length) + reinterpret_cast<char *>(this->_data);
+        return Network::Protocol::Packet::uint32toByteString(this->_length) + reinterpret_cast<char *>(this->_data);
     }
 
     size_t CompressedPacket::get_length() const

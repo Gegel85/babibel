@@ -15,11 +15,12 @@ namespace Babel::Client {
 
     class CompressedPacket {
     private:
-        unsigned char *_data;
         size_t _length;
+        unsigned char *_data;
 
     public:
         CompressedPacket(const CompressedPacket &);
+        CompressedPacket(const std::string &str);
         CompressedPacket(unsigned char *data, size_t length);
         ~CompressedPacket();
         std::string to_string() const;
@@ -34,6 +35,7 @@ namespace Babel::Client {
         static std::vector<unsigned char> _bytes_to_vector(unsigned char *data, size_t length);
     public:
         CompressedAudio(const std::vector<CompressedPacket> &data);
+        CompressedAudio(const std::string &str);
         std::vector<float> uncompress_audio(const Compressor &compressor) const;
         std::string to_string() const;
         size_t get_vector_length() const;
