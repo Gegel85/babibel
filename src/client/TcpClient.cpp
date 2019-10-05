@@ -18,28 +18,14 @@ namespace Babel::Client
 		this->disconnectFromServer();
 	}
 
-	void TcpClient::hostVoice(unsigned short port)
+	void TcpClient::connectToVoice(unsigned ip, unsigned short port)
 	{
-		this->disconnectFromVoice();
-		std::cout << "Hosting voice server on port " << std::to_string(port) << std::endl;
 		try {
 			this->_voiceSock.bind(port, SOCK_DGRAM, IPPROTO_UDP);
 		} catch (Network::Exceptions::ListenFailedException &) {}
 		try {
-			this->_player.playFromSocket(this->_voiceSock);
-			this->_recorder.playFromSocket(this->_voiceSock);
-		} catch (std::exception &e) {
-			std::cerr << "Couldn't connect to voice client: " << e.what() << std::endl;
-		}
-	}
-
-	void TcpClient::connectToVoice(const std::string &ip, unsigned short port)
-	{
-		this->disconnectFromVoice();
-		std::cout << "Connecting to voice server at " << ip << ":" << std::to_string(port) << std::endl;
-		try {
-			this->_voiceSock.connect(ip, port, SOCK_DGRAM, IPPROTO_UDP);
-			this->_recorder.playFromSocket(this->_voiceSock);
+			this->_voiceSock.setRemoteIp(ip);
+			this->_recorder.recordAudioToSocket(this->_voiceSock);
 			this->_player.playFromSocket(this->_voiceSock);
 		} catch (std::exception &e) {
 			std::cerr << "Couldn't connect to voice server: " << e.what() << std::endl;
@@ -118,14 +104,10 @@ namespace Babel::Client
 				""
 			);
 		case Network::Protocol::CALL_ACCEPTED:
-			if (Network::Protocol::Packet::uint32FromByteString(packet.data))
-				return this->connectToVoice(
-					inet_ntoa({
-						Network::Protocol::Packet::uint32FromByteString(packet.data)
-					}),
-					Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2))
-				);
-			return this->hostVoice(Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2)));
+			return this->connectToVoice(
+				Network::Protocol::Packet::uint32FromByteString(packet.data),
+				Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2))
+			);
 		case Network::Protocol::CALL_REFUSED:
 		case Network::Protocol::OK:
 		case Network::Protocol::KO:

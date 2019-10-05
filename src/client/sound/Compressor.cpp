@@ -90,7 +90,6 @@ namespace Babel::Client
 
         std::vector<std::vector<float>> buffers = this->_split_vector(buffer, this->_frame_size * this->_channels);
         std::vector<CompressedPacket> result = {};
-        printf("bytes   len: %lu\nbuffer  len: %lu\nbuffers len: %lu\n", bytes.size(), buffer.size(), buffers.size());
 
         for (auto &chuncked : buffers) {
             float *input_data = this->_bytes_to_floatptr(chuncked);
@@ -98,7 +97,6 @@ namespace Babel::Client
             int nb = opus_encode_float(this->_encoder, input_data, this->_frame_size, output_data,
                                        this->_max_packet_size);
             delete[] input_data;
-            printf("Encode float returned %d\n", nb);
             if (nb < 0)
                 throw CompressingError("An error occured durring encoding" + std::string(opus_strerror(nb)));
             result.emplace_back(output_data, nb);
@@ -116,7 +114,6 @@ namespace Babel::Client
             auto *out = new float[this->_frame_size * this->_channels];
             int dec_samples = opus_decode_float(this->_decoder, chuncked.get_raw_data(), chuncked.get_length(),
                                                 out, this->_frame_size, 0);
-            printf("Decode float returned %d\n", dec_samples);
             if (dec_samples < 0) {
                 delete[] out;
                 std::cerr << "An error has occured durring decoding: " << opus_strerror(dec_samples);

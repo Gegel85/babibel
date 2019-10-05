@@ -38,9 +38,8 @@ namespace Babel::Client
 		void sendPacketToServer(Network::Protocol::Opcode op, const std::string &data);
 		std::pair<unsigned char, std::string> waitServerResponse(int timeout = -1);
 		void sendPacketToServer(Network::Protocol::Opcode op, unsigned data);
-		void connectToVoice(const std::string &ip, unsigned short port);
+		void connectToVoice(unsigned ip, unsigned short port);
 		void disconnectFromServer(const std::string &reason);
-		void hostVoice(unsigned short port);
 		void disconnectFromServer();
 		void disconnectFromVoice();
 		void disconnect();
