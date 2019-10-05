@@ -25,4 +25,9 @@ namespace Babel::Client
 	{
 		return (this->toPlainText().toStdString());
 	}
+
+	void QTTypingBox::setEnabled(bool enabled)
+	{
+		QTextEdit::setEnabled(enabled);
+	}
 }

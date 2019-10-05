@@ -12,17 +12,17 @@
 #include "../network/Socket.hpp"
 #include "../network/ServerSocket.hpp"
 #include "../network/Protocol.hpp"
+#include "sound/Sound.hpp"
 
 namespace Babel::Client
 {
 	class TcpClient {
 	private:
-		bool _voiceConnectionEnd = false;
+		Sound::Sound _recorder;
+		Sound::Sound _player;
 		bool _serverConnectionEnd = false;
 		std::thread _serverThread;
-		std::thread _voiceThread;
 		std::thread _serverConnectionThread;
-		std::thread _voiceConnectionThread;
 		std::string _lastError = "";
 		std::optional<std::pair<unsigned char, std::string>> _lastResponse = {{Network::Protocol::OK, ""}};
 		Network::ServerSocket _voiceSock;
@@ -35,12 +35,12 @@ namespace Babel::Client
 	public:
 		~TcpClient();
 		void connectToServer(const std::string &ip, unsigned short port, unsigned retryTime = 0);
-		void connectToVoice(const std::string &ip, unsigned short port, unsigned retryTime = 0);
 		void sendPacketToServer(Network::Protocol::Opcode op, const std::string &data);
 		std::pair<unsigned char, std::string> waitServerResponse(int timeout = -1);
 		void sendPacketToServer(Network::Protocol::Opcode op, unsigned data);
-		void hostVoice(unsigned short port, unsigned retryTime = 0);
+		void connectToVoice(const std::string &ip, unsigned short port);
 		void disconnectFromServer(const std::string &reason);
+		void hostVoice(unsigned short port);
 		void disconnectFromServer();
 		void disconnectFromVoice();
 		void disconnect();

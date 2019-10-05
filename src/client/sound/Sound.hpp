@@ -3,6 +3,12 @@
 #include <functional>
 #include <thread>
 #include <portaudio.h>
+#include "../../network/Socket.hpp"
+
+
+#ifndef BABEL_SOUND_HPP
+#define BABEL_SOUND_HPP
+
 
 #define FRAMES_PER_BUFFER (512)
 
@@ -79,14 +85,15 @@ namespace Babel::Client::Sound
 			unsigned int currentIndex;
 			std::vector<float> buffer;
 			PortAudioHandler handler;
+			Network::Socket *socket;
 		};
 
 		Sound();
 		~Sound();
 		std::vector<float> recordAudio(float duration, size_t sampleRate = 48000, unsigned channelCount = 2);
 		void playBuffer(const std::vector<float> &buffer, size_t sampleRate = 48000, unsigned channelCount = 2);
-		std::vector<float> recordAudioToSocket(float duration, size_t sampleRate = 48000, unsigned channelCount = 2);
-		void playBufferFromSocket(const std::vector<float> &buffer, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void recordAudioToSocket(Network::Socket &, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void playFromSocket(Network::Socket &, size_t sampleRate = 48000, unsigned channelCount = 2);
 		void stopActions();
 		bool isReady() const;
 
@@ -114,3 +121,5 @@ namespace Babel::Client::Sound
 		void _setupStream(size_t sampleRate, unsigned channelCount, bool input, bool output);
 	};
 }
+
+#endif //BABEL_SOUND_HPP

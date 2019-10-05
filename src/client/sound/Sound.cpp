@@ -4,6 +4,7 @@
 #include <thread>
 #include <cmath>
 #include "Sound.hpp"
+#include "../../network/Protocol.hpp"
 
 namespace Babel::Client::Sound
 {
@@ -40,6 +41,29 @@ namespace Babel::Client::Sound
 
 		this->_state.buffer = buffer;
 		this->_play(_playBufferCallback, sampleRate, channelCount);
+	}
+
+	void Sound::playFromSocket(Network::Socket &sock, size_t sampleRate, unsigned int channelCount)
+	{
+		if (!this->isReady())
+			throw Exceptions::AlreadyWorkingException("This sound is still working");
+
+		this->_state.socket = &sock;
+		this->_play(_playSocketCallback, sampleRate, channelCount);
+	}
+
+	void Sound::recordAudioToSocket(Babel::Network::Socket &sock, size_t sampleRate, unsigned int channelCount)
+	{
+		if (!this->isReady())
+			throw Exceptions::AlreadyWorkingException("This sound is still working");
+
+		this->_state.socket = &sock;
+		this->_play(_recordSocketCallback, sampleRate, channelCount);
+	}
+
+	void Sound::stopActions()
+	{
+		this->_state.stopped = true;
 	}
 
 	bool Sound::isReady() const
@@ -199,6 +223,66 @@ namespace Babel::Client::Sound
 					*output++ = state.buffer[j];
 
 			state.currentIndex += framesPerBuffer;
+			return static_cast<int>(state.stopped ? paComplete : paContinue);
+		}
+	};
+
+	Sound::PortAudioHandler Sound::_recordSocketCallback{
+		[](
+			const float *input,
+			float *,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *,
+			PaStreamCallbackFlags ,
+			SoundState &state
+		)
+		{
+			if (!state.socket || !state.socket->isOpen()) {
+				state.stopped = true;
+				return static_cast<int>(paComplete);
+			}
+
+			framesPerBuffer *= state.channelCount;
+
+			unsigned long framesLeft = state.buffer.size() - state.currentIndex;
+			long framesToCalc;
+			std::string buffer;
+
+			framesToCalc = framesLeft < framesPerBuffer ? framesLeft : framesPerBuffer;
+
+			buffer.reserve(framesToCalc);
+			if (input)
+				for (unsigned i = 0; i < framesToCalc; i += state.channelCount)
+					for (unsigned j = i; j < i + state.channelCount; j++)
+						buffer += Network::Protocol::Packet::float32ToByteString(*input++);
+
+			state.socket->send(buffer);
+			return static_cast<int>(state.stopped ? paComplete : paContinue);
+		}
+	};
+
+	Sound::PortAudioHandler Sound::_playSocketCallback{
+		[](
+			const float *,
+			float *output,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *,
+			PaStreamCallbackFlags ,
+			SoundState &state
+		)
+		{
+			if (!state.socket || !state.socket->isOpen()) {
+				state.stopped = true;
+				return static_cast<int>(paComplete);
+			}
+			framesPerBuffer *= state.channelCount;
+
+			std::string buffer = state.socket->read(framesPerBuffer * sizeof(float));
+
+			for (unsigned i = 0; i < framesPerBuffer;  i += state.channelCount)
+				for (unsigned j = i; j < i + state.channelCount; j++)
+					*output++ = Network::Protocol::Packet::float32FromByteString(buffer.substr(j * sizeof(float), sizeof(float)));
+
 			return static_cast<int>(state.stopped ? paComplete : paContinue);
 		}
 	};

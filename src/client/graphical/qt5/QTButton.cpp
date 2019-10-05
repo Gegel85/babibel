@@ -30,7 +30,7 @@ namespace Babel::Client {
 
 	void QTButton::draw(GUIScreen &screen)
 	{
-		
+		(void)screen;
 	}
 
 	void QTButton::setCursor(cursors cursor)

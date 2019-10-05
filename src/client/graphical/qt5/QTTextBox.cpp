@@ -29,4 +29,8 @@ namespace Babel::Client
 
 	}
 
+	void QTTextBox::setEnabled(bool enabled)
+	{
+		QLabel::setEnabled(enabled);
+	}
 }

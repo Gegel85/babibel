@@ -72,6 +72,12 @@ namespace Babel::Network::Protocol
 
 		//! taille: 0 | Appel refusé.
 		CALL_REFUSED,
+
+		//! taille : 4 | Envoie une requête de demande d'ami au serveur
+		ADD_FRIEND,
+
+		//! taille : 4 | Envoie une requête de supression d'ami au serveur 
+		REMOVE_FRIEND,
 	};
 
 	namespace ErrorReason {
@@ -161,6 +167,10 @@ namespace Babel::Network::Protocol
 		//! @param str  Chaîne de caractère à transformer
 		//! @return	 Un entier non signé réprésentant la chaine de caractère
 		static unsigned		uint32FromByteString(const std::string &str);
+
+		static std::string	float32ToByteString(float value);
+
+		static float		float32FromByteString(const std::string &str);
 	};
 }
 

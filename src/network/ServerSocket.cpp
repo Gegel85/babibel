@@ -40,7 +40,7 @@ namespace Babel::Network
 		if (!handler)
 			throw Exceptions::InvalidHandlerException("The data handler sent to acceptClient is empty");
 
-		int i = 0;
+		unsigned i = 0;
 
 		while (i < this->_clients.size() && this->_clients.at(i)->isOpen())
 			i++;
@@ -49,8 +49,18 @@ namespace Babel::Network
 			this->_clients.emplace_back(new Socket());
 
 		Socket &socket = *this->_clients.at(i);
+		sockaddr_in address{};
+		socklen_t size = sizeof(address);
 
-		socket.setSocket(::accept(this->getSocket(), nullptr, nullptr));
+		socket.setSocket(
+			::accept(
+				this->getSocket(),
+				reinterpret_cast<struct sockaddr *>(&address),
+				&size
+			),
+			address.sin_addr.s_addr
+		);
+
 		this->_threads.emplace_back([&socket, handler, this](){
 			Socket &sock = socket;
 
@@ -65,5 +75,10 @@ namespace Babel::Network
 				}
 		});
 		return socket;
+	}
+
+	void ServerSocket::disconnectClients()
+	{
+		this->_clients.clear();
 	}
 }
