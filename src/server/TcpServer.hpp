@@ -37,7 +37,8 @@ namespace Babel::Server
 		std::function<void (Network::Socket &)> _handler;
 		std::map<Network::Socket *, Client> _users;
 
-        void _getFriends(Network::Socket &socket);
+		void _getFriends(Network::Socket &socket);
+		void _callUser(Network::Socket &socket, unsigned id);
 	public:
 		static void sendPacket(Network::Socket &, Network::Protocol::Opcode op, const std::string &data);
 		static void disconnectClient(Network::Socket &, const std::string &code);

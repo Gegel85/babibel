@@ -23,7 +23,7 @@ namespace Babel::Network
 	class Socket {
 	public:
 		explicit Socket();
-		Socket(SOCKET sock);
+		Socket(SOCKET sock, unsigned remoteIp);
 		Socket(Socket &) = delete;
 
 		//! @brief Destructeur
@@ -77,8 +77,9 @@ namespace Babel::Network
 
 		//! @brief Lie un SOCKET système à l'objet.
 		//! @param sock SOCKET système.
+		//! @param remoteIp ip à laquel le socket est actuellement connecté
 		//! @throw AlreadyOpenedException
-		void	setSocket(SOCKET soc);
+		void	setSocket(SOCKET soc, unsigned remoteIp = 0);
 
 		//! @brief Attend que le Socket soit prêt en lecture.
 		//! @param timeout Temps d'attente avant de lever l'exception TimeoutException.
@@ -91,8 +92,11 @@ namespace Babel::Network
 		//! @warning La valeur est sucéptible de changer si d'autres appels systèmes ont été fait entre la dernière erreur du Socket et l'appel de cette fonction !
 		static std::string	getLastSocketError();
 
+		unsigned getRemoteIp() const;
+
 	protected:
 		mutable SOCKET	_socket = INVALID_SOCKET;
+		unsigned	_remoteIp = 0;
 	};
 }
 

@@ -52,7 +52,7 @@ namespace Babel::Server
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::LOGIN:
 				case Network::Protocol::REGISTER:
-					if (packet.data.size() != 32)
+					if (packet.data.size() != 64)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
 					if (this->_users.at(&socket).connected)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
@@ -60,8 +60,8 @@ namespace Babel::Server
 					this->_users.at(&socket).userId = this->_lastUserID;
 					this->_createdUsers.push_back({
 						this->_lastUserID,
-						packet.data.substr(0, 16),
-						packet.data.substr(16, 16)
+						packet.data.substr(0, 32),
+						packet.data.substr(32, 32)
 					});
 					return TcpServer::sendPacket(
 						socket,
@@ -76,8 +76,13 @@ namespace Babel::Server
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::GET_FRIENDS:
 					return this->_getFriends(socket);
-				case Network::Protocol::GET_USER_INFOS:
 				case Network::Protocol::CALL:
+					if (!this->_users.at(&socket).connected)
+						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED);
+					if (packet.data.size() != 4)
+						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+					return this->_callUser(socket, Network::Protocol::Packet::uint32FromByteString(packet.data));
+				case Network::Protocol::GET_USER_INFOS:
 				case Network::Protocol::CALL_ACCEPTED:
 				case Network::Protocol::CALL_REFUSED:
 				case Network::Protocol::ADD_FRIEND:
@@ -136,5 +141,10 @@ namespace Babel::Server
 		for (auto value : friendList)
 			data += Network::Protocol::Packet::uint32toByteString(value);
 		TcpServer::sendPacket(socket, Network::Protocol::OK, data);
+	}
+
+	void TcpServer::_callUser(Babel::Network::Socket &socket, unsigned id)
+	{
+
 	}
 }

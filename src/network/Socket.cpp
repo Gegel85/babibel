@@ -51,11 +51,10 @@ namespace Babel::Network
 	#endif
 	}
 
-	Socket::Socket(SOCKET sock)
+	Socket::Socket(SOCKET sock, unsigned remoteIp) :
+		_socket(sock),
+		_remoteIp(remoteIp)
 	{
-		if (this->isOpen())
-			throw Exceptions::AlreadyOpenedException("This socket is already opened");
-		this->_socket = sock;
 	}
 
 	Socket::~Socket()
@@ -102,12 +101,13 @@ namespace Babel::Network
 			this->_socket = INVALID_SOCKET;
 			throw Exceptions::ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
 		}
+		this->_remoteIp = ip;
 	}
 
 	void Socket::disconnect()
 	{
 		if (!this->isOpen())
-			throw Exceptions::NotConnectedException("This socket is not opened");
+			return;
 		closesocket(this->_socket);
 		this->_socket = INVALID_SOCKET;
 	}
@@ -117,11 +117,12 @@ namespace Babel::Network
 		return this->_socket;
 	}
 
-	void Socket::setSocket(SOCKET sock)
+	void Socket::setSocket(SOCKET sock, unsigned remoteIp)
 	{
 		if (this->isOpen())
 			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
+		this->_remoteIp = remoteIp;
 		this->_socket = sock;
 	}
 
@@ -170,6 +171,9 @@ namespace Babel::Network
 		FD_SET	set;
 		timeval time = {timeout, 0};
 
+		if (!this->isOpen())
+			throw Exceptions::NotConnectedException("This socket is not opened");
+
 		FD_ZERO(&set);
 		FD_SET(this->_socket, &set);
 
@@ -191,5 +195,12 @@ namespace Babel::Network
 			this->_socket = INVALID_SOCKET;
 		}
 		return this->_socket != INVALID_SOCKET;
+	}
+
+	unsigned Socket::getRemoteIp() const
+	{
+		if (!this->isOpen())
+			throw Exceptions::NotConnectedException("This socket is not opened");
+		return this->_remoteIp;
 	}
 }

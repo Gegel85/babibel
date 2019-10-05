@@ -18,11 +18,33 @@ namespace Babel::Client
 		this->disconnectFromServer();
 	}
 
-	void TcpClient::hostVoice(unsigned short port, unsigned int retryTime)
-	{}
+	void TcpClient::hostVoice(unsigned short port)
+	{
+		this->disconnectFromVoice();
+		this->_voiceSock.bind(port);
+		try {
+			this->_voiceSock.waitToBeReady(5);
 
-	void TcpClient::connectToVoice(const std::string &ip, unsigned short port, unsigned int retryTime)
-	{}
+			Network::Socket &sock = this->_voiceSock.acceptClient([](Network::Socket &) {});
+
+			this->_recorder.playFromSocket(sock);
+			this->_player.playFromSocket(sock);
+		} catch (std::exception &e) {
+			std::cerr << "Couldn't connect to voice client: " << e.what() << std::endl;
+		}
+	}
+
+	void TcpClient::connectToVoice(const std::string &ip, unsigned short port)
+	{
+		this->disconnectFromVoice();
+		try {
+			this->_voiceSock.connect(ip, port, IPPROTO_UDP);
+			this->_recorder.playFromSocket(this->_voiceSock);
+			this->_player.playFromSocket(this->_voiceSock);
+		} catch (std::exception &e) {
+			std::cerr << "Couldn't connect to voice server: " << e.what() << std::endl;
+		}
+	}
 
 	void TcpClient::connectToServer(const std::string &ip, unsigned short port, unsigned retryTime)
 	{
@@ -100,7 +122,7 @@ namespace Babel::Client
 					}),
 					Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2))
 				);
-			return this->hostVoice(Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2)), 10000);
+			return this->hostVoice(Network::Protocol::Packet::uint16FromByteString(packet.data.substr(4, 2)));
 		case Network::Protocol::CALL_REFUSED:
 		case Network::Protocol::OK:
 		case Network::Protocol::KO:
@@ -126,7 +148,10 @@ namespace Babel::Client
 	void TcpClient::disconnectFromVoice()
 	{
 		std::cout << "Disconnecting from voice" << std::endl;
-		_disconnect(this->_voiceConnectionEnd, this->_voiceConnectionThread, this->_voiceThread, this->_voiceSock);
+		this->_voiceSock.disconnect();
+		this->_recorder.stopActions();
+		this->_player.stopActions();
+		std::cout << "Done !" << std::endl;
 	}
 
 	void TcpClient::disconnectFromServer()
