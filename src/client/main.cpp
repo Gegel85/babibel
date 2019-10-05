@@ -13,6 +13,7 @@
 #include "../network/Protocol.hpp"
 #include "../network/SocketExceptions.hpp"
 #include "TcpClient.hpp"
+#include "sound/Sound.hpp"
 
 namespace Babel::Client
 {

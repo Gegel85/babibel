@@ -66,8 +66,7 @@ namespace Babel::Server
 					return TcpServer::sendPacket(
 						socket,
 						Network::Protocol::OK,
-						Network::Protocol::Packet::uint32toByteString(
-							this->_lastUserID++) + packet.data.substr(0, 16)
+						Network::Protocol::Packet::uint32toByteString(this->_lastUserID++) + packet.data.substr(0, 16)
 					);
 				case Network::Protocol::LOGOUT:
 					if (!this->_users.at(&socket).connected)

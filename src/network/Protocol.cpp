@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <cstring>
 #include "Protocol.hpp"
 
 namespace Babel::Network::Protocol
@@ -86,6 +87,41 @@ namespace Babel::Network::Protocol
 		return {
 			static_cast<char>(value >> 8U),
 			static_cast<char>(value)
+		};
+	}
+
+	float Packet::float32FromByteString(const std::string &str)
+	{
+		float value;
+		char *buffer = reinterpret_cast<char *>(&value);
+		unsigned short magic = 0xFFFE;
+
+		if (*reinterpret_cast<unsigned char *>(&magic) == 0xFE) {
+			for (int i = 3; i >= 0; i--)
+				buffer[i] = str.at(3 - i);
+		} else
+			std::memcpy(buffer, str.c_str(), 4);
+		return value;
+	}
+
+	std::string Packet::float32ToByteString(float value)
+	{
+		char *buffer = reinterpret_cast<char *>(&value);
+		unsigned short magic = 0xFFFE;
+
+		if (*reinterpret_cast<unsigned char *>(&magic) == 0xFE) {
+			return {
+				buffer[3],
+				buffer[2],
+				buffer[1],
+				buffer[0]
+			};
+		}
+		return {
+			buffer[0],
+			buffer[1],
+			buffer[2],
+			buffer[3],
 		};
 	}
 

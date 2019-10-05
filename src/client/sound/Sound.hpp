@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
+#include <functional>
 #include <portaudio.h>
+#include "../../network/Socket.hpp"
 
 #define FRAMES_PER_BUFFER (512)
 
@@ -50,6 +52,11 @@ namespace Babel::Client::Sound
 			explicit InvalidChannelCountException(const std::string &msg) : BaseException(msg) {};
 		};
 
+		class AlreadyWorkingException : public BaseException {
+		public:
+			explicit AlreadyWorkingException(const std::string &msg) : BaseException(msg) {};
+		};
+
 		class NoOutputDeviceException : public BaseException {
 		public:
 			explicit NoOutputDeviceException(const std::string &msg) : BaseException(msg) {};
@@ -62,35 +69,49 @@ namespace Babel::Client::Sound
 	}
 
 	class Sound {
-	private:
+	public:
+		struct SoundState;
+		typedef std::function<int (const float *, float *, unsigned long, const PaStreamCallbackTimeInfo *, PaStreamCallbackFlags, SoundState &)> PortAudioHandler;
+
 		struct SoundState {
+			bool stopped;
 			unsigned int channelCount;
 			unsigned int currentIndex;
 			std::vector<float> buffer;
+			PortAudioHandler handler;
+			Network::Socket *socket;
 		};
 
-		static int _playCallback(
-			const void *inputBuffer,
-			void *outputBuffer,
-			unsigned long framesPerBuffer,
-			const PaStreamCallbackTimeInfo *timeInfo,
-			PaStreamCallbackFlags statusFlags,
-			void *userData
-		);
-
-		static int _recordCallback(
-			const void *inputBuffer,
-			void *outputBuffer,
-			unsigned long framesPerBuffer,
-			const PaStreamCallbackTimeInfo *timeInfo,
-			PaStreamCallbackFlags statusFlags,
-			void *userData
-		);
-
-	public:
 		Sound();
 		~Sound();
 		std::vector<float> recordAudio(float duration, size_t sampleRate = 48000, unsigned channelCount = 2);
 		void playBuffer(const std::vector<float> &buffer, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void recordAudioToSocket(Network::Socket &, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void playFromSocket(Network::Socket &, size_t sampleRate = 48000, unsigned channelCount = 2);
+		void stopActions();
+		bool isReady() const;
+
+	private:
+
+		SoundState _state;
+		std::thread _mainThread;
+
+		static int _defaultCallback(
+			const void *inputBuffer,
+			void *outputBuffer,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *timeInfo,
+			PaStreamCallbackFlags statusFlags,
+			void *userData
+		);
+
+		static PortAudioHandler _playBufferCallback;
+		static PortAudioHandler _recordBufferCallback;
+		static PortAudioHandler _playSocketCallback;
+		static PortAudioHandler _recordSocketCallback;
+
+		void _play(const PortAudioHandler &, size_t sampleRate, unsigned channelCount);
+		void _record(const PortAudioHandler &, size_t sampleRate, unsigned channelCount);
+		void _setupStream(size_t sampleRate, unsigned channelCount, bool input, bool output);
 	};
 }

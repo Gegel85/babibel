@@ -18,6 +18,7 @@ namespace Babel::Client
 		QTTypingBox(QWidget &parent, const std::string &text = "", Vector2<int> position = {0, 0}, Vector2<unsigned> size = {0, 0});
 		void draw(GUIScreen &screen) override;
 		std::string getPlainText() const;
+		void setEnabled(bool enabled);
 	};
 }
 #endif
