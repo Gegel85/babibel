@@ -9,6 +9,7 @@ namespace Babel::Client::Sound
 {
 	Sound::Sound()
 	{
+		this->_state.stopped = true;
 		PaError err = Pa_Initialize();
 
 		if (err != paNoError)
@@ -17,41 +18,96 @@ namespace Babel::Client::Sound
 
 	Sound::~Sound()
 	{
-
+		this->_state.stopped = true;
+		if (this->_mainThread.joinable())
+			this->_mainThread.join();
 	}
 
-	void Sound::playBuffer(const std::vector<float> &buffer, size_t sampleRate, unsigned channelCount)
+	std::vector<float> Sound::recordAudio(float duration, size_t sampleRate, unsigned int channelCount)
+	{
+		if (!this->isReady())
+			throw Exceptions::AlreadyWorkingException("This sound is still working");
+
+		this->_state.buffer.resize(std::ceil(duration * sampleRate * channelCount), 0);
+		this->_record(_recordBufferCallback, sampleRate, channelCount);
+		return this->_state.buffer;
+	}
+
+	void Sound::playBuffer(const std::vector<float> &buffer, size_t sampleRate, unsigned int channelCount)
+	{
+		if (!this->isReady())
+			throw Exceptions::AlreadyWorkingException("This sound is still working");
+
+		this->_state.buffer = buffer;
+		this->_play(_playBufferCallback, sampleRate, channelCount);
+	}
+
+	bool Sound::isReady() const
+	{
+		return this->_state.stopped;
+	}
+
+	void Sound::_play(const PortAudioHandler &handler, size_t sampleRate, unsigned channelCount)
+	{
+		this->_state.handler = handler;
+		this->_setupStream(sampleRate, channelCount, false, true);
+	}
+
+	void Sound::_record(const Babel::Client::Sound::Sound::PortAudioHandler &handler, size_t sampleRate, unsigned channelCount)
+	{
+		this->_state.handler = handler;
+		this->_setupStream(sampleRate, channelCount, true, false);
+		this->_mainThread.join();
+	}
+
+	void Sound::_setupStream(size_t sampleRate, unsigned channelCount, bool input, bool output)
 	{
 		PaError		err;
-		SoundState	state;
 		PaStream	*stream;
-		PaStreamParameters params;
+		SoundState	&state = this->_state;
+		PaStreamParameters inparams;
+		PaStreamParameters outparams;
 
 		if (!channelCount)
 			throw Exceptions::InvalidChannelCountException("There must be at least 1 channel");
 
+		if (this->_mainThread.joinable())
+			this->_mainThread.join();
+
+		state.stopped = false;
 		state.channelCount = channelCount;
 		state.currentIndex = 0;
-		state.buffer = buffer;
 
-		params.device = Pa_GetDefaultOutputDevice(); /* default output device */
-		if (params.device == paNoDevice)
-			throw Exceptions::NoOutputDeviceException("No default output device.");
+		if (input) {
+			inparams.device = Pa_GetDefaultInputDevice();
+			if (inparams.device == paNoDevice)
+				throw Exceptions::NoInputDeviceException("No default input device");
 
-		params.channelCount = channelCount;
-		params.sampleFormat = paFloat32;
-		params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
-		params.hostApiSpecificStreamInfo = nullptr;
+			inparams.channelCount = channelCount;
+			inparams.sampleFormat = paFloat32;
+			inparams.suggestedLatency = Pa_GetDeviceInfo(inparams.device)->defaultLowInputLatency;
+			inparams.hostApiSpecificStreamInfo = nullptr;
+		}
+		if (output) {
+			outparams.device = Pa_GetDefaultOutputDevice(); /* default output device */
+			if (outparams.device == paNoDevice)
+				throw Exceptions::NoOutputDeviceException("No default output device.");
+
+			outparams.channelCount = channelCount;
+			outparams.sampleFormat = paFloat32;
+			outparams.suggestedLatency = Pa_GetDeviceInfo(outparams.device)->defaultLowOutputLatency;
+			outparams.hostApiSpecificStreamInfo = nullptr;
+		}
 
 		err = Pa_OpenStream(
 			&stream,
-			nullptr,
-			&params,
+			input ? &inparams : nullptr,
+			output ? &outparams : nullptr,
 			sampleRate,
 			FRAMES_PER_BUFFER,
 			paClipOff,
-			Sound::_playCallback,
-			&state
+			Sound::_defaultCallback,
+			this
 		);
 		if (err != paNoError)
 			throw Exceptions::OpenStreamErrorException(std::string("Couldn't open stream: ") + Pa_GetErrorText(err));
@@ -63,132 +119,101 @@ namespace Babel::Client::Sound
 		if (err != paNoError)
 			throw Exceptions::StartStreamErrorException(std::string("Couldn't close stream: ") + Pa_GetErrorText(err));
 
-		for (err = Pa_IsStreamActive(stream); err == 1; err = Pa_IsStreamActive(stream))
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		this->_mainThread = std::thread{[stream](){
+			try {
+				PaError	err;
 
-		if (err < 0)
-			throw Exceptions::StreamActivityCheckErrorException(std::string("Couldn't check stream's activity: ") + Pa_GetErrorText(err));
+				for (err = Pa_IsStreamActive(stream); err == 1; err = Pa_IsStreamActive(stream))
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-		err = Pa_CloseStream(stream);
-		if (err != paNoError)
-			throw Exceptions::CloseStreamErrorException(std::string("Couldn't close stream: ") + Pa_GetErrorText(err));
+				if (err < 0)
+					throw Exceptions::StreamActivityCheckErrorException(std::string("Couldn't check stream's activity: ") + Pa_GetErrorText(err));
 
+				err = Pa_CloseStream(stream);
+				if (err != paNoError)
+					throw Exceptions::CloseStreamErrorException(std::string("Couldn't close stream: ") + Pa_GetErrorText(err));
+			} catch (std::exception &e) {
+				std::cerr << "Error in playing thread: " << e.what() << std::endl;
+			}
+		}};
 	}
 
-	std::vector<float> Sound::recordAudio(float duration, size_t sampleRate, unsigned channelCount)
-	{
-		PaError		err;
-		SoundState	state;
-		PaStream	*stream;
-		PaStreamParameters params;
+	Sound::PortAudioHandler Sound::_recordBufferCallback{
+		[](
+			const float *input,
+			float *,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *,
+			PaStreamCallbackFlags ,
+			SoundState &state
+		)
+		{
+			framesPerBuffer *= state.channelCount;
 
-		if (!channelCount)
-			throw Exceptions::InvalidChannelCountException("There must be at least 1 channel");
+			unsigned int index = state.currentIndex;
+			unsigned long framesLeft = state.buffer.size() - state.currentIndex;
+			long framesToCalc;
 
-		state.channelCount = channelCount;
-		state.currentIndex = 0;
-		state.buffer.resize(std::ceil(duration * sampleRate * channelCount), 0);
+			framesToCalc = framesLeft < framesPerBuffer ? framesLeft : framesPerBuffer;
 
-		params.device = Pa_GetDefaultInputDevice();
-		if (params.device == paNoDevice)
-			throw Exceptions::NoInputDeviceException("No default input device");
+			if (input)
+				for (unsigned i = index; i < framesToCalc + index; i += state.channelCount)
+					for (unsigned j = i; j < i + state.channelCount; j++)
+						state.buffer[j] = *input++;
 
-		params.channelCount = channelCount;
-		params.sampleFormat = paFloat32;
-		params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowInputLatency;
-		params.hostApiSpecificStreamInfo = nullptr;
-		err = Pa_OpenStream(
-			&stream,
-			&params,
-			nullptr,
-			sampleRate,
-			FRAMES_PER_BUFFER,
-			paClipOff,
-			Sound::_recordCallback,
-			&state
-		);
-		if (err != paNoError)
-			throw Exceptions::OpenStreamErrorException(std::string("Couldn't open stream: ") + Pa_GetErrorText(err));
+			state.currentIndex += framesToCalc;
+			state.stopped = framesLeft < framesPerBuffer;
+			return static_cast<int>(framesLeft < framesPerBuffer ? paComplete : paContinue);
+		}
+	};
 
-		err = Pa_StartStream(stream);
-		if (err != paNoError)
-			throw Exceptions::StartStreamErrorException(std::string("Couldn't close stream: ") + Pa_GetErrorText(err));
+	Sound::PortAudioHandler Sound::_playBufferCallback{
+		[](
+			const float *,
+			float *output,
+			unsigned long framesPerBuffer,
+			const PaStreamCallbackTimeInfo *,
+			PaStreamCallbackFlags ,
+			SoundState &state
+		)
+		{
+			unsigned int index = state.currentIndex;
+			unsigned long framesLeft = state.buffer.size() - state.currentIndex;
 
+			framesPerBuffer *= state.channelCount;
 
-		for (err = Pa_IsStreamActive(stream); err == 1; err = Pa_IsStreamActive(stream))
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			if (framesLeft < framesPerBuffer) {
+				for (unsigned i = index; i < framesLeft + index; i += state.channelCount)
+					for (unsigned j = i; j < i + state.channelCount; j++)
+						*output++ = state.buffer[j];
+				for (unsigned i = framesLeft + index; i < framesPerBuffer + index; i += state.channelCount)
+					for (unsigned j = i; j < i + state.channelCount; j++)
+						*output++ = 0;
+				state.currentIndex += framesLeft;
+				state.stopped = true;
+				return static_cast<int>(paComplete);
+			}
 
-		if (err < 0)
-			throw Exceptions::StreamActivityCheckErrorException(std::string("Couldn't check stream's activity: ") + Pa_GetErrorText(err));
-
-		err = Pa_CloseStream(stream);
-		if (err != paNoError)
-			throw Exceptions::CloseStreamErrorException(std::string("Couldn't close stream: ") + Pa_GetErrorText(err));
-
-		return state.buffer;
-	}
-
-	int Sound::_recordCallback(
-		const void *inputBuffer,
-		void *,
-		unsigned long framesPerBuffer,
-		const PaStreamCallbackTimeInfo *,
-		PaStreamCallbackFlags,
-		void *userData
-	)
-	{
-		SoundState &state = *reinterpret_cast<SoundState *>(userData);
-
-		framesPerBuffer *= state.channelCount;
-
-		unsigned int index = state.currentIndex;
-		auto *input = reinterpret_cast<const float *>(inputBuffer);
-		unsigned long framesLeft = state.buffer.size() - state.currentIndex;
-		long framesToCalc;
-
-		framesToCalc = framesLeft < framesPerBuffer ? framesLeft : framesPerBuffer;
-
-		if (inputBuffer)
-			for (unsigned i = index; i < framesToCalc + index; i += state.channelCount)
-				for (unsigned j = i; j < i + state.channelCount; j++)
-					state.buffer[j] = *input++;
-
-		state.currentIndex += framesToCalc;
-		return framesLeft < framesPerBuffer ? paComplete : paContinue;
-	}
-
-	int Sound::_playCallback(
-		const void *,
-		void *outputBuffer,
-		unsigned long framesPerBuffer,
-		const PaStreamCallbackTimeInfo *,
-		PaStreamCallbackFlags ,
-		void *userData
-	)
-	{
-		SoundState &state = *reinterpret_cast<SoundState *>(userData);
-		unsigned int index = state.currentIndex;
-		auto *output = reinterpret_cast<float *>(outputBuffer);
-		unsigned long framesLeft = state.buffer.size() - state.currentIndex;
-
-		framesPerBuffer *= state.channelCount;
-
-		if (framesLeft < framesPerBuffer) {
-			for (unsigned i = index; i < framesLeft + index; i += state.channelCount)
+			for (unsigned i = index; i < framesPerBuffer + index;  i += state.channelCount)
 				for (unsigned j = i; j < i + state.channelCount; j++)
 					*output++ = state.buffer[j];
-			for (unsigned i = framesLeft + index; i < framesPerBuffer + index; i += state.channelCount)
-				for (unsigned j = i; j < i + state.channelCount; j++)
-					*output++ = 0;
-			state.currentIndex += framesLeft;
-			return paComplete;
+
+			state.currentIndex += framesPerBuffer;
+			return static_cast<int>(paContinue);
 		}
+	};
 
-		for (unsigned i = index; i < framesPerBuffer + index;  i += state.channelCount)
-			for (unsigned j = i; j < i + state.channelCount; j++)
-				*output++ = state.buffer[j];
+	int Sound::_defaultCallback(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags statusFlags, void *userData)
+	{
+		SoundState &data = *reinterpret_cast<SoundState *>(userData);
 
-		state.currentIndex += framesPerBuffer;
-		return paContinue;
+		return data.handler(
+			reinterpret_cast<const float *>(inputBuffer),
+			reinterpret_cast<float *>(outputBuffer),
+			framesPerBuffer,
+			timeInfo,
+			statusFlags,
+			data
+		);
 	}
 }
