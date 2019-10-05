@@ -227,7 +227,7 @@ namespace Babel::Server
 			this->sendPacket(
 				socket,
 				Network::Protocol::CALL_ACCEPTED,
-				Network::Protocol::Packet::uint32toByteString(socket.getRemoteIp()) +
+				Network::Protocol::Packet::uint32toByteString(user.first->getRemoteIp()) +
 				Network::Protocol::Packet::uint16toByteString(DEFAULT_PORT)
 			);
 			this->sendPacket(

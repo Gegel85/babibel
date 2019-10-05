@@ -22,7 +22,7 @@ namespace Babel::Client
 	{
 		this->disconnectFromVoice();
 		std::cout << "Hosting voice server on port " << std::to_string(port) << std::endl;
-		this->_voiceSock.bind(port);
+		this->_voiceSock.bind(port, SOCK_DGRAM, IPPROTO_UDP);
 		try {
 			this->_voiceSock.waitToBeReady(5);
 

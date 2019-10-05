@@ -18,11 +18,11 @@ namespace Babel::Network
 				thread.join();
 	}
 
-	void ServerSocket::bind(unsigned short port, int protocol)
+	void ServerSocket::bind(unsigned short port, int type, int protocol)
 	{
 		struct sockaddr_in address{};
 
-		this->setSocket(socket(AF_INET, SOCK_STREAM, protocol));
+		this->setSocket(socket(AF_INET, type, protocol));
 		address.sin_port = htons(port);
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
