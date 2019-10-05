@@ -38,12 +38,7 @@ int main(int argc, char **argv)
 {
 	unsigned int port;
 	std::string ip;
-	Babel::Client::Sound::Sound sound;
 
-	std::cout << "Yo" << std::endl;
-	std::vector<float> buffer = sound.recordAudio(4);
-	std::cout << "Ya" << std::endl;
-	sound.playBuffer(buffer);
 	if (argc != 3) {
 		std::cout << argv[0] << ": <serverIp> <port>" << std::endl;
 		std::cout << "Assuming server is on localhost:10800..." << std::endl;
