@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.15"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Skipe:  Fichier source de src/client/graphical/GUIScreen.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Skipe
+   </div>
+   <div id="projectbrief">Client et Serveur VOIP</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_6908ff505388a07996d238c763adbdab.html">client</a></li><li class="navelem"><a class="el" href="dir_203a532a37ed1f571aeb5fa9aeb2a8e8.html">graphical</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">GUIScreen.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="GUIScreen_8hpp.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** EPITECH PROJECT, 2019</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** CPP_babel_2019</span></div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** File description:</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** GUIScreen.hpp</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">*/</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef GUISCREEN_HPP</span></div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define GUISCREEN_HPP</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;../data/Vector2.hpp&quot;</span></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Widget_8hpp.html">Widget/Widget.hpp</a>&quot;</span></div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div><div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1GUIScreen.html">   18</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classBabel_1_1Client_1_1GUIScreen.html">GUIScreen</a> {</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">protected</span>:</div><div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1GUIScreen.html#af2bd2f178e038ee603cdb3643ae0708b">   20</a></span>&#160;        std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#af2bd2f178e038ee603cdb3643ae0708b">_widgets</a>;</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">public</span>:</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a936b488e8576c61e124603c4334ca100">GUIScreen</a>() = <span class="keywordflow">default</span>;</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a3d6d770aa3e2fdddbe3f46cbf1083dad">getWidgets</a>();</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="classBabel_1_1Client_1_1Widget.html">Widget</a> &amp;<a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#aa0cf5d050240b01fecc2efa7c1cf5935">getWidget</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a1f61d3edad4b3e7fe3385d76d4b91725">addWidget</a>(std::shared_ptr&lt;Widget&gt; widget);</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="structVector2.html">Vector2&lt;unsigned int&gt;</a> <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#ad45364a1299e7b45ccb4c8f6ba3d42aa">getSize</a>() <span class="keyword">const</span> = 0;</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a303e932b0bde68345b75183a272dfd6b">setFullscreen</a>(<span class="keywordtype">bool</span> fullscreen = <span class="keyword">true</span>) = 0;</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a4f024d89a759dff36d9a52979103e439">setSize</a>(<a class="code" href="structVector2.html">Vector2&lt;unsigned int&gt;</a> size) = 0;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classBabel_1_1Client_1_1GUIScreen.html#a3bb8332cac8c5c3feeb5369df5f98bfa">refresh</a>() = 0;</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    };</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div><div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a3bb8332cac8c5c3feeb5369df5f98bfa"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a3bb8332cac8c5c3feeb5369df5f98bfa">Babel::Client::GUIScreen::refresh</a></div><div class="ttdeci">virtual bool refresh()=0</div></div>
+<div class="ttc" id="Widget_8hpp_html"><div class="ttname"><a href="Widget_8hpp.html">Widget.hpp</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html">Babel::Client::GUIScreen</a></div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8hpp_source.html#l00018">GUIScreen.hpp:18</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_aa0cf5d050240b01fecc2efa7c1cf5935"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#aa0cf5d050240b01fecc2efa7c1cf5935">Babel::Client::GUIScreen::getWidget</a></div><div class="ttdeci">Widget &amp; getWidget(unsigned int id)</div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8cpp_source.html#l00030">GUIScreen.cpp:30</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a1f61d3edad4b3e7fe3385d76d4b91725"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a1f61d3edad4b3e7fe3385d76d4b91725">Babel::Client::GUIScreen::addWidget</a></div><div class="ttdeci">unsigned int addWidget(std::shared_ptr&lt; Widget &gt; widget)</div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8cpp_source.html#l00013">GUIScreen.cpp:13</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a303e932b0bde68345b75183a272dfd6b"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a303e932b0bde68345b75183a272dfd6b">Babel::Client::GUIScreen::setFullscreen</a></div><div class="ttdeci">virtual void setFullscreen(bool fullscreen=true)=0</div></div>
+<div class="ttc" id="structVector2_html"><div class="ttname"><a href="structVector2.html">Vector2</a></div><div class="ttdef"><b>Definition:</b> <a href="Vector2_8hpp_source.html#l00012">Vector2.hpp:12</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a4f024d89a759dff36d9a52979103e439"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a4f024d89a759dff36d9a52979103e439">Babel::Client::GUIScreen::setSize</a></div><div class="ttdeci">virtual void setSize(Vector2&lt; unsigned int &gt; size)=0</div></div>
+<div class="ttc" id="namespaceBabel_1_1Client_html"><div class="ttname"><a href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="ttdef"><b>Definition:</b> <a href="client_2main_8cpp_source.html#l00018">main.cpp:18</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1Widget_html"><div class="ttname"><a href="classBabel_1_1Client_1_1Widget.html">Babel::Client::Widget</a></div><div class="ttdef"><b>Definition:</b> <a href="Widget_8hpp_source.html#l00017">Widget.hpp:17</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a3d6d770aa3e2fdddbe3f46cbf1083dad"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a3d6d770aa3e2fdddbe3f46cbf1083dad">Babel::Client::GUIScreen::getWidgets</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Widget &gt; &gt; getWidgets()</div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8cpp_source.html#l00025">GUIScreen.cpp:25</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_ad45364a1299e7b45ccb4c8f6ba3d42aa"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#ad45364a1299e7b45ccb4c8f6ba3d42aa">Babel::Client::GUIScreen::getSize</a></div><div class="ttdeci">virtual Vector2&lt; unsigned int &gt; getSize() const =0</div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_a936b488e8576c61e124603c4334ca100"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#a936b488e8576c61e124603c4334ca100">Babel::Client::GUIScreen::GUIScreen</a></div><div class="ttdeci">GUIScreen()=default</div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html_af2bd2f178e038ee603cdb3643ae0708b"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html#af2bd2f178e038ee603cdb3643ae0708b">Babel::Client::GUIScreen::_widgets</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Widget &gt; &gt; _widgets</div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8hpp_source.html#l00020">GUIScreen.hpp:20</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.15
+</small></address>
+</body>
+</html>

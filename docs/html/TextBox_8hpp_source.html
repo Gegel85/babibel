@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.15"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Skipe:  Fichier source de src/client/graphical/Widget/TextBox.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Skipe
+   </div>
+   <div id="projectbrief">Client et Serveur VOIP</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_6908ff505388a07996d238c763adbdab.html">client</a></li><li class="navelem"><a class="el" href="dir_203a532a37ed1f571aeb5fa9aeb2a8e8.html">graphical</a></li><li class="navelem"><a class="el" href="dir_0bb005b83376b6b12afbb718f2b8f40d.html">Widget</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">TextBox.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="TextBox_8hpp.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** EPITECH PROJECT, 2019</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** CPP_babel_2019</span></div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** File description:</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** TextBox.hpp</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">*/</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef TEXTBOX_HPP</span></div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define TEXTBOX_HPP</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Widget_8hpp.html">Widget.hpp</a>&quot;</span></div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div><div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1TextBox.html">   15</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classBabel_1_1Client_1_1TextBox.html">TextBox</a> : <span class="keyword">public</span> <a class="code" href="classBabel_1_1Client_1_1Widget.html">Widget</a> {</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">protected</span>:</div><div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">   17</a></span>&#160;        std::string <a class="code" href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">_text</a>;</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">public</span>:</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <a class="code" href="classBabel_1_1Client_1_1TextBox.html#acaa033ab30540aa0ff9123011deccaf6">TextBox</a>(<span class="keyword">const</span> std::string &amp;text = <span class="stringliteral">&quot;&quot;</span>, <a class="code" href="structVector2.html">Vector2&lt;int&gt;</a> position = {0, 0}, <a class="code" href="structVector2.html">Vector2&lt;unsigned&gt;</a> size = {0, 0});</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1TextBox.html#ab0fc2de1e2dd9d9222215192008c761b">setText</a>(<span class="keyword">const</span> std::string &amp;text);</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        std::string <a class="code" href="classBabel_1_1Client_1_1TextBox.html#ab2a7e8d7e660681b68c64e8afce21b75">getText</a>() <span class="keyword">const</span>;</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    };</div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif</span></div><div class="ttc" id="Widget_8hpp_html"><div class="ttname"><a href="Widget_8hpp.html">Widget.hpp</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html_a8f1a80bb83209706fa854604f4ca766f"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">Babel::Client::TextBox::_text</a></div><div class="ttdeci">std::string _text</div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8hpp_source.html#l00017">TextBox.hpp:17</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html_ab0fc2de1e2dd9d9222215192008c761b"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html#ab0fc2de1e2dd9d9222215192008c761b">Babel::Client::TextBox::setText</a></div><div class="ttdeci">void setText(const std::string &amp;text)</div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8cpp_source.html#l00018">TextBox.cpp:18</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html_ab2a7e8d7e660681b68c64e8afce21b75"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html#ab2a7e8d7e660681b68c64e8afce21b75">Babel::Client::TextBox::getText</a></div><div class="ttdeci">std::string getText() const</div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8cpp_source.html#l00023">TextBox.cpp:23</a></div></div>
+<div class="ttc" id="structVector2_html"><div class="ttname"><a href="structVector2.html">Vector2&lt; int &gt;</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html_acaa033ab30540aa0ff9123011deccaf6"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html#acaa033ab30540aa0ff9123011deccaf6">Babel::Client::TextBox::TextBox</a></div><div class="ttdeci">TextBox(const std::string &amp;text=&quot;&quot;, Vector2&lt; int &gt; position={0, 0}, Vector2&lt; unsigned &gt; size={0, 0})</div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8cpp_source.html#l00012">TextBox.cpp:12</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html">Babel::Client::TextBox</a></div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8hpp_source.html#l00015">TextBox.hpp:15</a></div></div>
+<div class="ttc" id="namespaceBabel_1_1Client_html"><div class="ttname"><a href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="ttdef"><b>Definition:</b> <a href="client_2main_8cpp_source.html#l00018">main.cpp:18</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1Widget_html"><div class="ttname"><a href="classBabel_1_1Client_1_1Widget.html">Babel::Client::Widget</a></div><div class="ttdef"><b>Definition:</b> <a href="Widget_8hpp_source.html#l00017">Widget.hpp:17</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.15
+</small></address>
+</body>
+</html>

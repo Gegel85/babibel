@@ -14,7 +14,8 @@ namespace Babel::Client
 		window(size, parent),
 		_scrollBar(VERTICAL, this->window, {(int)size.x - 15, 0}, {15, size.y}),
 		_lastError(this->window, "Last Error: ", {10, (int)(size.y - 35)}, {120, 35}),
-		_logButton(this->window, "Connect", {10, 125}, {70, 35}),
+		_logButton(this->window, "Log in", {10, 125}, {70, 35}),
+		_logOutButton(this->window, "Log out", {105, 125}, {70, 35}),
 		_serverLogged(this->window, "Not Connected to server", {10, (int)(size.y - 60)}, {250, 35}),
 		_usernameLog(this->window, "Username:", {12, 5}, {90, 30}),
 		_passwordLog(this->window, "Password:", {12, 60}, {90, 30}),
@@ -29,7 +30,8 @@ namespace Babel::Client
 		_thread([this](){
 			while (!this->_end) {
 				this->_serverLogged.setText(this->_client.isConnected() ? "Connected to server" : this->_client.getLastError());
-				this->_logButton.setEnabled(this->_client.isConnected());
+				this->_logButton.setEnabled(this->_client.isConnected() && this->_myID == -1 ? true : false);
+				this->_logOutButton.setEnabled(this->_myID == -1 ? false : true);
 				if (this->_myID == -1) {
 					this->_myIDTxtBx.setEnabled(false);
 					this->_idToCallTxtBx.setEnabled(false);
@@ -54,6 +56,7 @@ namespace Babel::Client
 		this->_logButton.setCursor(POINTINGHANDCURSOR);
 		this->_callButton.setCursor(POINTINGHANDCURSOR);
 		QObject::connect(&this->_logButton, SIGNAL(released()), this, SLOT(sendConnectionLogs()));
+		QObject::connect(&this->_logOutButton, SIGNAL(released()), this, SLOT(logOut()));
 		QObject::connect(&this->_callButton, SIGNAL(released()), this, SLOT(callButton()));
 	}
 
@@ -76,13 +79,17 @@ namespace Babel::Client
 			this->_lastError.setText("Last Error: Username and password need to be 32 long each");
 			return;
 		}
-		username.resize(32, '\0');
-		password.resize(32, '\0');
+		username.resize(16, '\0');
+		password.resize(16, '\0');
 		this->_client.sendPacketToServer(Network::Protocol::Opcode::LOGIN, username + password);
 		std::pair<unsigned char, std::string> servResponse = this->_client.waitServerResponse();
-		if (servResponse.first == Network::Protocol::Opcode::LOGIN)
-			this->_lastError.setText("Last Error: Server refuse connection");
+		if (servResponse.first == Network::Protocol::Opcode::KO) {
+			this->_lastError.setText("Last Error: Server refuse connection: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
+			return;
+		}
 		this->_myID = std::atoi(servResponse.second.c_str());
+		// this->_logOutButton.setEnabled(true);
+		// this->_logButton.setEnabled(false);
 	}
 
 	void BabelQTClient::callButton()
@@ -93,5 +100,18 @@ namespace Babel::Client
 			this->_lastError.setText("Last Error: Cannot call, need valid ID");
 			return;
 		}
+	}
+
+	void BabelQTClient::logOut()
+	{
+		this->_client.sendPacketToServer(Network::Protocol::Opcode::LOGOUT, "");
+		std::pair<unsigned char, std::string> servResponse = this->_client.waitServerResponse();
+		if (servResponse.first == Network::Protocol::Opcode::KO) {
+			this->_lastError.setText("Last Error: Server refuse deconnection: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
+			return;
+		}
+		this->_myID = -1;
+		// this->_logOutButton.setEnabled(false);
+		// this->_logButton.setEnabled(true);
 	}
 }

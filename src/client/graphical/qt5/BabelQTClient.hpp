@@ -36,6 +36,7 @@ namespace Babel::Client
 
 	public slots:
 		void sendConnectionLogs();
+		void logOut();
 		void callButton();
 
 	private:
@@ -43,6 +44,7 @@ namespace Babel::Client
 
 		QTTextBox _lastError;
 		QTButton _logButton;
+		QTButton _logOutButton;
 		QTTextBox _serverLogged;
 
 		QTTextBox _usernameLog;

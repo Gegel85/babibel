@@ -22,13 +22,21 @@ namespace Babel::Client
 		TcpClient client;
 		QTApplication app(argc, argv);
 		BabelQTClient qtClient(client, {1000, 500});
+		int code = EXIT_FAILURE;
 
-		client.connectToServer(ip, port, 10000);
-		qtClient.window.show();
+		try {
+			client.connectToServer(ip, port, 10000);
+			qtClient.window.show();
 
-		int code = app.launch();
+			code = app.launch();
 
-		client.disconnect();
+			client.disconnect();
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+			return EXIT_FAILURE;
+		}
 
 		return code;
 	}

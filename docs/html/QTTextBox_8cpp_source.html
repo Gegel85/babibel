@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.15"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Skipe:  Fichier source de src/client/graphical/qt5/QTTextBox.cpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Skipe
+   </div>
+   <div id="projectbrief">Client et Serveur VOIP</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_6908ff505388a07996d238c763adbdab.html">client</a></li><li class="navelem"><a class="el" href="dir_203a532a37ed1f571aeb5fa9aeb2a8e8.html">graphical</a></li><li class="navelem"><a class="el" href="dir_0d7f6eec0c98d686810e66084313d72a.html">qt5</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">QTTextBox.cpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="QTTextBox_8cpp.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** EPITECH PROJECT, 2019</span></div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** CPP_babel_2019</span></div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">** File description:</span></div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** QTTextBox.cpp</span></div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">*/</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="QTTextBox_8hpp.html">QTTextBox.hpp</a>&quot;</span></div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div><div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1QTTextBox.html#aa0129b584b8062f8378cc8bd83855bf0">   12</a></span>&#160;    <a class="code" href="classBabel_1_1Client_1_1QTTextBox.html#aa0129b584b8062f8378cc8bd83855bf0">QTTextBox::QTTextBox</a>(QWidget &amp;parent, <span class="keyword">const</span> std::string &amp;text, <a class="code" href="structVector2.html">Vector2&lt;int&gt;</a> position, <a class="code" href="structVector2.html">Vector2&lt;unsigned&gt;</a> size) :</div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="classBabel_1_1Client_1_1TextBox.html">TextBox</a>(text, position, size),</div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        QLabel(QString(this-&gt;_text.c_str()), &amp;parent)</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    {</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        this-&gt;setGeometry(this-&gt;<a class="code" href="classBabel_1_1Client_1_1Widget.html#a2050fd1c9555d42675362608ca4a03ba">_position</a>.<a class="code" href="structVector2.html#a78fa1f2ed5e261c7fbeb8f3536a1ee34">x</a>, this-&gt;_position.y, this-&gt;_size.x, this-&gt;_size.y);</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div><div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1QTTextBox.html#a2f76334eea96f06bc321644a6a5fbec4">   19</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1QTTextBox.html#a2f76334eea96f06bc321644a6a5fbec4">QTTextBox::draw</a>(<a class="code" href="classBabel_1_1Client_1_1GUIScreen.html">GUIScreen</a> &amp;screen)</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    {</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        (void)screen;</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    }</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div><div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1QTTextBox.html#a1fd50e38b5de1f934ac1231e60bd3c5c">   24</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1QTTextBox.html#a1fd50e38b5de1f934ac1231e60bd3c5c">QTTextBox::setText</a>(<span class="keyword">const</span> std::string &amp;text)</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    {</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        this-&gt;<a class="code" href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">_text</a> = text;</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        QLabel::setText(QString(this-&gt;<a class="code" href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">_text</a>.c_str()));</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        this-&gt;setGeometry(this-&gt;<a class="code" href="classBabel_1_1Client_1_1Widget.html#a2050fd1c9555d42675362608ca4a03ba">_position</a>.<a class="code" href="structVector2.html#a78fa1f2ed5e261c7fbeb8f3536a1ee34">x</a>, this-&gt;_position.y, (<span class="keywordtype">unsigned</span>)(text.length()) * 10, this-&gt;<a class="code" href="classBabel_1_1Client_1_1Widget.html#a51c68800ed468d8aad6174188ca0d5e9">_size</a>.<a class="code" href="structVector2.html#a6cfed8355591aa269f4dba43bd806ef9">y</a>);</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classBabel_1_1Client_1_1QTTextBox.html#ac21d90b91d5326bc3253fd618c754ea6">   32</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classBabel_1_1Client_1_1QTTextBox.html#ac21d90b91d5326bc3253fd618c754ea6">QTTextBox::setEnabled</a>(<span class="keywordtype">bool</span> enabled)</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        QLabel::setEnabled(enabled);</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div><div class="ttc" id="classBabel_1_1Client_1_1GUIScreen_html"><div class="ttname"><a href="classBabel_1_1Client_1_1GUIScreen.html">Babel::Client::GUIScreen</a></div><div class="ttdef"><b>Definition:</b> <a href="GUIScreen_8hpp_source.html#l00018">GUIScreen.hpp:18</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1QTTextBox_html_a1fd50e38b5de1f934ac1231e60bd3c5c"><div class="ttname"><a href="classBabel_1_1Client_1_1QTTextBox.html#a1fd50e38b5de1f934ac1231e60bd3c5c">Babel::Client::QTTextBox::setText</a></div><div class="ttdeci">void setText(const std::string &amp;text)</div><div class="ttdef"><b>Definition:</b> <a href="QTTextBox_8cpp_source.html#l00024">QTTextBox.cpp:24</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html_a8f1a80bb83209706fa854604f4ca766f"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html#a8f1a80bb83209706fa854604f4ca766f">Babel::Client::TextBox::_text</a></div><div class="ttdeci">std::string _text</div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8hpp_source.html#l00017">TextBox.hpp:17</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1QTTextBox_html_aa0129b584b8062f8378cc8bd83855bf0"><div class="ttname"><a href="classBabel_1_1Client_1_1QTTextBox.html#aa0129b584b8062f8378cc8bd83855bf0">Babel::Client::QTTextBox::QTTextBox</a></div><div class="ttdeci">QTTextBox(QWidget &amp;parent, const std::string &amp;text=&quot;&quot;, Vector2&lt; int &gt; position={0, 0}, Vector2&lt; unsigned &gt; size={0, 0})</div><div class="ttdef"><b>Definition:</b> <a href="QTTextBox_8cpp_source.html#l00012">QTTextBox.cpp:12</a></div></div>
+<div class="ttc" id="structVector2_html_a6cfed8355591aa269f4dba43bd806ef9"><div class="ttname"><a href="structVector2.html#a6cfed8355591aa269f4dba43bd806ef9">Vector2::y</a></div><div class="ttdeci">T y</div><div class="ttdef"><b>Definition:</b> <a href="Vector2_8hpp_source.html#l00014">Vector2.hpp:14</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1QTTextBox_html_ac21d90b91d5326bc3253fd618c754ea6"><div class="ttname"><a href="classBabel_1_1Client_1_1QTTextBox.html#ac21d90b91d5326bc3253fd618c754ea6">Babel::Client::QTTextBox::setEnabled</a></div><div class="ttdeci">void setEnabled(bool enabled)</div><div class="ttdef"><b>Definition:</b> <a href="QTTextBox_8cpp_source.html#l00032">QTTextBox.cpp:32</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1QTTextBox_html_a2f76334eea96f06bc321644a6a5fbec4"><div class="ttname"><a href="classBabel_1_1Client_1_1QTTextBox.html#a2f76334eea96f06bc321644a6a5fbec4">Babel::Client::QTTextBox::draw</a></div><div class="ttdeci">void draw(GUIScreen &amp;screen) override</div><div class="ttdef"><b>Definition:</b> <a href="QTTextBox_8cpp_source.html#l00019">QTTextBox.cpp:19</a></div></div>
+<div class="ttc" id="structVector2_html"><div class="ttname"><a href="structVector2.html">Vector2&lt; int &gt;</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1TextBox_html"><div class="ttname"><a href="classBabel_1_1Client_1_1TextBox.html">Babel::Client::TextBox</a></div><div class="ttdef"><b>Definition:</b> <a href="TextBox_8hpp_source.html#l00015">TextBox.hpp:15</a></div></div>
+<div class="ttc" id="namespaceBabel_1_1Client_html"><div class="ttname"><a href="namespaceBabel_1_1Client.html">Babel::Client</a></div><div class="ttdef"><b>Definition:</b> <a href="client_2main_8cpp_source.html#l00018">main.cpp:18</a></div></div>
+<div class="ttc" id="structVector2_html_a78fa1f2ed5e261c7fbeb8f3536a1ee34"><div class="ttname"><a href="structVector2.html#a78fa1f2ed5e261c7fbeb8f3536a1ee34">Vector2::x</a></div><div class="ttdeci">T x</div><div class="ttdef"><b>Definition:</b> <a href="Vector2_8hpp_source.html#l00013">Vector2.hpp:13</a></div></div>
+<div class="ttc" id="QTTextBox_8hpp_html"><div class="ttname"><a href="QTTextBox_8hpp.html">QTTextBox.hpp</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1Widget_html_a2050fd1c9555d42675362608ca4a03ba"><div class="ttname"><a href="classBabel_1_1Client_1_1Widget.html#a2050fd1c9555d42675362608ca4a03ba">Babel::Client::Widget::_position</a></div><div class="ttdeci">Vector2&lt; int &gt; _position</div><div class="ttdef"><b>Definition:</b> <a href="Widget_8hpp_source.html#l00019">Widget.hpp:19</a></div></div>
+<div class="ttc" id="classBabel_1_1Client_1_1Widget_html_a51c68800ed468d8aad6174188ca0d5e9"><div class="ttname"><a href="classBabel_1_1Client_1_1Widget.html#a51c68800ed468d8aad6174188ca0d5e9">Babel::Client::Widget::_size</a></div><div class="ttdeci">Vector2&lt; unsigned &gt; _size</div><div class="ttdef"><b>Definition:</b> <a href="Widget_8hpp_source.html#l00020">Widget.hpp:20</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.15
+</small></address>
+</body>
+</html>
