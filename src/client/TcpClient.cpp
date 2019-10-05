@@ -21,6 +21,7 @@ namespace Babel::Client
 	void TcpClient::hostVoice(unsigned short port)
 	{
 		this->disconnectFromVoice();
+		std::cout << "Hosting voice server on port " << std::to_string(port) << std::endl;
 		this->_voiceSock.bind(port);
 		try {
 			this->_voiceSock.waitToBeReady(5);
@@ -37,6 +38,7 @@ namespace Babel::Client
 	void TcpClient::connectToVoice(const std::string &ip, unsigned short port)
 	{
 		this->disconnectFromVoice();
+		std::cout << "Connecting to voice server at " << ip << ":" << std::to_string(port) << std::endl;
 		try {
 			this->_voiceSock.connect(ip, port, IPPROTO_UDP);
 			this->_recorder.playFromSocket(this->_voiceSock);
