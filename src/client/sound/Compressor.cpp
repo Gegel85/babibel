@@ -5,21 +5,21 @@
 ** Compressor.cpp
 */
 #include <iostream>
+#include <cmath>
 #include "Compressor.hpp"
 
 namespace Babel::Client
 {
     Compressor::Compressor(opus_int32 sample_rate, int channels, int application, size_t bitrate, size_t frame_size,
-                           size_t max_frame_size, size_t max_packet_size)
+                           size_t max_frame_size, size_t max_packet_size):
+                           _encoder(nullptr),
+                           _decoder(nullptr),
+                           _channels(channels),
+                           _frame_size(frame_size),
+                           _max_frame_size(max_frame_size),
+                           _max_packet_size(max_packet_size)
     {
         int error;
-
-        this->_channels = channels;
-        this->_frame_size = frame_size;
-        this->_max_frame_size = max_frame_size;
-        this->_max_packet_size = max_packet_size;
-        this->_encoder = nullptr;
-        this->_decoder = nullptr;
 
         this->_encoder = opus_encoder_create(sample_rate, channels, application, &error);
         if (error < 0) {
@@ -51,59 +51,82 @@ namespace Babel::Client
             opus_decoder_destroy(this->_decoder);
     }
 
-    opus_int16 *Compressor::bytes_to_short(const std::vector<unsigned char> &bytes)
+    float *Compressor::_bytes_to_floatptr(const std::vector<float> &bytes)
     {
-        std::vector<unsigned char> src = bytes;
-        if (src.size() % 2)
-            src.push_back(0);
+        auto *result = new float[bytes.size()];
 
-        auto *result = new opus_int16[bytes.size() / 2];
-
-        for (int i = 0; i < src.size() / 2; i++)
-            result[i] = (src[i * 2 + 1] << 8U) + src[i * 2];
+        for (unsigned long i = 0; i < bytes.size(); i++)
+            result[i] = bytes[i];
         return result;
     }
 
-    std::vector<unsigned char> Compressor::compress_bytes(const std::vector<unsigned char> &bytes) const
+    std::vector<std::vector<float>> Compressor::_split_vector(const std::vector<float> &vect, unsigned x)
     {
-        opus_int16 *input_data = this->bytes_to_short(bytes);
-        auto *output_data = new unsigned char[this->_max_packet_size];
-        int nb = opus_encode(this->_encoder, input_data, this->_frame_size, output_data, this->_max_packet_size);
+        int size = (vect.size() - 1) / x + 1;
 
-        if (nb < 0) {
-            std::cerr << "An error has occured durring encoding: " << opus_strerror(nb);
-            throw CompressingError("An error occured durring encoding");
+        std::vector<std::vector<float>> result;
+
+        result.resize(size);
+
+        for (int i = 0; i < size; i++) {
+            auto start_itr = std::next(vect.cbegin(), i * x);
+            auto end_itr = std::next(vect.cbegin(), i * x + x);
+
+            result[i].resize(x);
+
+            if (i * x + x > vect.size()) {
+                end_itr = vect.cend();
+                result[i].resize(vect.size() - i * x);
+            }
+            std::copy(start_itr, end_itr, result[i].begin());
         }
-
-        std::vector<unsigned char> result{static_cast<size_t>(nb), 0, std::vector<unsigned char>::allocator_type()};
-        for (int i = 0; i < nb; i++)
-            result[i] = output_data[i];
-        delete[] input_data;
-        delete[] output_data;
         return result;
     }
 
-    std::vector<unsigned char> Compressor::uncompress_bytes(const std::vector<unsigned char> &bytes) const
+    CompressedAudio Compressor::compress_bytes(const std::vector<float> &bytes) const
     {
-        int nb = bytes.size();
-        auto *data = new unsigned char [bytes.size()];
-        auto *out = new opus_int16[this->_max_frame_size * this->_channels];
+        auto buffer = bytes;
+        buffer.resize(static_cast<unsigned long>(std::ceil(static_cast<float>(buffer.size()) / this->_frame_size) * this->_frame_size), 0);
 
-        for (int i = 0; i < nb; i++)
-            data[i] = bytes[i];
-        int frame_size = opus_decode(this->_decoder, data, nb, out, this->_max_frame_size, 0);
-        if (frame_size<0) {
-            std::cerr << "An error has occured durring decoding: " << opus_strerror(nb);
-            throw CompressingError("An error occured durring decoding");
+        std::vector<std::vector<float>> buffers = this->_split_vector(buffer, this->_frame_size * this->_channels);
+        std::vector<CompressedPacket> result = {};
+        printf("bytes   len: %lu\nbuffer  len: %lu\nbuffers len: %lu\n", bytes.size(), buffer.size(), buffers.size());
+
+        for (auto &chuncked : buffers) {
+            float *input_data = this->_bytes_to_floatptr(chuncked);
+            auto *output_data = new unsigned char[this->_max_packet_size];
+            int nb = opus_encode_float(this->_encoder, input_data, this->_frame_size, output_data,
+                                       this->_max_packet_size);
+            delete[] input_data;
+            printf("Encode float returned %d\n", nb);
+            if (nb < 0)
+                throw CompressingError("An error occured durring encoding" + std::string(opus_strerror(nb)));
+            result.emplace_back(output_data, nb);
         }
 
-        std::vector<unsigned char> result{static_cast<size_t>(this->_channels * frame_size), 0, std::vector<unsigned char>::allocator_type()};
-        for(int i = 0; i < this->_channels * frame_size; i++) {
-            result[2*i] = out[i] & 0xFF;
-            result[2*i+1] = (out[i]>>8) & 0xFF;
+        return {result};
+    }
+
+    std::vector<float> Compressor::uncompress_bytes(const CompressedAudio &ca) const
+    {
+
+        std::vector<float> result;
+
+        for (auto &chuncked : ca.get_data()) {
+            auto *out = new float[this->_frame_size * this->_channels];
+            int dec_samples = opus_decode_float(this->_decoder, chuncked.get_raw_data(), chuncked.get_length(),
+                                                out, this->_frame_size, 0);
+            printf("Decode float returned %d\n", dec_samples);
+            if (dec_samples < 0) {
+                delete[] out;
+                std::cerr << "An error has occured durring decoding: " << opus_strerror(dec_samples);
+                throw CompressingError("An error occured durring decoding");
+            }
+
+            for (int i = 0; i < dec_samples; i++)
+                result.push_back(out[i]);
+            delete[] out;
         }
-        delete[] data;
-        delete[] out;
         return result;
     }
 }

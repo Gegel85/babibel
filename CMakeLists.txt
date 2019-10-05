@@ -57,6 +57,8 @@ add_executable(
 	src/client/graphical/GUIScreen.cpp
 	src/client/sound/Compressor.cpp
 	src/client/sound/Compressor.hpp
+	src/client/sound/CompressedAudio.cpp
+	src/client/sound/CompressedAudio.hpp
 	src/client/sound/Sound.cpp
 	src/client/sound/Sound.hpp
 	src/client/main.cpp

@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <thread>
 #include <portaudio.h>
 
 #define FRAMES_PER_BUFFER (512)
