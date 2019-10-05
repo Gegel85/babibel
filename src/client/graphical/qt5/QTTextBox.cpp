@@ -18,6 +18,7 @@ namespace Babel::Client
 
 	void QTTextBox::draw(GUIScreen &screen)
 	{
+		(void)screen;
 	}
 
 	void QTTextBox::setText(const std::string &text)

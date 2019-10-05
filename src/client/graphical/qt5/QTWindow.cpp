@@ -18,7 +18,7 @@ namespace Babel::Client {
 
 	void QTWindow::setFullscreen(bool fullscren)
 	{
-
+		(void)fullscren;
 	}
 
 	void QTWindow::setSize(Vector2<unsigned> size)
