@@ -118,6 +118,8 @@ add_executable(
 	src/network/ServerSocket.hpp
 	src/server/TcpServer.cpp
 	src/server/TcpServer.hpp
+	src/server/Database.cpp
+	src/server/Database.hpp
 )
 
 target_link_libraries(
