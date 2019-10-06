@@ -109,7 +109,7 @@ namespace Babel::Server
         );
         auto data = this->raw_request(sql);
 
-        if (this->_last_data.empty())
+        if (data.empty())
             throw Exceptions::NotFound("Bad credentials given");
         return std::stoi(data[0].data);
     }
@@ -131,9 +131,9 @@ namespace Babel::Server
 
         const std::string sql = (
                 std::string("SELECT (ID) FROM Member WHERE Username='") + username + "'");
-        this->raw_request(sql);
+        auto data = this->raw_request(sql);
 
-        if (this->_last_data.empty())
+        if (data.empty())
             throw Exceptions::NotFound("User with this name was not found");
         return std::stoi(this->_last_data[0].data);
     }
@@ -142,10 +142,23 @@ namespace Babel::Server
     {
         const std::string sql = (
                 std::string("SELECT (Username) FROM Member WHERE ID = ") + std::to_string(id));
-        this->raw_request(sql);
+        auto data = this->raw_request(sql);
 
-        if (this->_last_data.empty())
+        if (data.empty())
             throw Exceptions::NotFound("User with this ID was not found");
         return std::string(this->_last_data[0].data);
+    }
+
+    std::vector<DSuser> Database::get_all_user()
+    {
+        const std::string sql = "SELECT ID, Username FROM Member;";
+        auto data = this->raw_request(sql);
+
+        if (data.size() % 2)
+            throw Exceptions::SQLError(std::string("get_all_user must return a even size, but it was ") + std::to_string(data.size()));
+        std::vector<DSuser> result = {};
+        for (size_t i = 0; i < data.size(); i += 2)
+            result.push_back({std::stoi(data[i].data), data[i + 1].data});
+        return result;
     }
 }

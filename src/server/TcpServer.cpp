@@ -29,8 +29,10 @@ namespace Babel::Server
 		std::cout << "Client has been disconnected" << std::endl;
 	}
 
-	TcpServer::TcpServer(unsigned short port) :
-		_handler{[this](Network::Socket &socket){
+	TcpServer::TcpServer(unsigned short port):
+        _db(Database()),
+		_handler{[this](Network::Socket &socket)
+		{
 			try {
 				Network::Protocol::Packet packet{socket};
 
@@ -52,22 +54,56 @@ namespace Babel::Server
 				case Network::Protocol::KO:
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::LOGIN:
+                    if (packet.data.size() != 64)
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+                    if (this->_users.at(&socket).connected)
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
+                    try {
+                        this->_users.at(&socket).userId = this->_db.register_member(
+                                this->_unpadStr(packet.data.substr(0, 32)),
+                                this->_unpadStr(packet.data.substr(32, 32)));
+                    }
+                    catch (Exceptions::NotFound &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_CREDENTIALS);
+                    }
+                    catch (Exceptions::ForbiddenInput &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_AUTHORIZED);
+                    }
+                    catch (Exceptions::SQLError &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+                    }
+                    this->_users.at(&socket).connected = true;
+
+                    return TcpServer::sendPacket(
+                            socket,
+                            Network::Protocol::OK,
+                            Network::Protocol::Packet::uint32toByteString(this->_users.at(&socket).userId) + packet.data.substr(0, 32)
+                    );
 				case Network::Protocol::REGISTER:
 					if (packet.data.size() != 64)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
 					if (this->_users.at(&socket).connected)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
-					this->_users.at(&socket).connected = true;
-					this->_users.at(&socket).userId = this->_lastUserID;
-					this->_createdUsers.push_back({
-						this->_lastUserID,
-						packet.data.substr(0, 32),
-						packet.data.substr(32, 32)
-					});
+					try {
+                        this->_users.at(&socket).userId = this->_db.register_member(
+                                this->_unpadStr(packet.data.substr(0, 32)),
+                                this->_unpadStr(packet.data.substr(32, 32)));
+                    }
+					catch (Exceptions::MemberAlreadyExist &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_USED);
+                    }
+					catch (Exceptions::ForbiddenInput &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_AUTHORIZED);
+					}
+                    catch (Exceptions::SQLError &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+                    }
+                    this->_users.at(&socket).connected = true;
+
 					return TcpServer::sendPacket(
 						socket,
 						Network::Protocol::OK,
-						Network::Protocol::Packet::uint32toByteString(this->_lastUserID++) + packet.data.substr(0, 16)
+						Network::Protocol::Packet::uint32toByteString(this->_users.at(&socket).userId) + packet.data.substr(0, 32)
 					);
 				case Network::Protocol::LOGOUT:
 					if (!this->_users.at(&socket).connected)
@@ -78,7 +114,17 @@ namespace Babel::Server
 					this->_users.at(&socket).callingUser = 0;
 					return TcpServer::sendPacket(socket, Network::Protocol::OK, "");
 				case Network::Protocol::GET_FRIENDS:
-					return this->_getFriends(socket);
+				    try {
+                        std::string result;
+                        auto friends = this->_db.get_all_user();
+                        for (auto &i : friends)
+                            result += Network::Protocol::Packet::uint32toByteString(i.id);
+                        return TcpServer::sendPacket(socket, Network::Protocol::OK, result);
+                    }
+				    catch (Exceptions::SQLError &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+				    }
+
 				case Network::Protocol::CALL:
 					if (!this->_users.at(&socket).connected)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_CONNECTED);
@@ -86,7 +132,25 @@ namespace Babel::Server
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
 					return this->_callUser(socket, Network::Protocol::Packet::uint32FromByteString(packet.data));
 				case Network::Protocol::GET_USER_INFOS:
-					return;
+                    if (packet.data.size() != 4)
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+                    try {
+                        std::string member_name;
+                        member_name = this->_db.get_user_name(Network::Protocol::Packet::uint32FromByteString(packet.data));
+                        member_name.resize(32, '\0');
+                        return TcpServer::sendPacket(socket, Network::Protocol::OK, member_name);
+                    }
+                    catch (Exceptions::NotFound &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_FOUND);
+                    }
+                    catch (Exceptions::ForbiddenInput &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::NOT_AUTHORIZED);
+                    }
+                    catch (Exceptions::SQLError &err) {
+                        return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET);
+                    }
+
+
 				case Network::Protocol::CALL_ACCEPTED:
 					if (!packet.data.empty())
 						return (TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_PACKET));
@@ -146,6 +210,11 @@ namespace Babel::Server
 			} catch (Network::Exceptions::EOFException &) {}
 		}
 	}
+
+	std::string TcpServer::_unpadStr(const std::string &str)
+    {
+	    return std::string(str.c_str());
+    }
 
 	void TcpServer::_getFriends(Network::Socket &socket)
 	{
@@ -271,11 +340,21 @@ namespace Babel::Server
 		}
 	}
 
-	std::pair<Network::Socket *, std::reference_wrapper<TcpServer::User>> TcpServer::_getUser(unsigned id)
+	std::pair<Network::Socket *, TcpServer::User> TcpServer::_getUser(unsigned id)
 	{
 		for (auto &user : this->_users)
-			if (user.second.connected && user.second.userId == id)
-				return {user.first, this->_createdUsers[user.second.userId]};
+			if (user.second.connected && user.second.userId == id) {
+                try {
+                    return {user.first, {id, this->_db.get_user_name(id)}};
+                }
+                catch (Exceptions::NotFound &err) {
+                    throw Exceptions::UserNotFoundException("Cannot find user with id " + std::to_string(id));
+                }
+                catch (Exceptions::SQLError &err) {
+                    throw Exceptions::UserNotFoundException("Cannot find user with id " + std::to_string(id));
+                }
+
+            }
 		throw Exceptions::UserNotFoundException("Cannot find user with id " + std::to_string(id));
 	}
 }

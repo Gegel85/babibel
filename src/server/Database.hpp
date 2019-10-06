@@ -19,6 +19,11 @@ namespace Babel::Server {
         std::string data;
     };
 
+    struct DSuser {
+        int id;
+        std::string username;
+    };
+
     class Database {
     private:
         sqlite3 *_db = nullptr;
@@ -40,6 +45,7 @@ namespace Babel::Server {
         int register_member(const std::string &username, const std::string &passwd);
         int check_creds(const std::string &username, const std::string &passwd);
         std::string get_user_name(int id);
+        std::vector<DSuser> get_all_user();
     };
 
     namespace Exceptions {
