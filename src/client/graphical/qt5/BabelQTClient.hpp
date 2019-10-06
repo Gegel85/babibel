@@ -25,6 +25,7 @@
 #include "QTLayout.hpp"
 #include "../../TcpClient.hpp"
 
+
 namespace Babel::Client
 {
 	class BabelQTClient : public QObject
@@ -41,6 +42,9 @@ namespace Babel::Client
 		void callButton();
 		void hangUp();
 		void voiceConnect();
+		void addFriend();
+		void removeFriend();
+		void registerMe();
 
 	private:
 //		QTScrollBar _scrollBar;
@@ -48,6 +52,7 @@ namespace Babel::Client
 		QTTextBox _lastError;
 		QTButton _logButton;
 		QTButton _logOutButton;
+		QTButton _registerButton;
 		QTTextBox _serverLogged;
 
 		QTTextBox _usernameLog;
@@ -62,14 +67,23 @@ namespace Babel::Client
 		QTButton _callButton;
 		QTTextBox _stateOfCallTxtBx;
 		QTButton _hangUpButton;
+		QTButton _addFriendButton;
+		QTButton _removeFriendButton;
 
 		QTTypingBox _address;
 		QTTypingBox _port;
 		QTButton _voiceConnectButton;
 
+		QTTextBox _listOfUsers;
+
 		bool _end = false;
 		TcpClient &_client;
 		std::thread _thread;
+
+		void getUsers();
+		unsigned _count = 15;
+		void activateWhenConnected();
+		void desactivateWhenDisconnected();
 	};
 }
 

@@ -33,4 +33,9 @@ namespace Babel::Client
 	{
 		QLabel::setEnabled(enabled);
 	}
+
+	void QTTextBox::setAlignment(QTAlignment alignement)
+	{
+		QLabel::setAlignment(Qt::Alignment(alignement));
+	}
 }
