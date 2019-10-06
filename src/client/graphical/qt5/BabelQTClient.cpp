@@ -17,7 +17,7 @@ namespace Babel::Client
 	BabelQTClient::BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent) :
 		QObject(parent),
 		window(size, parent),
-		_lastError(this->window, "", {10, (int)(size.y - 5)}, {120, 35}),
+		_lastError(this->window, "nxzjxniuznzns", {10, (int)(size.y - 40)}, {120, 35}),
 		_logButton(this->window, "Log in", {10, 125}, {70, 35}),
 		_logOutButton(this->window, "Log out", {90, 125}, {70, 35}),
 		_registerButton(this->window, "Register", {170, 125}, {80, 35}),
