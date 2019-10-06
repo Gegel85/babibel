@@ -8,6 +8,7 @@
 
 #ifdef _WIN32
 #	include <winsock.h>
+typedef int socklen_t;
 #else
 #	include <netdb.h>
 #	include <arpa/inet.h>

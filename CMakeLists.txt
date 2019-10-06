@@ -20,31 +20,13 @@ endif ()
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 if (WIN32)
-	file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf [Paths]\nPrefix=${CONAN_QT_ROOT})
+	if (Qt5_PLUGINS_DIR)
+		file(TO_CMAKE_PATH "${Qt5_PLUGINS_DIR}" Qt5_PLUGINS_DIR)
+		file(WRITE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf [Paths]\nPlugins=${Qt5_PLUGINS_DIR})
+	else ()
+		message(FATAL_ERROR "Please define Qt5_PLUGINS_DIR")
+	endif()
 endif ()
-
-add_executable(
-		dbg_opus
-		src/client/sound/CompressedAudio.cpp
-		src/client/sound/CompressedAudio.hpp
-		src/client/sound/Compressor.cpp
-		src/client/sound/Compressor.hpp
-		src/client/sound/Sound.cpp
-		src/client/sound/Sound.hpp
-		src/client/sound/main.cpp
-		src/network/Socket.cpp
-		src/network/Socket.hpp
-		src/network/Protocol.cpp
-		src/network/Protocol.hpp
-		src/network/SocketExceptions.hpp
-		src/network/ServerSocket.cpp
-		src/network/ServerSocket.hpp
-)
-
-target_link_libraries(
-		dbg_opus
-		${CONAN_LIBS}
-)
 
 add_executable(
 	babel_client
@@ -100,11 +82,20 @@ add_executable(
 	src/client/sound/Compressor.hpp
 )
 
-target_link_libraries(
-	babel_client
-	${CONAN_LIBS}
-	Qt5::Widgets
-)
+if (WIN32)
+	target_link_libraries(
+		babel_client
+		${CONAN_LIBS}
+		Qt5::Widgets
+		ws2_32
+	)
+else ()
+	target_link_libraries(
+		babel_client
+		${CONAN_LIBS}
+		Qt5::Widgets
+	)
+endif ()
 
 add_executable(
 	babel_server
@@ -122,7 +113,15 @@ add_executable(
 	src/server/Database.hpp
 )
 
-target_link_libraries(
-	babel_server
-	${CONAN_LIBS}
-)
+if (WIN32)
+	target_link_libraries(
+		babel_server
+		${CONAN_LIBS}
+		ws2_32
+	)
+else ()
+	target_link_libraries(
+		babel_server
+		${CONAN_LIBS}
+	)
+endif ()

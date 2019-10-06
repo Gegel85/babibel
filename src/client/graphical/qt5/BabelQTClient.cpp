@@ -5,9 +5,8 @@
 ** myQTWindow.cpp
 */
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <winsock.h>
+#include "../../../network/Socket.hpp"
 #include "BabelQTClient.hpp"
 
 namespace Babel::Client
@@ -145,14 +144,13 @@ namespace Babel::Client
 		std::string address = this->_address.getPlainText();
 		std::string port = this->_port.getPlainText();
 		int portNb = std::atoi(port.c_str());
-		struct in_addr addr;
-		int err = inet_aton(address.c_str(), &addr);
+		unsigned addr = inet_addr(address.c_str());
 
-		if (err < 0) {
-			this->_lastError.setText("Last Error: cannot trasnform address with inet_addr");
+		if (addr == -1) {
+			this->_lastError.setText("Last Error: cannot transform address with inet_addr");
 			return;
 		}
 
-		this->_client.connectToVoice(addr.s_addr, portNb);
+		this->_client.connectToVoice(addr, portNb);
 	}
 }

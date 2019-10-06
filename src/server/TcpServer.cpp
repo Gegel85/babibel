@@ -136,8 +136,10 @@ namespace Babel::Server
 				}
 
 				Network::Socket &sock = this->_socket.acceptClient(this->_handler);
+				struct in_addr addr;
 
-				std::cout << "New client connected " << inet_ntoa({sock.getRemoteIp()}) << "\n";
+				addr.s_addr = sock.getRemoteIp();
+				std::cout << "New client connected " << inet_ntoa(addr) << "\n";
 				sock.send(packet);
 				this->_users.emplace(&sock, Client{0, false, 0, 0, {}});
 			} catch (Network::Exceptions::TimeoutException &) {

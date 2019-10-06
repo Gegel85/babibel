@@ -86,7 +86,7 @@ namespace Babel::Network
 			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		/* fill in the structure */
-		bzero(&serv_addr, sizeof(serv_addr));
+		std::memset(&serv_addr, 0, sizeof(serv_addr));
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_port = htons(portno);
 		serv_addr.sin_addr.s_addr = ip;
@@ -137,7 +137,7 @@ namespace Babel::Network
 		sockaddr_in	addr{};
 		socklen_t	len = sizeof(addr);
 
-		bzero(&addr, sizeof(addr));
+		std::memset(&addr, 0, sizeof(addr));
 		addr.sin_addr.s_addr = this->_remoteIp;
 		addr.sin_port = htons(this->_port);
 		addr.sin_family = AF_INET;
@@ -164,7 +164,7 @@ namespace Babel::Network
 		unsigned	pos = 0;
 		sockaddr_in	addr{};
 
-		bzero(&addr, sizeof(addr));
+		std::memset(&addr, 0, sizeof(addr));
 		addr.sin_port = htons(this->_port);
 		addr.sin_family = AF_INET;
 		addr.sin_addr.s_addr = this->_remoteIp;

@@ -9,6 +9,7 @@
 #define CPP_BABEL_2019_TCPCLIENT_HPP
 
 
+#include <optional>
 #include "../network/Socket.hpp"
 #include "../network/ServerSocket.hpp"
 #include "../network/Protocol.hpp"
