@@ -12,6 +12,7 @@
 #include <map>
 #include "../network/ServerSocket.hpp"
 #include "../network/Protocol.hpp"
+#include "Database.hpp"
 
 #define DEFAULT_PORT 31543U
 
@@ -30,22 +31,21 @@ namespace Babel::Server
 		struct User {
 			unsigned    id;
 			std::string name;
-			std::string passwd;
 		};
 
-		std::vector<User> _createdUsers;
-		unsigned _lastUserID = 1;
+        Database _db;
 		Network::ServerSocket _socket;
 		std::function<void (Network::Socket &)> _handler;
 		std::map<Network::Socket *, Client> _users;
 
+		std::string _unpadStr(const std::string &str);
 		void _getFriends(Network::Socket &socket);
 		void _addFriend(Network::Socket &socket, unsigned int ID);
 		void _removeFriend(Network::Socket &socket, unsigned int ID);
 		void _callUser(Network::Socket &socket, unsigned id);
 		void _acceptCall(Network::Socket &socket);
 		void _refuseCall(Network::Socket &socket);
-		std::pair<Network::Socket *, std::reference_wrapper<TcpServer::User>> _getUser(unsigned id);
+		std::pair<Network::Socket *, TcpServer::User> _getUser(unsigned id);
 
 	public:
 		static void sendPacket(Network::Socket &, Network::Protocol::Opcode op, const std::string &data);
