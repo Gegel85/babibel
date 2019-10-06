@@ -13,7 +13,7 @@
 #include "../network/ServerSocket.hpp"
 #include "../network/Protocol.hpp"
 
-#define DEFAULT_PORT 36543
+#define DEFAULT_PORT 31543U
 
 namespace Babel::Server
 {

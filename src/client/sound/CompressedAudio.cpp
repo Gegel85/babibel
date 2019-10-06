@@ -60,20 +60,6 @@ namespace Babel::Client {
         return compressor.uncompress_bytes(*this);
     }
 
-    void CompressedAudio::print_debug(int level) const
-    {
-        printf("===Compressed Audio===\nLength of vector : %lu\n", this->_vector_length);
-        if (level <= 1)
-            return;
-        for (size_t i = 0; i < this->_data.size(); i++) {
-            printf("%02lu : [", i);
-            for (size_t j = 0; j < this->_data[i].get_length(); j++)
-                printf("%02X, ", this->_data[i].get_raw_data()[j]);
-            printf("]\n");
-        }
-    }
-
-
     CompressedPacket::CompressedPacket(unsigned char *data, size_t length):
     _length(length),
     _data(data)

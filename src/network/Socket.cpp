@@ -86,6 +86,7 @@ namespace Babel::Network
 			throw Exceptions::AlreadyOpenedException("This socket is already opened");
 
 		/* fill in the structure */
+		bzero(&serv_addr, sizeof(serv_addr));
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_port = htons(portno);
 		serv_addr.sin_addr.s_addr = ip;
@@ -101,7 +102,10 @@ namespace Babel::Network
 			this->_socket = INVALID_SOCKET;
 			throw Exceptions::ConnectException(std::string("Cannot connect to ") + inet_ntoa(serv_addr.sin_addr));
 		}
+		this->_type = type;
+		this->_port = portno;
 		this->_remoteIp = ip;
+		this->_protocol = protocol;
 	}
 
 	void Socket::disconnect()
@@ -130,11 +134,18 @@ namespace Babel::Network
 	{
 		std::string	buf;
 		char		buffer[1024];
+		sockaddr_in	addr{};
+		socklen_t	len = sizeof(addr);
+
+		bzero(&addr, sizeof(addr));
+		addr.sin_addr.s_addr = this->_remoteIp;
+		addr.sin_port = htons(this->_port);
+		addr.sin_family = AF_INET;
 
 		while (size != 0) {
 			this->waitToBeReady(timeout);
 
-			int bytes = recv(this->_socket, buffer, (static_cast<unsigned>(size) >= sizeof(buffer)) ? (sizeof(buffer)) : (size), 0);
+			int bytes = recvfrom(this->_socket, buffer, (static_cast<unsigned>(size) >= sizeof(buffer)) ? (sizeof(buffer)) : (size), 0, reinterpret_cast<sockaddr *>(&addr), &len);
 
 			if (bytes <= 0) {
 				if (size < 0)
@@ -151,9 +162,14 @@ namespace Babel::Network
 	void Socket::send(const std::string &msg)
 	{
 		unsigned	pos = 0;
+		sockaddr_in	addr{};
 
+		bzero(&addr, sizeof(addr));
+		addr.sin_port = htons(this->_port);
+		addr.sin_family = AF_INET;
+		addr.sin_addr.s_addr = this->_remoteIp;
 		while (pos < msg.length()) {
-			int bytes = ::send(this->_socket, &msg.c_str()[pos], msg.length() - pos, 0);
+			int bytes = ::sendto(this->_socket, &msg.c_str()[pos], msg.length() - pos, 0, reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
 
 			if (bytes <= 0)
 				throw Exceptions::EOFException(bytes ? getLastSocketError() : "The connection was closed");
@@ -164,6 +180,11 @@ namespace Babel::Network
 	std::string Socket::readUntilEOF(int timeout)
 	{
 		return this->read(-1, timeout);
+	}
+
+	void Socket::setRemoteIp(unsigned ip)
+	{
+		this->_remoteIp = ip;
 	}
 
 	void Socket::waitToBeReady(int timeout) const

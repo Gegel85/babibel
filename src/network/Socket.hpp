@@ -94,9 +94,14 @@ namespace Babel::Network
 
 		unsigned getRemoteIp() const;
 
+		void setRemoteIp(unsigned ip);
+
 	protected:
 		mutable SOCKET	_socket = INVALID_SOCKET;
 		unsigned	_remoteIp = 0;
+		int		_protocol;
+		int		_type;
+		unsigned short	_port;
 	};
 }
 

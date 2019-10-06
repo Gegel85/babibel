@@ -137,7 +137,7 @@ namespace Babel::Server
 
 				Network::Socket &sock = this->_socket.acceptClient(this->_handler);
 
-				printf("New client connected\n");
+				std::cout << "New client connected " << inet_ntoa({sock.getRemoteIp()}) << "\n";
 				sock.send(packet);
 				this->_users.emplace(&sock, Client{0, false, 0, 0, {}});
 			} catch (Network::Exceptions::TimeoutException &) {
@@ -233,7 +233,7 @@ namespace Babel::Server
 			this->sendPacket(
 				*user.first,
 				Network::Protocol::CALL_ACCEPTED,
-				Network::Protocol::Packet::uint32toByteString(0) +
+				Network::Protocol::Packet::uint32toByteString(socket.getRemoteIp()) +
 				Network::Protocol::Packet::uint16toByteString(DEFAULT_PORT)
 			);
 		} catch (Exceptions::UserNotFoundException &) {

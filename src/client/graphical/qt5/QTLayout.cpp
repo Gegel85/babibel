@@ -27,8 +27,8 @@ namespace Babel::Client
 		QBoxLayout::setEnabled(enabled);
 	}
 /*
-	void QTLayout::addWidget(Widget &wigdet)
+	void QTLayout::addWidget(QWidget *wigdet)
 	{
-		QBoxLayout::addWidget(widget.nativeParentWidget());
+		QBoxLayout::addWidget(widget);
 	}*/
 }

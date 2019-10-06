@@ -23,6 +23,7 @@ namespace Babel::Network
 		struct sockaddr_in address{};
 
 		this->setSocket(socket(AF_INET, type, protocol));
+		this->_port = port;
 		address.sin_port = htons(port);
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;

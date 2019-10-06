@@ -10,6 +10,7 @@
 
 
 #include <functional>
+#include <vector>
 #include <thread>
 #include "Socket.hpp"
 
@@ -20,7 +21,6 @@ namespace Babel::Network
 	//! @brief Socket du serveur où se connecte les clients.
 	class ServerSocket : public Socket {
 	private:
-		unsigned short _port;
 		bool _ended;
 		std::vector<std::thread> _threads;
 		std::vector<std::unique_ptr<Socket>> _clients;
