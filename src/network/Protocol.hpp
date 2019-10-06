@@ -154,6 +154,9 @@ namespace Babel::Network::Protocol
 		Packet &operator=(const std::string &);
 		operator std::string();
 
+        //! @brief Permet de changer un entier non signé en une chaîne de charactère de 2 bytes.
+        //! @param value	Valeur à changer
+        //! @return		 Une chaîne de 2 caractères réprésentant la value, en MSBF (Most significant byte first)
 		static std::string	uint16toByteString(unsigned short value);
 
 		//! @brief Permet de changer un entier non signé en une chaîne de charactère de 4 bytes.
@@ -161,6 +164,9 @@ namespace Babel::Network::Protocol
 		//! @return		 Une chaîne de 4 caractères réprésentant la value, en MSBF (Most significant byte first)
 		static std::string	uint32toByteString(unsigned value);
 
+        //! @brief Permet de transformer une chaîne de charactère de 2 bytes codée en MSBF en entier non signé.
+        //! @param str  Chaîne de caractère à transformer
+        //! @return	 Un entier non signé réprésentant la chaine de caractère
 		static unsigned	short	uint16FromByteString(const std::string &str);
 
 		//! @brief Permet de transformer une chaîne de charactère de 4 bytes codée en MSBF en entier non signé.
@@ -168,8 +174,14 @@ namespace Babel::Network::Protocol
 		//! @return	 Un entier non signé réprésentant la chaine de caractère
 		static unsigned		uint32FromByteString(const std::string &str);
 
+        //! @brief Permet de changer un flotant en une chaîne de charactère de 4 bytes.
+        //! @param value	Valeur à changer
+        //! @return		 Une chaîne de 4 caractères réprésentant la value, en MSBF (Most significant byte first)
 		static std::string	float32ToByteString(float value);
 
+        //! @brief Permet de transformer une chaîne de charactère de 4 bytes codée en MSBF en flotant non signé.
+        //! @param str  Chaîne de caractère à transformer
+        //! @return	 Un flotant réprésentant la chaine de caractère
 		static float		float32FromByteString(const std::string &str);
 	};
 }
