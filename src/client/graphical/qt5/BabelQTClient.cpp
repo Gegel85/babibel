@@ -171,14 +171,8 @@ namespace Babel::Client
 	{
 		std::string address = this->_address.getPlainText();
 		std::string port = this->_port.getPlainText();
-<<<<<<< HEAD
 		int portNb = std::atoi(port.c_str());
 		unsigned addr = inet_addr(address.c_str());
-=======
-		int portNb = std::stoi(port);
-		struct in_addr addr;
-		int err = inet_aton(address.c_str(), &addr);
->>>>>>> qt5
 
 		if (addr == -1) {
 			this->_lastError.setText("Last Error: cannot transform address with inet_addr");
