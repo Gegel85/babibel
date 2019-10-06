@@ -13,6 +13,17 @@
 
 namespace Babel::Client
 {
+	enum QTAlignment {
+		LEFT = Qt::AlignLeft,
+		RIGHT = Qt::AlignRight,
+		HCENTER = Qt::AlignHCenter,
+		JUSTIFY = Qt::AlignJustify,
+		TOP = Qt::AlignTop,
+		BOTTOM = Qt::AlignBottom,
+		VCENTER = Qt::AlignVCenter,
+		BASELINE = Qt::AlignBaseline,
+	};
+
 	class QTTextBox : public TextBox, public QLabel
 	{
 	public:
@@ -20,6 +31,7 @@ namespace Babel::Client
 		void setText(const std::string &text);
 		void draw(GUIScreen &screen) override;
 		void setEnabled(bool enabled);
+		void setAlignment(QTAlignment alignement);
 	};
 }
 #endif
