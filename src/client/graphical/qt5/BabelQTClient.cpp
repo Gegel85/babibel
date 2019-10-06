@@ -49,6 +49,9 @@ namespace Babel::Client
 					this->_voiceConnectButton.setEnabled(this->_client.isVoiceConnected() ? false : true);
 					this->_stateOfCallTxtBx.setText(this->_client.isVoiceConnected() ? "Calling" : "Not calling");
 
+					if (!this->_client.isConnected())
+						this->_myID = -1;
+
 					if (this->_myID == -1)
 						this->desactivateWhenDisconnected();
 					else 
