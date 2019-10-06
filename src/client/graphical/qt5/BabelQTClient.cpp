@@ -5,7 +5,9 @@
 ** myQTWindow.cpp
 */
 
-#include <winsock.h>
+#ifdef _WIN32
+    #include <winsock.h>
+#endif
 #include "../../../network/Socket.hpp"
 #include <sstream>
 #include "BabelQTClient.hpp"
