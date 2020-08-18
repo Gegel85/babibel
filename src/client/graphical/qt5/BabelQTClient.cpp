@@ -17,7 +17,7 @@ namespace Babel::Client
 	BabelQTClient::BabelQTClient(TcpClient &client, Vector2<unsigned int> size, QWidget *parent) :
 		QObject(parent),
 		window(size, parent),
-		_lastError(this->window, "", {10, (int)(size.y - 5)}, {120, 35}),
+		_lastError(this->window, "nxzjxniuznzns", {10, (int)(size.y - 40)}, {120, 35}),
 		_logButton(this->window, "Log in", {10, 125}, {70, 35}),
 		_logOutButton(this->window, "Log out", {90, 125}, {70, 35}),
 		_registerButton(this->window, "Register", {170, 125}, {80, 35}),
@@ -49,6 +49,9 @@ namespace Babel::Client
 					this->_voiceConnectButton.setEnabled(this->_client.isVoiceConnected() ? false : true);
 					this->_stateOfCallTxtBx.setText(this->_client.isVoiceConnected() ? "Calling" : "Not calling");
 
+					if (!this->_client.isConnected())
+						this->_myID = -1;
+
 					if (this->_myID == -1)
 						this->desactivateWhenDisconnected();
 					else 
@@ -62,6 +65,8 @@ namespace Babel::Client
 
 				} catch (std::exception &e) {
 					std::cerr << e.what() << std::endl;
+					std::string cpyEWhat = e.what();
+					this->_lastError.setText("Last Error: " + cpyEWhat);
 					this->logOut();
 				}
 			}
@@ -122,7 +127,7 @@ namespace Babel::Client
 			this->_registerButton.setEnabled(false);
 			return;
 		}
-		if (!servResponse.first == Network::Protocol::Opcode::OK)
+		if (servResponse.first != Network::Protocol::Opcode::OK)
 			return;
 		this->_myID = Network::Protocol::Packet::uint32FromByteString(servResponse.second);
 	}
@@ -143,8 +148,6 @@ namespace Babel::Client
 			this->_callButton.setEnabled(true);
 			return;
 		}
-		if (!servResponse.first == Network::Protocol::Opcode::OK)
-			return;
 		if (servResponse.first == Network::Protocol::Opcode::CALL_ACCEPTED)
 			this->_stateOfCallTxtBx.setText("Calling");
 	}
@@ -174,7 +177,7 @@ namespace Babel::Client
 		int portNb = std::atoi(port.c_str());
 		unsigned addr = inet_addr(address.c_str());
 
-		if (addr == -1) {
+		if (addr == 0) {
 			this->_lastError.setText("Last Error: cannot transform address with inet_addr");
 			return;
 		}
@@ -230,13 +233,11 @@ namespace Babel::Client
 	{
 		std::string username = this->_username.getPlainText();
 		std::string password = this->_password.getPlainText();
-		if (username.empty() || password.empty())
-		{
+		if (username.empty() || password.empty()) {
 			this->_lastError.setText("Last Error: Need valid username and password");
 			return;
 		}
-		if (username.length() > 32 || password.length() > 32)
-		{
+		if (username.length() > 32 || password.length() > 32) {
 			this->_lastError.setText("Last Error: Username and password need to be 32 long each");
 			return;
 		}
@@ -246,8 +247,7 @@ namespace Babel::Client
 		this->_logButton.setEnabled(false);
 		this->_registerButton.setEnabled(false);
 		std::pair<unsigned char, std::string> servResponse = this->_client.waitServerResponse();
-		if (servResponse.first == Network::Protocol::Opcode::KO)
-		{
+		if (servResponse.first == Network::Protocol::Opcode::KO) {
 			this->_lastError.setText("Last Error: Server refuse connection: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
 			this->_logButton.setEnabled(true);
 			this->_registerButton.setEnabled(false);
@@ -255,7 +255,7 @@ namespace Babel::Client
 		}
 		if (!servResponse.first == Network::Protocol::Opcode::OK)
 			return;
-		this->_myID = Network::Protocol::Packet::uint32FromByteString(servResponse.second);
+		this->sendConnectionLogs();
 	}
 
 	void BabelQTClient::getUsers()
@@ -293,7 +293,7 @@ namespace Babel::Client
 				usersName.push_back("Error: " + Network::Protocol::ErrorReason::errorReasonToString(servResponse.second));
 				continue;
 			}
-			if (!servResponse.first == Network::Protocol::Opcode::OK)
+			if (servResponse.first != Network::Protocol::Opcode::OK)
 				usersName.push_back("");
 			else
 				usersName.push_back(servResponse.second.substr(4, 32));
@@ -327,5 +327,4 @@ namespace Babel::Client
 		this->_addFriendButton.setEnabled(false);
 		this->_removeFriendButton.setEnabled(false);
 	}
-
 }

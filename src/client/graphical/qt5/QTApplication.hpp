@@ -14,11 +14,11 @@ namespace Babel::Client
 {
 	class QTApplication : public QApplication
 	{
-	Q_OBJECT
+//	Q_OBJECT
 	public:
 		QTApplication(int &ac, char **av);
 		int launch();
-
+/*
 		bool notify(QObject * receiver, QEvent * event) override {
 			try {
 				return QCoreApplication::notify(receiver, event);
@@ -26,8 +26,8 @@ namespace Babel::Client
 				std::cerr << e.what() << std::endl;
 			}
 				return false;
-			};
-		};
+			};*/
+	};
 }
 
 #endif

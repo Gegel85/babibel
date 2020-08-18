@@ -59,9 +59,10 @@ namespace Babel::Server
 					if (this->_users.at(&socket).connected)
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
 					try {
-						this->_users.at(&socket).userId = this->_db.register_member(
-						this->_unpadStr(packet.data.substr(0, 32)),
-						this->_unpadStr(packet.data.substr(32, 32)));
+						this->_users.at(&socket).userId = this->_db.check_creds(
+							this->_unpadStr(packet.data.substr(0, 32)),
+							this->_unpadStr(packet.data.substr(32, 32))
+						);
 					}
 					catch (Exceptions::NotFound &err) {
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::BAD_CREDENTIALS);
@@ -86,8 +87,9 @@ namespace Babel::Server
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_CONNECTED);
 					try {
 						this->_users.at(&socket).userId = this->_db.register_member(
-						this->_unpadStr(packet.data.substr(0, 32)),
-						this->_unpadStr(packet.data.substr(32, 32)));
+							this->_unpadStr(packet.data.substr(0, 32)),
+							this->_unpadStr(packet.data.substr(32, 32))
+						);
 					}
 					catch (Exceptions::MemberAlreadyExist &err) {
 						return TcpServer::sendPacket(socket, Network::Protocol::KO, Network::Protocol::ErrorReason::ALREADY_USED);
